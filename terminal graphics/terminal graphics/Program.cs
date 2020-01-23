@@ -27,10 +27,11 @@ namespace terminal_graphics
             sender.Send(msg);
             int bytesRec = sender.Receive(bytes);
             string data = Encoding.ASCII.GetString(bytes, 0, bytesRec);
-            if (data == "diconnect")
+            if (data == "disconnect")
             {
                 sender.Shutdown(SocketShutdown.Both); // “send”, “receive”, “both
                 sender.Close(); // destroy the socket.
+                Application.Exit();
             }
             return data;
         }

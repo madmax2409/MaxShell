@@ -41,8 +41,8 @@ namespace server
                 case "showproc":
                     return ShowProcess(target);
 
-                case "close":
-                    return "close";
+                case "disconnect":
+                    return "disconnect";
 
                 case "killproc":
                     return KillProcess(target, parameter);

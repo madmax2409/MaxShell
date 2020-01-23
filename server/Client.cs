@@ -13,11 +13,9 @@ namespace server
         private static Queue<Socket> clients = new Queue<Socket>();
         private Socket con;
         private byte[] bytes;
-        public Client(IPHostEntry ipHostInfo, IPAddress ipAddress)
+        public Client(Socket cl)
         {
-            IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
-            con = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            con.Connect(remoteEP);
+            con = cl;
             clients.Enqueue(con);
             bytes = new byte[4096];
         }
@@ -25,7 +23,11 @@ namespace server
         {
             return con;
         }
-        public void Disconnect(Socket dis)
+        public void SetSocket(Socket sc)
+        {
+            this.con = sc;
+        }
+        public static void Disconnect(Socket dis)
         {
             bool flag = true;
             while (flag)
