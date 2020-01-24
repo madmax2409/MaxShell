@@ -9,7 +9,7 @@ namespace server
     class Program
     {
         public static string data = null;
-        public static byte[] bytes = new byte[4096];
+        public static byte[] bytes = new byte[8192];
         public static IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
         public static IPAddress ipAddress = ipHostInfo.AddressList[0];
         public static IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);
@@ -17,11 +17,11 @@ namespace server
         public static void Maintenance(Socket cl)
         {
             Client handler = new Client(cl);
-            handler.SetSocket(cl);
             while (true)
             {
                 int bytesRec = cl.Receive(bytes);
                 data = Encoding.ASCII.GetString(bytes, 0, bytesRec); // encode by len
+                Console.WriteLine(data);
                 data = Server.CommandOutput(data);
                 bytes = Encoding.ASCII.GetBytes(data);
                 cl.Send(bytes);

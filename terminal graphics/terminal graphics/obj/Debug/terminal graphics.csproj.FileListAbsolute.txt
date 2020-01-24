@@ -35,3 +35,13 @@ C:\Users\Maxim\Desktop\MaxShell\MaxShell\terminal graphics\terminal graphics\obj
 C:\Users\Maxim\Desktop\MaxShell\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csproj.GenerateResource.cache
 C:\Users\Maxim\Desktop\MaxShell\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.exe
 C:\Users\Maxim\Desktop\MaxShell\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.pdb
+C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.exe.config
+C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.exe
+C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.pdb
+C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csprojAssemblyReference.cache
+C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Form1.resources
+C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Properties.Resources.resources
+C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csproj.GenerateResource.cache
+C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csproj.CoreCompileInputs.cache
+C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.exe
+C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.pdb

@@ -68,6 +68,7 @@ namespace terminal_graphics
             if (e.KeyData == Keys.Enter)
             {
                 string command = cmd.Text;
+                MessageBox.Show(command);
                 string outpt = Program.Maintain(command);
                 char[] seperate = { '\n' };
                 string[] dirs = outpt.Split(seperate);

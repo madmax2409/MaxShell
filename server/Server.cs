@@ -28,7 +28,6 @@ namespace server
                 target = param[1];
                 parameter = param[2];
             }
-
             switch (cmd)
             {
                 case "getip":
