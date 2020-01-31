@@ -23,17 +23,25 @@ namespace terminal_graphics
         }
         public static string Maintain(string message)
         {
-            byte[] msg = Encoding.ASCII.GetBytes(message);
-            sender.Send(msg);
-            int bytesRec = sender.Receive(bytes);
-            string data = Encoding.ASCII.GetString(bytes, 0, bytesRec);
-            if (data == "disconnect")
+            if (message == "file manager")
             {
-                sender.Shutdown(SocketShutdown.Both); // “send”, “receive”, “both
-                sender.Close(); // destroy the socket.
-                Application.Exit();
+                Application.Run(new Form2());
+                return "opened file manager";
             }
-            return data;
+            else
+            {
+                byte[] msg = Encoding.ASCII.GetBytes(message);
+                sender.Send(msg);
+                int bytesRec = sender.Receive(bytes);
+                string data = Encoding.ASCII.GetString(bytes, 0, bytesRec);
+                if (data == "disconnect")
+                {
+                    sender.Shutdown(SocketShutdown.Both); // “send”, “receive”, “both
+                    sender.Close(); // destroy the socket.
+                    Application.Exit();
+                }
+                return data;
+            }
         }
         static void Main()
         {
