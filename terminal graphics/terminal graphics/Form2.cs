@@ -7,13 +7,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+<<<<<<< HEAD
 using System.Management;
 using System.IO;
+=======
+>>>>>>> a0ae94e76c26a9289fafbd93cb8d70a427b18ff6
 
 namespace terminal_graphics
 {
     public partial class Form2 : Form
     {
+<<<<<<< HEAD
         private void ProcessDirectory(string Dir, TreeNode Node)
         {
             string[] SubDir; 
@@ -40,6 +44,15 @@ namespace terminal_graphics
                 ProcessDirectory(file["path"].ToString(), tn);
             }
             Controls.Add(tv);
+=======
+        TreeView tv = new TreeView();
+        public Form2()
+        {
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
+            MinimizeBox = false;
+
+>>>>>>> a0ae94e76c26a9289fafbd93cb8d70a427b18ff6
             InitializeComponent();
         }
     }
