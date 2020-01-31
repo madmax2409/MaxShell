@@ -9,19 +9,25 @@ namespace server
     class Program
     {
         public static string data = null;
-        public static byte[] bytes = new byte[8192];
+        public static byte[] bytes = new byte[1024];
         public static IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
         public static IPAddress ipAddress = ipHostInfo.AddressList[0];
         public static IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);
         public static Socket listener;
+        private static string temp = "";
         public static void Maintenance(Socket cl)
         {
             Client handler = new Client(cl);
+            
             while (true)
             {
                 int bytesRec = cl.Receive(bytes);
                 data = Encoding.ASCII.GetString(bytes, 0, bytesRec); // encode by len
                 Console.WriteLine(data);
+                while (!Organize(data))
+                {
+                    Console.WriteLine("aaa");
+                }
                 data = Server.CommandOutput(data);
                 bytes = Encoding.ASCII.GetBytes(data);
                 cl.Send(bytes);
@@ -36,6 +42,16 @@ namespace server
             cl.Send(msg);
             cl.Shutdown(SocketShutdown.Both);
             cl.Close();
+        }
+        public static bool Organize(string data)
+        {
+            for (int i = 0; i < data.Length; i++)
+            {
+                if (data[i] == ';')
+                    return true;
+                temp += data[i];
+            }
+            return false;
         }
 
         static void Main(string[] args)

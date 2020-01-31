@@ -183,7 +183,9 @@ namespace server
 
             foreach (ManagementObject mo in searcher.Get())
                 if (path == mo["path"].ToString())
+                {
                     p = mo["path"].ToString();
+                }
 
             if (p != "")
             {

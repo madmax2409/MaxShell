@@ -12,7 +12,7 @@ namespace terminal_graphics
     static class Program
     {
         private static Socket sender;
-        private static byte[] bytes = new byte[4096];
+        private static byte[] bytes = new byte[1024];
         public static void Connection()
         {
             IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
