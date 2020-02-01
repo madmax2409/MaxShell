@@ -17,7 +17,6 @@ namespace server
             Console.WriteLine(fullstring);
             while (counter >= 0)
             {
-                
                 msg = Encoding.ASCII.GetBytes(fullstring);
                 handler.Send(msg);
                 string dat = Encoding.ASCII.GetString(msg);

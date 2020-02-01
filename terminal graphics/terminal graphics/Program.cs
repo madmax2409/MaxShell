@@ -35,18 +35,17 @@ namespace terminal_graphics
                 string totaldata = "", data = "";
                 do
                 {
-                    MessageBox.Show("abraham");
                     int bytesRec = sender.Receive(bytes);
                     data = Encoding.ASCII.GetString(bytes, 0, bytesRec);
                     totaldata += data;
                 }
-                while (!data.Contains("stoptightnow"));
+                while (!data.Contains("stoprightnow"));
                 if (totaldata == "diconnect")
                 {
                     sender.Shutdown(SocketShutdown.Both); // “send”, “receive”, “both
                     sender.Close(); // destroy the socket.
                 }
-                return totaldata;
+                return totaldata.Remove(totaldata.IndexOf("stoprightnow"), 12);
             }
         }
         static void Main()
