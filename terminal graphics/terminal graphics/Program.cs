@@ -12,7 +12,7 @@ namespace terminal_graphics
     static class Program
     {
         private static Socket sender;
-        private static byte[] bytes = new byte[1024];
+        private static byte[] bytes = new byte[4096];
         public static void Connection()
         {
             IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
@@ -32,15 +32,21 @@ namespace terminal_graphics
             {
                 byte[] msg = Encoding.ASCII.GetBytes(message);
                 sender.Send(msg);
-                int bytesRec = sender.Receive(bytes);
-                string data = Encoding.ASCII.GetString(bytes, 0, bytesRec);
-                if (data == "disconnect")
+                string totaldata = "", data = "";
+                do
+                {
+                    MessageBox.Show("abraham");
+                    int bytesRec = sender.Receive(bytes);
+                    data = Encoding.ASCII.GetString(bytes, 0, bytesRec);
+                    totaldata += data;
+                }
+                while (!data.Contains("stoptightnow"));
+                if (totaldata == "diconnect")
                 {
                     sender.Shutdown(SocketShutdown.Both); // “send”, “receive”, “both
                     sender.Close(); // destroy the socket.
-                    Application.Exit();
                 }
-                return data;
+                return totaldata;
             }
         }
         static void Main()

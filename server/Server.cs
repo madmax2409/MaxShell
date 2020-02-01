@@ -32,38 +32,38 @@ namespace server
             {
                 case "getip":
                     string names = Dns.GetHostName();
-                    return Dns.GetHostByName(names).AddressList[0].ToString();
+                    return Dns.GetHostByName(names).AddressList[0].ToString() + "stoprightnow";
 
                 case "freespace":
-                    return FreeSpace(target);
+                    return FreeSpace(target) + "stoprightnow";
 
                 case "showproc":
-                    return ShowProcess(target);
+                    return ShowProcess(target) + "stoprightnow";
 
                 case "disconnect":
-                    return "disconnect";
+                    return "disconnect" + "stoprightnow";
 
                 case "killproc":
-                    return KillProcess(target, parameter);
+                    return KillProcess(target, parameter) + "stoprightnow";
 
                 case "getdir":
-                    return Directory.GetCurrentDirectory();
+                    return Directory.GetCurrentDirectory() + "stoprightnow";
 
                 case "startproc":
-                    return RemoteProcess(target, parameter);
+                    return RemoteProcess(target, parameter) + "stoprightnow";
 
                 case "sharefolder":
-                    return ShareFolder(target, parameter);
+                    return ShareFolder(target, parameter) + "stoprightnow";
 
                 case "showfolder":
-                    return ShowFiles(target, parameter);
+                    return ShowFiles(target, parameter) + "stoprightnow";
 
                 case "write":
-                    return Write(target, param[2], param[3]);
+                    return Write(target, param[2], param[3]) + "stoprightnow";
 
             }
 
-            return "no such command as --> " + cmd;
+            return "no such command as --> " + cmd + "stop";
         }
 
         public static string FreeSpace(string target)
