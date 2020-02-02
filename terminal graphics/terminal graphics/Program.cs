@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.IO;
 
 namespace terminal_graphics
 {
@@ -13,11 +14,12 @@ namespace terminal_graphics
     {
         private static Socket sender;
         private static byte[] bytes = new byte[4096];
-        public static void Connection()
+        private static IPAddress ipAddress;
+        private static void Connection()
         {
             IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
-            IPAddress ipAddress = ipHostInfo.AddressList[0];
-            IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);
+            ipAddress = ipHostInfo.AddressList[0];
+            IPEndPoint remoteEP = new IPEndPoint(ipAddress, int.Parse(File.ReadAllText(GetTheRightPath())));  //
             sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sender.Connect(remoteEP);
         }
@@ -25,18 +27,23 @@ namespace terminal_graphics
         {
             if (message == "file manager")
             {
-                Application.Run(new Form2());
+                
+                sender.Send(Encoding.Unicode.GetBytes("showfolder"));
+                int bytesRec = sender.Receive(bytes);
+                string data = Encoding.Unicode.GetString(bytes, 0, bytesRec);
+                Thread t = new Thread(() => Application.Run(new Form2(data)));
+                t.Start();
                 return "opened file manager";
             }
             else
             {
-                byte[] msg = Encoding.ASCII.GetBytes(message);
+                byte[] msg = Encoding.Unicode.GetBytes(message);
                 sender.Send(msg);
                 string totaldata = "", data = "";
                 do
                 {
                     int bytesRec = sender.Receive(bytes);
-                    data = Encoding.ASCII.GetString(bytes, 0, bytesRec);
+                    data = Encoding.Unicode.GetString(bytes, 0, bytesRec);
                     totaldata += data;
                 }
                 while (!data.Contains("stoprightnow"));
@@ -47,6 +54,18 @@ namespace terminal_graphics
                 }
                 return totaldata.Remove(totaldata.IndexOf("stoprightnow"), 12);
             }
+        }
+        public static string GetTheRightPath()
+        {
+            string curpath = Environment.CurrentDirectory;
+            char[] separator = { '\\' };
+            string[] dirs = curpath.Split(separator);
+            string output = "";
+            for (int i = 0; i < dirs.Length; i++)
+                if (i < dirs.Length - 4)
+                    output += dirs[i] + "\\";
+            return output + "\\server\\bin\\Debug\\port.txt";
+            
         }
         static void Main()
         {

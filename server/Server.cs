@@ -15,55 +15,86 @@ namespace server
         {
             char[] seperator = { ' ' };
             string[] param = command.Split(seperator);
-            string cmd = param[0];
-            string target = "";
-            string parameter = "";
-            if (param.Length == 2)
+            string target = "", parameter = "", output = "", cmd = param[0];
+            bool flag = false;
+
+            switch (param.Length)
             {
-                target = Environment.MachineName;
-                parameter = param[1];
+                case 1:
+                    target = Environment.MachineName;
+                    break;
+                case 2:
+                    target = Environment.MachineName;
+                    parameter = param[1];
+                    break;
+                case 3:
+                    target = param[1];
+                    parameter = param[2];
+                    break;
             }
-            else if (param.Length > 2)
-            {
-                target = param[1];
-                parameter = param[2];
-            }
+
             switch (cmd)
             {
                 case "getip":
                     string names = Dns.GetHostName();
-                    return Dns.GetHostByName(names).AddressList[0].ToString() + "stoprightnow";
+                    output = Dns.GetHostByName(names).AddressList[0].ToString();
+                    flag = true;
+                    break;
 
                 case "freespace":
-                    return FreeSpace(target) + "stoprightnow";
+                    output = FreeSpace(target);
+                    flag = true;
+                    break;
 
                 case "showproc":
-                    return ShowProcess(target) + "stoprightnow";
+                    output = ShowProcess(target);
+                    flag = true;
+                    break;
 
                 case "disconnect":
-                    return "disconnect" + "stoprightnow";
+                    output = cmd;
+                    flag = true;
+                    break;
 
                 case "killproc":
-                    return KillProcess(target, parameter) + "stoprightnow";
+                    output = KillProcess(target, parameter);
+                    flag = true;
+                    break;
 
                 case "getdir":
-                    return Directory.GetCurrentDirectory() + "stoprightnow";
+                    output = Directory.GetCurrentDirectory();
+                    flag = true;
+                    break;
 
                 case "startproc":
-                    return RemoteProcess(target, parameter) + "stoprightnow";
+                    output = RemoteProcess(target, parameter);
+                    flag = true;
+                    break;
 
                 case "sharefolder":
-                    return ShareFolder(target, parameter) + "stoprightnow";
+                    output = ShareFolder(target, parameter);
+                    flag = true;
+                    break;
 
-                case "showfolder":
-                    return ShowFiles(target, parameter) + "stoprightnow";
+                case "listfiles":
+                    output = ListFiles(target, parameter);
+                    flag = true;
+                    break;
 
                 case "write":
-                    return Write(target, param[2], param[3]) + "stoprightnow";
+                    output = Write(target, param[2], param[3]);
+                    flag = true;
+                    break;
 
+                case "showfolder":
+                    output = ShowFolders(target);
+                    flag = true;
+                    break;
             }
 
-            return "no such command as --> " + cmd + "stop";
+            if (flag)
+                return output + "stoprightnow";
+            return "no such command as --> " + cmd + "stoprightnow";
         }
 
         public static string FreeSpace(string target)
@@ -175,7 +206,7 @@ namespace server
                 return "seems like the directory doesn't exist bucko";
         }
 
-        public static string ShowFiles(string target, string path)
+        public static string ListFiles(string target, string path)
         {
             string p = "";
             string output = "";
@@ -197,6 +228,18 @@ namespace server
             }
             else
                 return "bruh you failed";
+        }
+
+        public static string ShowFolders(string target)
+        {
+            string output = "";
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\\\" + target + "\\root\\CIMV2", "SELECT * FROM Win32_Share");
+
+            foreach (ManagementObject mo in searcher.Get())
+                if (!mo["Name"].ToString().Contains("$")) 
+                    output += mo["Path"] + "\n";
+
+            return output;
         }
     }
 }

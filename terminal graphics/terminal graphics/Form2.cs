@@ -1,55 +1,67 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Management;
 using System.IO;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
 
 namespace terminal_graphics
 {
     public partial class Form2 : Form
     {
-        private void ProcessDirectory(string Dir, TreeNode Node)
+        private static Socket sender;
+        private static void ProcessDirectory(string dir, TreeNode Node)
         {
-
             try
             {
                 string[] SubDir;
-                SubDir = Directory.GetDirectories(Dir);
+                SubDir = Directory.GetFileSystemEntries(dir);
                 foreach (string SB in SubDir) // exit upon empty 
                 {
-                    TreeNode tempNode = new TreeNode(SB); ProcessDirectory(SB, tempNode); // recursive call per node
+                    TreeNode tempNode = new TreeNode();
+                    tempNode.Text = SB;
                     Node.Nodes.Add(tempNode);
+                    ProcessDirectory(SB, tempNode); // recursive call per node
                 }
             }
-            catch (UnauthorizedAccessException e)
+            catch
             {
 
             }
         }
-        public Form2()
+        private static void Connection()
         {
-            TreeView tv = new TreeView();
-            tv.Nodes.Clear(); 
+
+            IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
+            IPAddress ipAddress = ipHostInfo.AddressList[0];
+            IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000 );    //int.Parse(File.ReadAllText(Program.GetTheRightPath()))
+            sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            sender.Connect(remoteEP);
+        }
+        public Form2(string dirs)
+        {
             
+            char[] seperator = { '\n' };
+            string[] direcs = dirs.Split(seperator);
+
+            TreeView tv = new TreeView();
+            TreeNode tn = new TreeNode();
+            TreeNode temp;
+            tn.Name = "sourcenode";
+            tn.Text = "shared folders";
+            tv.Nodes.Add(tn);
+            foreach (string dir in direcs)
+                if (dir != "stoprightnow")
+                {
+                    temp = tn.Nodes.Add(dir);
+                    ProcessDirectory(dir, temp);
+                }
             tv.Font = new Font("comic sans", 10);
             tv.Location = new Point(0,0);
             tv.Size = new Size(400, 450);
             tv.BorderStyle = BorderStyle.FixedSingle;
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\\\" + Environment.MachineName + "\\root\\CIMV2", "SELECT * FROM Win32_Share");
-            foreach (ManagementObject file in searcher.Get())
-            {
-                if (!file["Name"].ToString().Contains("Windows"))
-                {
-                    TreeNode tn = new TreeNode(file["Name"].ToString());
-                    ProcessDirectory(file["path"].ToString(), tn);
-                }
-            }
             Controls.Add(tv);
         
             FormBorderStyle = FormBorderStyle.FixedSingle;
