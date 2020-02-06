@@ -90,6 +90,11 @@ namespace server
                     output = ShowFolders(target);
                     flag = true;
                     break;
+
+                case "help":
+                    output = "help!";
+                    flag = true;
+                    break;
             }
 
             if (flag)
@@ -97,7 +102,7 @@ namespace server
             return "no such command as --> " + cmd + "stoprightnow";
         }
 
-        public static string FreeSpace(string target)
+        private static string FreeSpace(string target)
         {
             string outpt = "";
             var dskQuery = new SelectQuery("Win32_LogicalDisk", "DriveType=3"); // Define your query (what you want to return from WMI).
@@ -118,7 +123,7 @@ namespace server
             return outpt;
         }
 
-        public static string ShowProcess(string target)
+        private static string ShowProcess(string target)
         {
             string outpt = "";
             try
@@ -136,7 +141,7 @@ namespace server
             }
         }
 
-        public static string KillProcess(string targetmachine, string targetprocess)
+        private static string KillProcess(string targetmachine, string targetprocess)
         {
             //Execute the query
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\\\" + targetmachine + "\\root\\CIMV2", "SELECT * FROM Win32_Process");
@@ -152,7 +157,7 @@ namespace server
             return "Could not kill the specified process";
         }
 
-        public static string RemoteProcess(string targetmachine, string procname)
+        private static string RemoteProcess(string targetmachine, string procname)
         {
             ManagementClass cl = new ManagementClass("\\\\" + targetmachine + "\\root\\CIMV2:Win32_Process");
             object[] methodArgs = { procname, null, null, 0 };
@@ -160,7 +165,7 @@ namespace server
             return "the process " + procname + " started successfully";
         }
 
-        public static string ShareFolder(string target, string sharefolder)
+        private static string ShareFolder(string target, string sharefolder)
         {
             if (!Directory.Exists(sharefolder))
             {
@@ -193,7 +198,7 @@ namespace server
             }
         }
 
-        public static string Write(string target, string path, string text)
+        private static string Write(string target, string path, string text)
         {
             if (File.Exists(path))
             {
@@ -206,7 +211,7 @@ namespace server
                 return "seems like the directory doesn't exist bucko";
         }
 
-        public static string ListFiles(string target, string path)
+        private static string ListFiles(string target, string path)
         {
             string p = "";
             string output = "";
@@ -230,7 +235,7 @@ namespace server
                 return "bruh you failed";
         }
 
-        public static string ShowFolders(string target)
+        private static string ShowFolders(string target)
         {
             string output = "";
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\\\" + target + "\\root\\CIMV2", "SELECT * FROM Win32_Share");

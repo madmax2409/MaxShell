@@ -15,6 +15,7 @@ namespace terminal_graphics
         private static Socket sender;
         private static byte[] bytes = new byte[4096];
         private static IPAddress ipAddress;
+        public static Form2 form2;
         private static void Connection()
         {
             IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
@@ -31,7 +32,8 @@ namespace terminal_graphics
                 sender.Send(Encoding.Unicode.GetBytes("showfolder"));
                 int bytesRec = sender.Receive(bytes);
                 string data = Encoding.Unicode.GetString(bytes, 0, bytesRec);
-                Thread t = new Thread(() => Application.Run(new Form2(data)));
+                form2 = new Form2(data);
+                Thread t = new Thread(() => Application.Run(form2));
                 t.Start();
                 return "opened file manager";
             }
@@ -55,7 +57,7 @@ namespace terminal_graphics
                 return totaldata.Remove(totaldata.IndexOf("stoprightnow"), 12);
             }
         }
-        public static string GetTheRightPath()
+        private static string GetTheRightPath()
         {
             string curpath = Environment.CurrentDirectory;
             char[] separator = { '\\' };
