@@ -32,7 +32,15 @@ namespace server
                     parameter = param[2];
                     break;
             }
-
+            string[] funcs = { "getip", "freespace", "showproc", "disconnect", "killproc" , "getdir", "startproc", "sharefolder", "listfiles", "write", "showfolder", "help" };
+            //string[] methods = {FreeSpace(target), ShowProcess(target), Dns.GetHostByName(Dns.GetHostName()).AddressList[0].ToString(),
+                //KillProcess(target, parameter), Directory.GetCurrentDirectory(), RemoteProcess(target, parameter), ShareFolder(target, parameter), ListFiles(target, parameter), 
+                //Write(target, param[2], param[3]),ShowFolders(target)};
+            //Dictionary<string, Delegate> func = new Dictionary<string, Delegate>();
+            //for (int i = 0; i < funcs.Length-1; i++)
+            //{
+            //    func.Add(funcs[i], );
+            //}
             switch (cmd)
             {
                 case "getip":
@@ -92,14 +100,14 @@ namespace server
                     break;
 
                 case "help":
-                    output = "help!";
+                    output = File.ReadAllText(Environment.CurrentDirectory + "\\info.txt");
                     flag = true;
                     break;
             }
 
             if (flag)
                 return output + "stoprightnow";
-            return "no such command as --> " + cmd + "stoprightnow";
+            return "no such command as --> " + cmd + MostSimilar(cmd, funcs) + "stoprightnow";
         }
 
         private static string FreeSpace(string target)
@@ -245,6 +253,35 @@ namespace server
                     output += mo["Path"] + "\n";
 
             return output;
+        }
+
+        private static string MostSimilar(string input, string[] commands)
+        {
+            int counter, len, max = 0;
+            string sim = "";
+            for (int i = 0; i < commands.Length; i++)
+            {
+                counter = 0;
+                if (input.Length < commands[i].Length)
+                    len = input.Length;
+                else
+                    len = commands[i].Length;
+
+                for (int j = 0; j < len; j++)
+                {
+                    if (input[j] == commands[i][j])
+                        counter++;
+                }
+
+                if (max < counter)
+                {
+                    max = counter;
+                    sim = commands[i];
+                }
+            }
+            if (sim == "")
+                return "";
+            return ", did you mean " + sim + "?";
         }
     }
 }

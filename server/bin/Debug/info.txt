@@ -1,0 +1,12 @@
+getip - the computer's ip
+freespace - the free space in bytes left in each of the device's drives
+showproc - a list of all currently running processes on the device
+disconnect - disconnect from remote server and stop the application
+killproc - kill the process mentioned in the parameter
+getdir - the current working directory
+startproc - start a process with the specified paramater
+sharefolder - set a folder mentioned in the parameter as a shared UNC path 
+listfiles - list all files in the mentioned directory
+write - write given text into a text file
+showfolder - list all shared UNC paths on the device
+help - list of avalible commands

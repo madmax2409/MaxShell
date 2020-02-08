@@ -35,15 +35,6 @@ namespace terminal_graphics
 
             }
         }
-        private static void Connection()
-        {
-
-            IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
-            IPAddress ipAddress = ipHostInfo.AddressList[0];
-            IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11000);    //int.Parse(File.ReadAllText(Program.GetTheRightPath()))
-            sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            sender.Connect(remoteEP);
-        }
         private static void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
             choice = e.Node.Text;
@@ -81,6 +72,7 @@ namespace terminal_graphics
             b.Location = new Point(20, 410);
             b.Text = "open";
             b.Click += new EventHandler(OpenFile);
+            b.Size = new Size(70, 30);
             Controls.Add(b);
 
             FormBorderStyle = FormBorderStyle.FixedSingle;

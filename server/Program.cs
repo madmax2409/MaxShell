@@ -42,12 +42,12 @@ namespace server
                 try
                 {
                     int bytesRec = s.Receive(bytes);
-                    data = Encoding.Unicode.GetString(bytes, 0, bytesRec); // encode by len
+                    data = Encoding.Unicode.GetString(bytes, 0, bytesRec); 
                     Console.WriteLine("Got a message: " + data);
                     data = Server.CommandOutput(data);
                     SendPackets(data, s);
                     if (data.Contains("diconnect"))
-                        break; // communication over. Now send back and close socket
+                        break; // communication over
                 }
                 catch (SocketException)
                 {

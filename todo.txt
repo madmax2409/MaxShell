@@ -1,0 +1,4 @@
+- class client
+- remote con socket
+- milestone 2
+- dictionary for serv funcs

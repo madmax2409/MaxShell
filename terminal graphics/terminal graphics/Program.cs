@@ -20,7 +20,7 @@ namespace terminal_graphics
         {
             IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
             ipAddress = ipHostInfo.AddressList[0];
-            IPEndPoint remoteEP = new IPEndPoint(ipAddress, int.Parse(File.ReadAllText(GetTheRightPath())));  //
+            IPEndPoint remoteEP = new IPEndPoint(ipAddress, int.Parse(File.ReadAllText(GetTheRightPath())));  
             sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sender.Connect(remoteEP);
         }
@@ -51,8 +51,8 @@ namespace terminal_graphics
                 while (!data.Contains("stoprightnow"));
                 if (totaldata == "diconnect")
                 {
-                    sender.Shutdown(SocketShutdown.Both); // “send”, “receive”, “both
-                    sender.Close(); // destroy the socket.
+                    sender.Shutdown(SocketShutdown.Both); 
+                    sender.Close(); // destroy the socket
                 }
                 return totaldata.Remove(totaldata.IndexOf("stoprightnow"), 12);
             }
