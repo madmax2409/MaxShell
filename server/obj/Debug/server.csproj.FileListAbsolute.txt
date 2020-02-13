@@ -24,3 +24,5 @@ C:\Users\u101010\Desktop\MaxShell\server\obj\Debug\server.csprojAssemblyReferenc
 C:\Users\u101010\Desktop\MaxShell\server\obj\Debug\server.csproj.CoreCompileInputs.cache
 C:\Users\u101010\Desktop\MaxShell\server\obj\Debug\server.exe
 C:\Users\u101010\Desktop\MaxShell\server\obj\Debug\server.pdb
+C:\Users\u101010\Desktop\‏‏MaxShell\MaxShell\server\obj\Debug\server.exe
+C:\Users\u101010\Desktop\‏‏MaxShell\MaxShell\server\obj\Debug\server.pdb

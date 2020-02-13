@@ -46,3 +46,5 @@ C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\
 C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.exe
 C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.pdb
 C:\Users\Maxim\Desktop\MaxShell\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Form2.resources
+C:\Users\u101010\Desktop\‏‏MaxShell\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.exe
+C:\Users\u101010\Desktop\‏‏MaxShell\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.pdb

@@ -40,11 +40,12 @@ namespace server
             byte[] bytes = new byte[4096];
             IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
             IPAddress ipAddress = ipHostInfo.AddressList[0];
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, FreeTcpPort());              
+            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000 );  //FreeTcpPort()            
             Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             listener.Bind(localEndPoint);
             listener.Listen(3);
             //Client handler = new Client()
+            Console.WriteLine("listening");
             Socket handler = listener.Accept();
             Console.WriteLine("ready");
             while (true)
