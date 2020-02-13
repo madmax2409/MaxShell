@@ -35,14 +35,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(400, 450);
-            this.Name = "Form2";
-            this.Text = "Form2";
+            this.Name = "File Manager";
+            this.Text = "File Manager";
             this.ResumeLayout(false);
-
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(400, 450);
-            this.Text = "Form2";
         }
 
         #endregion

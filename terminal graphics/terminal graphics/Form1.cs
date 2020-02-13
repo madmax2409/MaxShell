@@ -57,12 +57,12 @@ namespace terminal_graphics
             InitializeComponent();
         }
 
-        public void BlockingInput(object sender, KeyPressEventArgs e)
+        private void BlockingInput(object sender, KeyPressEventArgs e)
         {
             e.Handled = true;
         }
 
-        public void OutputProcedure(object sender, KeyEventArgs e)
+        private void OutputProcedure(object sender, KeyEventArgs e)
         {
             TextBox cmd = (TextBox)sender;
             if (e.KeyData == Keys.Enter)
@@ -97,6 +97,8 @@ namespace terminal_graphics
                     e.Cancel = true;
                     break;
                 default:
+                    if (Program.form2 != null)
+                        Program.form2.Close();
                     break;
             }
         }
