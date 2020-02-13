@@ -19,7 +19,11 @@ namespace terminal_graphics
         private static void Connection()
         {
             IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
-            ipAddress = ipHostInfo.AddressList[0];
+            for (int i = 0; i < ipHostInfo.AddressList.Length; i++)
+                if (ipHostInfo.AddressList[i].ToString().StartsWith("192"))
+                    ipAddress = ipHostInfo.AddressList[i];
+
+            //ipAddress = ipHostInfo.AddressList[0];
             IPEndPoint remoteEP = new IPEndPoint(ipAddress, int.Parse(File.ReadAllText(GetTheRightPath())));  
             sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sender.Connect(remoteEP);

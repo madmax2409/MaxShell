@@ -10,6 +10,7 @@ namespace server
     class Program
     {
         public static string data = null;
+        public static IPAddress ipAddress = null;
 
         private static void SendPackets(string fullstring, Socket handler)
         {
@@ -61,18 +62,15 @@ namespace server
         {
             byte[] bytes = new byte[4096];
             IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
-            IPAddress ipAddress = ipHostInfo.AddressList[0];
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000 );  //FreeTcpPort()            
+            for (int i = 0; i < ipHostInfo.AddressList.Length; i++)
+                if (ipHostInfo.AddressList[i].ToString().StartsWith("192"))
+                    ipAddress = ipHostInfo.AddressList[i];
+            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, FreeTcpPort());  //           
             Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             listener.Bind(localEndPoint);
             listener.Listen(3);
-<<<<<<< HEAD
             //Client handler = new Client()
             Console.WriteLine("listening");
-            Socket handler = listener.Accept();
-=======
->>>>>>> 00c2b2a37dc4f7a94ab8ec531def81cf03b2b28b
-            Console.WriteLine("ready");
             while (true)
             {
                 Socket handler = listener.Accept();

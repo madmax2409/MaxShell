@@ -32,6 +32,9 @@ namespace server
                     parameter = param[2];
                     break;
             }
+            foreach (string par in param)
+                Console.WriteLine(par);
+
             string[] funcs = { "getip", "freespace", "showproc", "disconnect", "killproc" , "getdir", "startproc", "sharefolder", "listfiles", "write", "showfolder", "help" };
             //string[] methods = {FreeSpace(target), ShowProcess(target), Dns.GetHostByName(Dns.GetHostName()).AddressList[0].ToString(),
                 //KillProcess(target, parameter), Directory.GetCurrentDirectory(), RemoteProcess(target, parameter), ShareFolder(target, parameter), ListFiles(target, parameter), 
@@ -45,7 +48,7 @@ namespace server
             {
                 case "getip":
                     string names = Dns.GetHostName();
-                    output = Dns.GetHostByName(names).AddressList[0].ToString();
+                    output = Program.ipAddress.ToString();
                     flag = true;
                     break;
 
@@ -101,6 +104,11 @@ namespace server
 
                 case "help":
                     output = File.ReadAllText(Environment.CurrentDirectory + "\\info.txt");
+                    flag = true;
+                    break;
+
+                case "copyfile":
+                    output = CopyDir(target, param[2], param[3]);
                     flag = true;
                     break;
             }
@@ -182,19 +190,15 @@ namespace server
             }
             try
             {
-                // Calling Win32_Share class to create a shared folder
                 ManagementClass managementClass = new ManagementClass("Win32_Share");
-                // Get the parameter for the Create Method for the folder
                 ManagementBaseObject inParams = managementClass.GetMethodParameters("Create");
                 ManagementBaseObject outParams;
-                // Assigning the values to the parameters
                 inParams["Description"] = "SharedTestApplication";
                 inParams["Name"] = "sharedfolder";
                 inParams["Path"] = sharefolder;
                 inParams["Type"] = 0x0;
-                // Finally Invoke the Create Method to do the process
                 outParams = managementClass.InvokeMethod("Create", inParams, null);
-                // Validation done here to check sharing is done or not
+
                 if ((uint)outParams.Properties["ReturnValue"].Value != 0)
                     return "error no: " + (uint)outParams.Properties["ReturnValue"].Value;
                 else
@@ -283,7 +287,37 @@ namespace server
                 return "";
             return ", did you mean " + sim + "?";
         }
+        public static string CopyDir(string target, string srcpath, string dstpath)
+        {
+            ManagementScope scope = new ManagementScope("\\\\" + Environment.MachineName + "\\root\\CIMV2");    //target
+            ManagementPath managementPath = new ManagementPath("Win32_Directory.Name=" + "\"" + srcpath.Replace("\\","\\\\") + "\"");
+            ManagementObject classInstance = new ManagementObject(scope, managementPath, null);
+            ManagementBaseObject inParams = classInstance.GetMethodParameters("CopyEx");
+            inParams["FileName"] = dstpath;
+            inParams["Recursive"] = true;
+            inParams["StartFileName"] = null;
+
+            ManagementBaseObject outParams = classInstance.InvokeMethod("CopyEx", inParams, null);
+
+            Console.WriteLine((uint)outParams.Properties["ReturnValue"].Value);
+
+            //ManagementClass cl = new ManagementClass("\\\\" + target + "\\root\\CIMV2:Win32_Directory.Name=" + path);
+            //ManagementBaseObject methodArgs = cl.GetMethodParameters("Copy");
+            //methodArgs["FileName"] = path;
+            //cl.InvokeMethod("Create", methodArgs, null);
+
+            //ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\\\" + target + "\\root\\CIMV2", "SELECT * FROM Win32_Directory");
+            ///foreach (ManagementObject mo in searcher.Get())
+            //    if (mo["Path"].ToString() == path)
+            //    {
+            //       Console.WriteLine("Chetni mango");
+            //        mo.InvokeMethod("Copy", null);
+            //    }
+
+            return "copied the file";
+        }
     }
 }
+
     
 
