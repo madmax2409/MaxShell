@@ -13,7 +13,8 @@ namespace terminal_graphics
     public partial class Form2 : Form
     {
         private static Socket sender;
-        private static Button b = new Button();
+        private static Button open = new Button();
+        private static Button refresh = new Button();
         private static TreeView tv = new TreeView();
         private static string choice;
         private static void ProcessDirectory(string dir, TreeNode Node)
@@ -44,12 +45,18 @@ namespace terminal_graphics
         {
             Process.Start(choice);
         }
-        public Form2(string dirs)
-        {
 
+        private static void Refresh(object sender, EventArgs e)
+        {
+            string dirs = Program.GetFolders();
             char[] seperator = { '\n' };
             string[] direcs = dirs.Split(seperator);
+            tv.Nodes.Clear();
+            BuildTree(direcs);
+        }
 
+        private static void BuildTree(string[] direcs)
+        {
             TreeNode tn = new TreeNode();
             TreeNode temp;
             tn.Name = "sourcenode";
@@ -61,6 +68,14 @@ namespace terminal_graphics
                     temp = tn.Nodes.Add(dir);
                     ProcessDirectory(dir, temp);
                 }
+        }
+        public Form2(string dirs)
+        {
+
+            char[] seperator = { '\n' };
+            string[] direcs = dirs.Split(seperator);
+            BuildTree(direcs);
+            
             tv.Font = new Font("comic sans", 10);
             tv.Location = new Point(0, 0);
             tv.Size = new Size(400, 400);
@@ -68,12 +83,19 @@ namespace terminal_graphics
             tv.AfterSelect += new TreeViewEventHandler(treeView1_AfterSelect);
             Controls.Add(tv);
 
-            b.Font = new Font("comic sans", 10);
-            b.Location = new Point(20, 410);
-            b.Text = "open";
-            b.Click += new EventHandler(OpenFile);
-            b.Size = new Size(70, 30);
-            Controls.Add(b);
+            open.Font = new Font("comic sans", 10);
+            open.Location = new Point(20, 410);
+            open.Text = "open";
+            open.Click += new EventHandler(OpenFile);
+            open.Size = new Size(70, 30);
+            Controls.Add(open);
+
+            refresh.Font = new Font("comic sans", 10);
+            refresh.Location = new Point(100, 410);
+            refresh.Text = "refresh";
+            refresh.Click += delegate (object sender, EventArgs e) { Refresh(sender, e); };
+            refresh.Size = new Size(70, 30);
+            Controls.Add(refresh);
 
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;

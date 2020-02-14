@@ -148,7 +148,6 @@ namespace server
 
                 foreach (ManagementObject queryObj in searcher.Get())
                     outpt += "Process: " + queryObj["Caption"] + "\n";
-
                 return outpt;
             }
             catch (ManagementException e)
@@ -231,9 +230,7 @@ namespace server
 
             foreach (ManagementObject mo in searcher.Get())
                 if (path == mo["path"].ToString())
-                {
                     p = mo["path"].ToString();
-                }
 
             if (p != "")
             {
@@ -272,10 +269,8 @@ namespace server
                     len = commands[i].Length;
 
                 for (int j = 0; j < len; j++)
-                {
                     if (input[j] == commands[i][j])
                         counter++;
-                }
 
                 if (max < counter)
                 {
@@ -283,6 +278,7 @@ namespace server
                     sim = commands[i];
                 }
             }
+
             if (sim == "")
                 return "";
             return ", did you mean " + sim + "?";
@@ -299,22 +295,10 @@ namespace server
 
             ManagementBaseObject outParams = classInstance.InvokeMethod("CopyEx", inParams, null);
 
-            Console.WriteLine((uint)outParams.Properties["ReturnValue"].Value);
+            if ((uint)outParams.Properties["ReturnValue"].Value == 0)
+                return "copied the file";
+            return "failure";
 
-            //ManagementClass cl = new ManagementClass("\\\\" + target + "\\root\\CIMV2:Win32_Directory.Name=" + path);
-            //ManagementBaseObject methodArgs = cl.GetMethodParameters("Copy");
-            //methodArgs["FileName"] = path;
-            //cl.InvokeMethod("Create", methodArgs, null);
-
-            //ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\\\" + target + "\\root\\CIMV2", "SELECT * FROM Win32_Directory");
-            ///foreach (ManagementObject mo in searcher.Get())
-            //    if (mo["Path"].ToString() == path)
-            //    {
-            //       Console.WriteLine("Chetni mango");
-            //        mo.InvokeMethod("Copy", null);
-            //    }
-
-            return "copied the file";
         }
     }
 }

@@ -32,10 +32,8 @@ namespace terminal_graphics
         {
             if (message == "file manager")
             {
-                
-                sender.Send(Encoding.Unicode.GetBytes("showfolder"));
-                int bytesRec = sender.Receive(bytes);
-                string data = Encoding.Unicode.GetString(bytes, 0, bytesRec);
+
+                string data = GetFolders();
                 form2 = new Form2(data);
                 Thread t = new Thread(() => Application.Run(form2));
                 t.Start();
@@ -72,6 +70,12 @@ namespace terminal_graphics
                     output += dirs[i] + "\\";
             return output + "\\server\\bin\\Debug\\port.txt";
             
+        }
+        public static string GetFolders()
+        {
+            sender.Send(Encoding.Unicode.GetBytes("showfolder"));
+            int bytesRec = sender.Receive(bytes);
+            return Encoding.Unicode.GetString(bytes, 0, bytesRec);
         }
         static void Main()
         {
