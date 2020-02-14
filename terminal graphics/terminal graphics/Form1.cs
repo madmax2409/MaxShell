@@ -18,6 +18,8 @@ namespace terminal_graphics
         private Label direc = new Label();
         private TextBox command = new TextBox();
         private TextBox output = new TextBox();
+        private Stack<string> older = new Stack<string>();
+        private Stack<string> newer = new Stack<string>();
 
         public Form1()
         {
@@ -67,9 +69,14 @@ namespace terminal_graphics
             TextBox cmd = (TextBox)sender;
             if (e.KeyData == Keys.Enter)
             {
+                while (newer.Count > 0)
+                    older.Push(newer.Pop());
+
                 if (cmd.Text == "")
                     return;
+
                 string command = cmd.Text;
+                older.Push(command);
                 string outpt = Program.Maintain(command);
                 char[] seperate = { '\n' };
                 string[] dirs = outpt.Split(seperate);
@@ -80,6 +87,23 @@ namespace terminal_graphics
                 }
                 output.AppendText(Environment.NewLine);
                 cmd.Text = "";
+            }
+
+            else if (e.KeyData == Keys.Up)
+            {
+                if (older.Count > 0)
+                {
+                    cmd.Text = older.Pop();
+                    newer.Push(cmd.Text);
+                }
+            }
+            else if (e.KeyData == Keys.Down)
+            {
+                if (newer.Count > 0)
+                {
+                    cmd.Text = newer.Pop();
+                    older.Push(cmd.Text);
+                }
             }
         }
         protected override void OnFormClosing(FormClosingEventArgs e)

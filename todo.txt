@@ -3,3 +3,4 @@
 - database to log activity
 - prev functions
 - dictionary for serv funcs
+- cleanup of disconnected client / server
