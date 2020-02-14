@@ -4,13 +4,14 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.IO;
-
+using System.Collections.Generic;
 namespace server
 {
     class Program
     {
         public static string data = null;
         public static IPAddress ipAddress = null;
+        public static Queue<string> machname = new Queue<string>();
 
         private static void SendPackets(string fullstring, Socket handler)
         {
@@ -38,11 +39,15 @@ namespace server
         {
             byte[] bytes = new byte[4096];
             //Client handler = new Client();
+            int bytesRec = s.Receive(bytes);
+            data = Encoding.Unicode.GetString(bytes, 0, bytesRec);
+            machname.Enqueue(data);
+            Console.WriteLine("got a name " + data);
             while (true)
             {
                 try
                 {
-                    int bytesRec = s.Receive(bytes);
+                    bytesRec = s.Receive(bytes);
                     data = Encoding.Unicode.GetString(bytes, 0, bytesRec); 
                     Console.WriteLine("Got a message: " + data);
                     data = Server.CommandOutput(data);
@@ -65,7 +70,8 @@ namespace server
             for (int i = 0; i < ipHostInfo.AddressList.Length; i++)
                 if (ipHostInfo.AddressList[i].ToString().StartsWith("192"))
                     ipAddress = ipHostInfo.AddressList[i];
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, FreeTcpPort());  //           
+
+            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);  //FreeTcpPort()           
             Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             listener.Bind(localEndPoint);
             listener.Listen(3);

@@ -7,12 +7,12 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace terminal_graphics
 {
     public partial class Form2 : Form
     {
-        private static Socket sender;
         private static Button open = new Button();
         private static Button refresh = new Button();
         private static TreeView tv = new TreeView();
@@ -54,24 +54,35 @@ namespace terminal_graphics
             tv.Nodes.Clear();
             BuildTree(direcs);
         }
-
         private static void BuildTree(string[] direcs)
         {
             TreeNode tn = new TreeNode();
             TreeNode temp;
             tn.Name = "sourcenode";
-            tn.Text = "shared folders";
+            tn.Text = "My Shared Folders";
             tv.Nodes.Add(tn);
+            TreeNode temp2 = tn;
             foreach (string dir in direcs)
-                if (dir != "stoprightnow")
-                {
-                    temp = tn.Nodes.Add(dir);
-                    ProcessDirectory(dir, temp);
-                }
+                if (dir.Length < 3 || dir != "stoprightnow" || dir.Contains("$"))
+                    if (dir.Contains("'s shared folders and drives"))
+                        if (dir.Substring(0, dir.IndexOf("'s shared folders and drives")) != Environment.MachineName)
+                        {
+                            temp2 = new TreeNode();
+                            temp2.Name = dir;
+                            temp2.Text = dir;
+                            tv.Nodes.Add(temp2);
+                        }
+                        else
+                            continue;
+                    else
+                    {
+                        temp = temp2.Nodes.Add(dir);
+                        ProcessDirectory(dir, temp);
+                    }
         }
+
         public Form2(string dirs)
         {
-
             char[] seperator = { '\n' };
             string[] direcs = dirs.Split(seperator);
             BuildTree(direcs);

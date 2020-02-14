@@ -1,4 +1,5 @@
 - class client
-- remote con socket
-- milestone 2
+- remote con socket: get server ip + port
+- database to log activity
+- prev functions
 - dictionary for serv funcs

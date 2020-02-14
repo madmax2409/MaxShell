@@ -26,3 +26,16 @@ C:\Users\u101010\Desktop\MaxShell\server\obj\Debug\server.exe
 C:\Users\u101010\Desktop\MaxShell\server\obj\Debug\server.pdb
 C:\Users\u101010\Desktop\‏‏MaxShell\MaxShell\server\obj\Debug\server.exe
 C:\Users\u101010\Desktop\‏‏MaxShell\MaxShell\server\obj\Debug\server.pdb
+C:\Users\u101010\Documents\MaxShell\server\bin\Debug\server.exe.config
+C:\Users\u101010\Documents\MaxShell\server\bin\Debug\server.exe
+C:\Users\u101010\Documents\MaxShell\server\bin\Debug\server.pdb
+C:\Users\u101010\Documents\MaxShell\server\obj\Debug\server.csprojAssemblyReference.cache
+C:\Users\u101010\Documents\MaxShell\server\obj\Debug\server.csproj.CoreCompileInputs.cache
+C:\Users\u101010\Documents\MaxShell\server\obj\Debug\server.exe
+C:\Users\u101010\Documents\MaxShell\server\obj\Debug\server.pdb
+F:\MaxShellcopy\MaxShell\server\bin\Debug\server.exe.config
+F:\MaxShellcopy\MaxShell\server\bin\Debug\server.exe
+F:\MaxShellcopy\MaxShell\server\bin\Debug\server.pdb
+F:\MaxShellcopy\MaxShell\server\obj\Debug\server.csprojAssemblyReference.cache
+F:\MaxShellcopy\MaxShell\server\obj\Debug\server.exe
+F:\MaxShellcopy\MaxShell\server\obj\Debug\server.pdb

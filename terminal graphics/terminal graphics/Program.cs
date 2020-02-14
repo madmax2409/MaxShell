@@ -24,15 +24,16 @@ namespace terminal_graphics
                     ipAddress = ipHostInfo.AddressList[i];
 
             //ipAddress = ipHostInfo.AddressList[0];
-            IPEndPoint remoteEP = new IPEndPoint(ipAddress, int.Parse(File.ReadAllText(GetTheRightPath())));  
+            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.214"), 11000); //int.Parse(File.ReadAllText(GetTheRightPath()))
             sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sender.Connect(remoteEP);
+            sender.Send(Encoding.Unicode.GetBytes(Environment.MachineName));
         }
+
         public static string Maintain(string message)
         {
             if (message == "file manager")
             {
-
                 string data = GetFolders();
                 form2 = new Form2(data);
                 Thread t = new Thread(() => Application.Run(form2));
@@ -59,6 +60,7 @@ namespace terminal_graphics
                 return totaldata.Remove(totaldata.IndexOf("stoprightnow"), 12);
             }
         }
+
         private static string GetTheRightPath()
         {
             string curpath = Environment.CurrentDirectory;
@@ -69,14 +71,15 @@ namespace terminal_graphics
                 if (i < dirs.Length - 4)
                     output += dirs[i] + "\\";
             return output + "\\server\\bin\\Debug\\port.txt";
-            
         }
+
         public static string GetFolders()
         {
             sender.Send(Encoding.Unicode.GetBytes("showfolder"));
             int bytesRec = sender.Receive(bytes);
             return Encoding.Unicode.GetString(bytes, 0, bytesRec);
         }
+
         static void Main()
         {
             Thread con = new Thread(new ThreadStart(Connection));
