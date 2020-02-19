@@ -12,113 +12,118 @@ namespace server
     class Server
     {
         private static int count = 1;
+        private static Dictionary<string, Func<string[], string>> dict = new Dictionary<string, Func<string[], string>>();
+        private static string[] funcs = { "getip", "freespace", "showproc", "disconnect", "killproc", "getdir", "startproc", "sharefolder", "listfiles", "write", "showfolder", 
+            "help", "copyfile" };
+
+        public static void SetCommands()
+        {
+            Func<string[], string>[] methods = {
+                targets => GetIp(),
+                targets => FreeSpace(targets[1]),
+                targets => ShowProcess(targets[1]),
+                targets => Disconnect(),
+                targets => KillProcess(targets[1], targets[2]),
+                targets => Directory.GetCurrentDirectory(),
+                targets => RemoteProcess(targets[1], targets[2]),
+                targets =>ShareFolder(targets[1], targets[2]),
+                targets =>ListFiles(targets[1], targets[2]),
+                targets => Write(targets[1], targets[2], targets[3]),
+                targets => ShowFolders(),
+                targets => File.ReadAllText(Environment.CurrentDirectory + "\\info.txt"),
+                targets =>CopyDir(targets[1], targets[2])};
+
+            for (int i = 0; i < funcs.Length; i++)
+                dict.Add(funcs[i], methods[i]);
+        }
+        
         public static string CommandOutput(string command)
         {
             char[] seperator = { ' ' };
             string[] param = command.Split(seperator);
-            string target = "", parameter = "", output = "", cmd = param[0];
+            string output = "", cmd = param[0];
             bool flag = false;
+            string[] pararms = new string[4];
+            pararms[0] = cmd;
 
             switch (param.Length)
             {
                 case 1:
-                    target = Environment.MachineName;
+                    pararms[1] = Environment.MachineName;
                     break;
                 case 2:
-                    target = Environment.MachineName;
-                    parameter = param[1];
+                    pararms[1] = Environment.MachineName;
+                    pararms[2] = param[1];
                     break;
                 case 3:
-                    target = param[1];
-                    parameter = param[2];
+                    pararms[1] = GetMach(param[1]);
+                    pararms[2] = param[2];
                     break;
             }
-            foreach (string par in param)
-                Console.WriteLine(par);
-
-            string[] funcs = { "getip", "freespace", "showproc", "disconnect", "killproc" , "getdir", "startproc", "sharefolder", "listfiles", "write", "showfolder", "help" };
-            //string[] methods = {FreeSpace(target), ShowProcess(target), Dns.GetHostByName(Dns.GetHostName()).AddressList[0].ToString(),
-                //KillProcess(target, parameter), Directory.GetCurrentDirectory(), RemoteProcess(target, parameter), ShareFolder(target, parameter), ListFiles(target, parameter), 
-                //Write(target, param[2], param[3]),ShowFolders(target)};
-            //Dictionary<string, Delegate> func = new Dictionary<string, Delegate>();
-            //for (int i = 0; i < funcs.Length-1; i++)
-            //{
-            //    func.Add(funcs[i], );
-            //}
-            switch (cmd)
+            
+            foreach(KeyValuePair<string, Func<string[], string>> pair in dict)
             {
-                case "getip":
-                    string names = Dns.GetHostName();
-                    output = Program.ipAddress.ToString();
+                if (pair.Key == cmd)
+                {
                     flag = true;
-                    break;
-
-                case "freespace":
-                    output = FreeSpace(target);
-                    flag = true;
-                    break;
-
-                case "showproc":
-                    output = ShowProcess(target);
-                    flag = true;
-                    break;
-
-                case "disconnect":
-                    output = cmd;
-                    flag = true;
-                    break;
-
-                case "killproc":
-                    output = KillProcess(target, parameter);
-                    flag = true;
-                    break;
-
-                case "getdir":
-                    output = Directory.GetCurrentDirectory();
-                    flag = true;
-                    break;
-
-                case "startproc":
-                    output = RemoteProcess(target, parameter);
-                    flag = true;
-                    break;
-
-                case "sharefolder":
-                    output = ShareFolder(target, parameter);
-                    flag = true;
-                    break;
-
-                case "listfiles":
-                    output = ListFiles(target, parameter);
-                    flag = true;
-                    break;
-
-                case "write":
-                    output = Write(target, param[2], param[3]);
-                    flag = true;
-                    break;
-
-                case "showfolder":
-                    output = ShowFolders();
-                    flag = true;
-                    break;
-
-                case "help":
-                    output = File.ReadAllText(Environment.CurrentDirectory + "\\info.txt");
-                    flag = true;
-                    break;
-
-                case "copyfile":
-                    output = CopyDir(target, param[2]);
-                    flag = true;
-                    break;
+                    output = pair.Value(pararms);
+                }
             }
 
             if (flag)
                 return output + "stoprightnow";
             return "no such command as --> " + cmd + MostSimilar(cmd, funcs) + "stoprightnow";
         }
+        public static string GetMach(string target)
+        {
+            bool flag = false;
+            int counter = 1;
+            for (int i = 0; i < Program.machname.Count; i++)
+            {
+                string mach = Program.machname.Dequeue();
+                Program.machname.Enqueue(mach);
+                if (target == mach)
+                {
+                    flag = true;
+                    break;
+                }
+            }
 
+            if (!flag)
+            {
+                for (int i = 0; i < Program.nickname.Count; i++)
+                {
+                    string nick = Program.nickname.Dequeue();
+                    Program.nickname.Enqueue(nick);
+                    if (target != nick)
+                        counter++;
+                    else
+                        break;
+                }
+
+                while (counter > 0)
+                {
+                    target = Program.machname.Dequeue();
+                    Program.machname.Enqueue(target);
+                    counter--;
+                }
+            }
+            return target;
+        }
+
+        public static string Disconnect()
+        {
+            return "disconnect";
+        }
+        public static string GetIp()
+        {
+            IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
+            IPAddress ipAddress = ipHostInfo.AddressList[0];
+            for (int i = 0; i < ipHostInfo.AddressList.Length; i++)
+                if (ipHostInfo.AddressList[i].ToString().StartsWith("192"))
+                    ipAddress = ipHostInfo.AddressList[i];
+            return ipAddress.ToString();
+        }
         private static string FreeSpace(string target)
         {
             string outpt = "";
@@ -159,6 +164,7 @@ namespace server
 
         private static string KillProcess(string targetmachine, string targetprocess)
         {
+            Console.WriteLine("target: " + targetmachine + " targetprocess: " + targetprocess);
             //Execute the query
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\\\" + targetmachine + "\\root\\CIMV2", "SELECT * FROM Win32_Process");
 
@@ -294,6 +300,7 @@ namespace server
         }
         public static string CopyDir(string target, string srcpath, bool prob = true)
         {
+
             ManagementScope scope = new ManagementScope("\\\\" + target + "\\root\\CIMV2");         //target
             ManagementPath managementPath;                                          
             if (target == Environment.MachineName)
@@ -309,7 +316,7 @@ namespace server
             ShareFolder(Environment.MachineName, "C:\\dump_folder");
             if (!prob)
             {
-                inParams["FileName"] = "C:\\dump_folder\\dump_no' " + count;
+                inParams["FileName"] = "C:\\dump_folder\\dump_no' " + count + " from " + target;
                 count++;
             }
             else
@@ -327,7 +334,6 @@ namespace server
                 return CopyDir(target, srcpath, false);
 
             return "failure, errno: " + (uint)outParams.Properties["ReturnValue"].Value;
-
         }
     }
 }

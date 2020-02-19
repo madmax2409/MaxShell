@@ -12,6 +12,7 @@ namespace server
         public static string data = null;
         public static IPAddress ipAddress = null;
         public static Queue<string> machname = new Queue<string>();
+        public static Queue<string> nickname = new Queue<string>();
 
         private static void SendPackets(string fullstring, Socket handler)
         {
@@ -41,8 +42,11 @@ namespace server
             //Client handler = new Client();
             int bytesRec = s.Receive(bytes);
             data = Encoding.Unicode.GetString(bytes, 0, bytesRec);
-            machname.Enqueue(data);
-            Console.WriteLine("got a name " + data);
+            char[] sep = { '+' };
+            string[] datas = data.Split(sep);
+            machname.Enqueue(datas[0]);
+            nickname.Enqueue(datas[1]);
+            Console.WriteLine("got a nickname " + datas[1]);
             while (true)
             {
                 try
@@ -65,6 +69,8 @@ namespace server
 
         static void Main(string[] args)
         {
+            Server.SetCommands();
+
             byte[] bytes = new byte[4096];
             IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
             for (int i = 0; i < ipHostInfo.AddressList.Length; i++)

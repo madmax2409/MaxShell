@@ -1,6 +1,5 @@
 - class client
 - remote con socket: get server ip + port
-- database to log activity
-- prev functions
-- dictionary for serv funcs
+- (database to log activity)
+- go up/down in commands list
 - cleanup of disconnected client / server

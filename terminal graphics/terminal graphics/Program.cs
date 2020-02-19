@@ -27,7 +27,7 @@ namespace terminal_graphics
             IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.214"), 11000); //int.Parse(File.ReadAllText(GetTheRightPath()))
             sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sender.Connect(remoteEP);
-            sender.Send(Encoding.Unicode.GetBytes(Environment.MachineName));
+            sender.Send(Encoding.Unicode.GetBytes(Environment.MachineName + "+" + Form3.nickname));
         }
 
         public static string Maintain(string message)
@@ -82,10 +82,12 @@ namespace terminal_graphics
 
         static void Main()
         {
-            Thread con = new Thread(new ThreadStart(Connection));
-            con.Start();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Form3 form3 = new Form3();
+            Application.Run(form3);
+            Thread con = new Thread(new ThreadStart(Connection));
+            con.Start();
             Application.Run(new Form1());
         }
     }
