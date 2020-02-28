@@ -13,7 +13,7 @@ namespace server
     {
         private static int count = 1, counter = 1;
         private static Dictionary<string, Func<string[], string>> dict = new Dictionary<string, Func<string[], string>>();
-        private static string[] funcs = { "getip", "freespace", "showproc", "disconnect", "killproc", "getdir", "startproc", "sharefolder", "listfiles", "write", "showfolder",
+        private static string[] funcs = { "getip", "freespace", "showproc", "disconnect", "killproc", "getdir", "startproc", "sharefolder", "listfiles", "write", "showfolders",
             "help", "copyfile" };
 
         public static void SetCommands()
@@ -256,6 +256,7 @@ namespace server
         {
             string output = "";
             Queue<string> q = Program.machname;
+            Console.WriteLine(q.Count);
             for (int i = 0; i < q.Count; i++)
             {
                 string mach = q.Dequeue();

@@ -68,7 +68,7 @@ namespace terminal_graphics
 
         private static void Refresh(object sender, EventArgs e)
         {
-            string dirs = Program.CallFunc("showfolder");
+            string dirs = Program.CallFunc("showfolders");
             char[] seperator = { '\n' };
             string[] direcs = dirs.Split(seperator);
             tv.Nodes.Clear();

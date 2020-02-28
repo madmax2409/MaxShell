@@ -44,8 +44,7 @@ namespace server
             data = Encoding.Unicode.GetString(bytes, 0, bytesRec);
             char[] sep = { '+' };
             string[] datas = data.Split(sep);
-            machname.Enqueue(datas[0]);
-            nickname.Enqueue(datas[1]);
+            CheckAndAdd(datas[0], datas[1]);
             Console.WriteLine("got a nickname " + datas[1]);
             while (true)
             {
@@ -66,7 +65,27 @@ namespace server
                 }
             }
         }
-
+        private static void CheckAndAdd(string mach, string nick)
+        {
+            bool flag = true;
+            for (int i = 0; i < machname.Count; i++)
+            {
+                string temp = machname.Dequeue();
+                Console.WriteLine("mach: " + mach + " temp: " + temp);
+                if (temp == mach)
+                {
+                    flag = false;
+                    machname.Enqueue(temp);
+                    break;
+                }
+                machname.Enqueue(temp);
+            }
+            if (flag || machname.Count == 0)
+            {
+                machname.Enqueue(mach);
+                nickname.Enqueue(nick);
+            }
+        }
         static void Main(string[] args)
         {
             Server.SetCommands();
