@@ -11,9 +11,9 @@ namespace server
 {
     class Server
     {
-        private static int count = 1;
+        private static int count = 1, counter = 1;
         private static Dictionary<string, Func<string[], string>> dict = new Dictionary<string, Func<string[], string>>();
-        private static string[] funcs = { "getip", "freespace", "showproc", "disconnect", "killproc", "getdir", "startproc", "sharefolder", "listfiles", "write", "showfolder", 
+        private static string[] funcs = { "getip", "freespace", "showproc", "disconnect", "killproc", "getdir", "startproc", "sharefolder", "listfiles", "write", "showfolder",
             "help", "copyfile" };
 
         public static void SetCommands()
@@ -36,7 +36,7 @@ namespace server
             for (int i = 0; i < funcs.Length; i++)
                 dict.Add(funcs[i], methods[i]);
         }
-        
+
         public static string CommandOutput(string command)
         {
             char[] seperator = { ' ' };
@@ -60,8 +60,8 @@ namespace server
                     pararms[2] = param[2];
                     break;
             }
-            
-            foreach(KeyValuePair<string, Func<string[], string>> pair in dict)
+
+            foreach (KeyValuePair<string, Func<string[], string>> pair in dict)
             {
                 if (pair.Key == cmd)
                 {
@@ -201,7 +201,7 @@ namespace server
                 ManagementBaseObject inParams = managementClass.GetMethodParameters("Create");
                 ManagementBaseObject outParams;
                 inParams["Description"] = "SharedTestApplication";
-                inParams["Name"] = "sharefolder" + rnd.Next(10,99);
+                inParams["Name"] = "sharefolder" + rnd.Next(10, 99);
                 inParams["Path"] = sharefolder;
                 inParams["Type"] = 0x0;
                 outParams = managementClass.InvokeMethod("Create", inParams, null);
@@ -298,42 +298,16 @@ namespace server
                 return "";
             return ", did you mean " + sim + "?";
         }
-        public static string CopyDir(string target, string srcpath, bool prob = true)
+        public static string CopyDir(string target, string srcpath)
         {
-
-            ManagementScope scope = new ManagementScope("\\\\" + target + "\\root\\CIMV2");         //target
-            ManagementPath managementPath;                                          
+            string newdir = @"C:\dump_folders\dump_folder No " + counter + " from " + target;
+            Directory.CreateDirectory(newdir);
+            counter++;
             if (target == Environment.MachineName)
-                managementPath = new ManagementPath("Win32_Directory.Name=" + "\"" + srcpath.Replace("\\","\\\\") + "\"");
+                File.Copy(srcpath, newdir + "\\" + Path.GetFileName(srcpath));
             else
-            {
-                srcpath.Remove(0, 4);
-                srcpath.Insert(0, "\\" + target);
-                managementPath = new ManagementPath("Win32_Directory.Name=" + "\"" + srcpath.Replace("\\", "\\\\") + "\"");
-            }
-            ManagementObject classInstance = new ManagementObject(scope, managementPath, null);
-            ManagementBaseObject inParams = classInstance.GetMethodParameters("CopyEx");
-            ShareFolder(Environment.MachineName, "C:\\dump_folder");
-            if (!prob)
-            {
-                inParams["FileName"] = "C:\\dump_folder\\dump_no' " + count + " from " + target;
-                count++;
-            }
-            else
-                inParams["FileName"] = "C:\\dump_folder";
-            inParams["Recursive"] = true;
-            inParams["StartFileName"] = null;
-
-            ManagementBaseObject outParams = classInstance.InvokeMethod("CopyEx", inParams, null);
-
-            uint output = (uint)outParams.Properties["ReturnValue"].Value;
-            if (output == 0)
-                return "copied the files";
-
-            else if (output == 10)
-                return CopyDir(target, srcpath, false);
-
-            return "failure, errno: " + (uint)outParams.Properties["ReturnValue"].Value;
+                File.Copy(@"\\" + target + "\\" + srcpath, newdir + "\\" + Path.GetFileName(srcpath));
+            return "copied the file";
         }
     }
 }

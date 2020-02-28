@@ -16,7 +16,8 @@ namespace terminal_graphics
         private static Button open = new Button();
         private static Button refresh = new Button();
         private static TreeView tv = new TreeView();
-        private static string choice;
+        private static string filechoice;
+        private static string dirchoice;
         private static void ProcessDirectory(string dir, TreeNode Node)
         {
             try
@@ -38,17 +39,36 @@ namespace terminal_graphics
         }
         private static void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            choice = e.Node.Text;
+            TreeNode temp = e.Node;
+            try
+            {
+                while (true)
+                {
+                    temp = temp.Parent;
+                    dirchoice = temp.Text;
+                }
+            }
+            catch
+            {
+                filechoice = e.Node.Text;
+            }
         }
 
         private static void OpenFile(object sender, EventArgs e)
         {
-            Process.Start(choice);
+            if (dirchoice == "My Shared Folders" || dirchoice == "My Dump Folders")
+                Process.Start(filechoice);
+            else
+            {
+                int end = dirchoice.IndexOf("'s shared folders and drives");
+                Program.CallFunc("CopyFile " + dirchoice.Substring(0, end - 1) + " " + filechoice);
+            }
+                    
         }
 
         private static void Refresh(object sender, EventArgs e)
         {
-            string dirs = Program.GetFolders();
+            string dirs = Program.CallFunc("showfolder");
             char[] seperator = { '\n' };
             string[] direcs = dirs.Split(seperator);
             tv.Nodes.Clear();
@@ -79,8 +99,20 @@ namespace terminal_graphics
                         temp = temp2.Nodes.Add(dir);
                         ProcessDirectory(dir, temp);
                     }
+            ShowDumps();
         }
 
+        public static void ShowDumps()
+        {
+            TreeNode tn = new TreeNode("My Dump Folders");
+            tv.Nodes.Add(tn);
+            foreach(string dir in Directory.GetFileSystemEntries("C:\\dump_folders"))
+            {
+                TreeNode temp = new TreeNode(dir);
+                tn.Nodes.Add(temp);
+                ProcessDirectory(dir, temp);
+            }
+        }
         public Form2(string dirs)
         {
             char[] seperator = { '\n' };

@@ -32,32 +32,41 @@ namespace terminal_graphics
 
         public static string Maintain(string message)
         {
-            if (message == "file manager")
+            try
             {
-                string data = GetFolders();
-                form2 = new Form2(data);
-                Thread t = new Thread(() => Application.Run(form2));
-                t.Start();
-                return "opened file manager";
+                if (message == "file manager")
+                {
+                    string data = CallFunc("showfolder");
+                    form2 = new Form2(data);
+                    Thread t = new Thread(() => Application.Run(form2));
+                    t.Start();
+                    return "opened file manager";
+                }
+                else
+                {
+                    byte[] msg = Encoding.Unicode.GetBytes(message);
+                    sender.Send(msg);
+                    string totaldata = "", data = "";
+                    do
+                    {
+                        int bytesRec = sender.Receive(bytes);
+                        data = Encoding.Unicode.GetString(bytes, 0, bytesRec);
+                        totaldata += data;
+                    }
+                    while (!data.Contains("stoprightnow"));
+                    if (totaldata == "diconnect")
+                    {
+                        sender.Shutdown(SocketShutdown.Both);
+                        sender.Close(); // destroy the socket
+                    }
+                    return totaldata.Remove(totaldata.IndexOf("stoprightnow"), 12);
+                }
             }
-            else
+            catch (SocketException se)
             {
-                byte[] msg = Encoding.Unicode.GetBytes(message);
-                sender.Send(msg);
-                string totaldata = "", data = "";
-                do
-                {
-                    int bytesRec = sender.Receive(bytes);
-                    data = Encoding.Unicode.GetString(bytes, 0, bytesRec);
-                    totaldata += data;
-                }
-                while (!data.Contains("stoprightnow"));
-                if (totaldata == "diconnect")
-                {
-                    sender.Shutdown(SocketShutdown.Both); 
-                    sender.Close(); // destroy the socket
-                }
-                return totaldata.Remove(totaldata.IndexOf("stoprightnow"), 12);
+                MessageBox.Show("The Server is down, closing...", "Sorry!");
+                Application.Exit();
+                return "";
             }
         }
 
@@ -73,9 +82,9 @@ namespace terminal_graphics
             return output + "\\server\\bin\\Debug\\port.txt";
         }
 
-        public static string GetFolders()
+        public static string CallFunc(string command)
         {
-            sender.Send(Encoding.Unicode.GetBytes("showfolder"));
+            sender.Send(Encoding.Unicode.GetBytes(command));
             int bytesRec = sender.Receive(bytes);
             return Encoding.Unicode.GetString(bytes, 0, bytesRec);
         }
