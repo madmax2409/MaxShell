@@ -15,6 +15,8 @@ namespace server
         private static Dictionary<string, Func<string[], string>> dict = new Dictionary<string, Func<string[], string>>();
         private static string[] funcs = { "getip", "freespace", "showproc", "disconnect", "killproc", "getdir", "startproc", "sharefolder", "listfiles", "write", "showfolders",
             "help", "copyfile" };
+        private static string[] keywords = { "from", "on", "where", "to" };
+        private static string[] paramnames = { "name=", "dir=", "pc=" };
 
         public static void SetCommands()
         {
@@ -38,41 +40,25 @@ namespace server
         }
 
         public static string CommandOutput(string command)
-        {
-            char[] seperator = { ' ' };
-            string[] param = command.Split(seperator);
-            string output = "", cmd = param[0];
+        { 
+            string output = "";
             bool flag = false;
-            string[] pararms = new string[4];
-            pararms[0] = cmd;
-
-            switch (param.Length)
+            string[] pararms = Interpreter(command);
+            if (pararms.Length == 1)
             {
-                case 1:
-                    pararms[1] = Environment.MachineName;
-                    break;
-                case 2:
-                    pararms[1] = Environment.MachineName;
-                    pararms[2] = param[1];
-                    break;
-                case 3:
-                    pararms[1] = GetMach(param[1]);
-                    pararms[2] = param[2];
-                    break;
-            }
-
-            foreach (KeyValuePair<string, Func<string[], string>> pair in dict)
-            {
-                if (pair.Key == cmd)
+                foreach (KeyValuePair<string, Func<string[], string>> pair in dict)
                 {
-                    flag = true;
-                    output = pair.Value(pararms);
+                    if (pair.Key == pararms[0])
+                    {
+                        flag = true;
+                        output = pair.Value(pararms);
+                    }
                 }
             }
 
             if (flag)
                 return output + "stoprightnow";
-            return "no such command as --> " + cmd + MostSimilar(cmd, funcs) + "stoprightnow";
+            return "no such command as --> " + pararms[0] + MostSimilar(pararms[0], funcs) + "stoprightnow";
         }
         public static string GetMach(string target)
         {
@@ -109,6 +95,54 @@ namespace server
                 }
             }
             return target;
+        }
+
+        private static string[] Interpreter(string command)
+        {
+            char[] sep = { ' ' }; //freespace on DESKTOP-21F9ULD
+            string[] cmd = command.Split(sep);
+            Stack<string> param = new Stack<string>();
+            bool cmdflag = false;
+            string[] returned = new string[1];
+
+            foreach (string possible in funcs)
+            {
+                if (cmd[0] == possible)
+                {
+                    param.Push(cmd[0]);
+                    cmdflag = true;
+                    break;
+                }
+            }
+
+            if (cmdflag)
+            {
+                for (int i = 0; i < cmd.Length; i++)
+                {
+                    if (cmd[i] == "from" || cmd[i] == "on")
+                    {
+                        param.Push(cmd[i + 1]);
+                        i++;
+                    }
+
+                    else foreach (string para in paramnames)
+                            if (cmd[i].Contains(para))
+                                param.Push(cmd[i].Substring(cmd[i].IndexOf("=") + 1));
+                }
+
+                if (param.Count > 0)
+                {
+                    returned = new string[param.Count];
+                    while (param.Count > 0)
+                        returned[param.Count - 1] = param.Pop();
+                }
+            }
+            else
+            {
+                returned = new string[1];
+                returned[0] = cmd[0];
+            }
+            return returned;
         }
 
         public static string Disconnect()
