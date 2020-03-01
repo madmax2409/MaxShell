@@ -1,3 +1,4 @@
-- class client
+- class client (?)
 - remote con socket: get server ip + port
 - (database to log activity)
+- web client
