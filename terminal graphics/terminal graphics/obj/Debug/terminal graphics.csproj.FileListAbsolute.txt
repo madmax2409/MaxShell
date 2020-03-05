@@ -82,3 +82,4 @@ F:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_
 F:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csproj.GenerateResource.cache
 F:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.exe
 F:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.pdb
+C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Form2.resources

@@ -56,12 +56,19 @@ namespace terminal_graphics
 
         private static void OpenFile(object sender, EventArgs e)
         {
-            if (dirchoice == "My Shared Folders" || dirchoice == "My Dump Folders")
-                Process.Start(filechoice);
-            else
+            if (dirchoice != null)
             {
-                int end = dirchoice.IndexOf("'s shared folders and drives");
-                Program.CallFunc("CopyFile " + dirchoice.Substring(0, end - 1) + " " + filechoice);
+                MessageBox.Show("dirchoice: " + dirchoice + " filechoice: " + filechoice);
+                if (dirchoice == "My Shared Folders" || dirchoice == "My Dump Folders")
+                    if (filechoice != null)
+                        return;
+                    else
+                        Process.Start(filechoice);
+                else
+                {
+                    int end = dirchoice.IndexOf("'s shared folders and drives");
+                    Program.CallFunc("CopyFile " + dirchoice.Substring(0, end - 1) + " " + filechoice);
+                }
             }
                     
         }
@@ -104,14 +111,19 @@ namespace terminal_graphics
 
         public static void ShowDumps()
         {
-            TreeNode tn = new TreeNode("My Dump Folders");
-            tv.Nodes.Add(tn);
-            foreach(string dir in Directory.GetFileSystemEntries("C:\\dump_folders"))
+            if (Directory.Exists("C:\\dump_folders"))
             {
-                TreeNode temp = new TreeNode(dir);
-                tn.Nodes.Add(temp);
-                ProcessDirectory(dir, temp);
+                TreeNode tn = new TreeNode("My Dump Folders");
+                tv.Nodes.Add(tn);
+                foreach (string dir in Directory.GetFileSystemEntries("C:\\dump_folders"))
+                {
+                    TreeNode temp = new TreeNode(dir);
+                    tn.Nodes.Add(temp);
+                    ProcessDirectory(dir, temp);
+                }
             }
+            else
+                Directory.CreateDirectory("C:\\dump_folders");
         }
         public Form2(string dirs)
         {

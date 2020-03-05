@@ -20,11 +20,11 @@ namespace terminal_graphics
         {
             IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
             for (int i = 0; i < ipHostInfo.AddressList.Length; i++)
-                if (ipHostInfo.AddressList[i].ToString().StartsWith("192"))
+                if (ipHostInfo.AddressList[i].ToString().StartsWith("172"))
                     ipAddress = ipHostInfo.AddressList[i];
 
             //ipAddress = ipHostInfo.AddressList[0];
-            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.214"), 11000); //int.Parse(File.ReadAllText(GetTheRightPath()))
+            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("172.16.10.200"), 11000); //int.Parse(File.ReadAllText(GetTheRightPath()))
             sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sender.Connect(remoteEP);
             sender.Send(Encoding.Unicode.GetBytes(Environment.MachineName + "+" + Form3.nickname));
@@ -37,7 +37,6 @@ namespace terminal_graphics
                 if (message == "file manager")
                 {
                     string data = CallFunc("showfolders");
-                    MessageBox.Show(data);
                     form2 = new Form2(data);
                     Thread t = new Thread(() => Application.Run(form2));
                     t.Start();

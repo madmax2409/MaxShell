@@ -1,4 +1,7 @@
 - class client (?)
 - remote con socket: get server ip + port
-- (database to log activity)
+- (database for client management)
 - web client
+-disconnection
+-client login interface
+EXCEPTION HANDELING

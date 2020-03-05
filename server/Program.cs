@@ -93,7 +93,7 @@ namespace server
             byte[] bytes = new byte[4096];
             IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
             for (int i = 0; i < ipHostInfo.AddressList.Length; i++)
-                if (ipHostInfo.AddressList[i].ToString().StartsWith("192"))
+                if (ipHostInfo.AddressList[i].ToString().StartsWith("172"))
                     ipAddress = ipHostInfo.AddressList[i];
 
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);  //FreeTcpPort()           
