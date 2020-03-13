@@ -1,23 +1,7 @@
-						Temporary Objectives
 - class client (?)
 - remote con socket: get server ip + port
 - (database for client management)
 - web client
-- nickname handling
-
-						MILESTONE 3				
- 			intptr
-- saved param names
-- missing parameters handling
-- improve command comaprison algorithm
-- check dividing by space (saved param names)
-			
-			file manager
-set up environment at home
-
-						FIXING DAY - EX HANDLING
-- close down clients as server closing and not when sendeing a message
-- login window
-- include enter button as an ok press in login window
-- place cursor on the end of the line at back command
-- useless functions and params cleaning
+-disconnection
+-client login interface
+EXCEPTION HANDELING

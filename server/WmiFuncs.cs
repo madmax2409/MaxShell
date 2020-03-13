@@ -114,6 +114,19 @@ namespace server
             }
         }
 
+        public static string Write(string target, string path, string text)
+        {
+            if (File.Exists(path))
+            {
+                FileStream fs = File.OpenWrite(path);
+                byte[] bytes = Encoding.ASCII.GetBytes(text);
+                fs.Write(bytes, 0, bytes.Length);
+                return "successfull written to " + path + " the text:" + text;
+            }
+            else
+                return "seems like the directory doesn't exist bucko";
+        }
+
         public static string ListFiles(string target, string path)
         {
             string p = "";
@@ -121,11 +134,8 @@ namespace server
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\\\" + target + "\\root\\CIMV2", "SELECT * FROM Win32_Share");
 
             foreach (ManagementObject mo in searcher.Get())
-            {
-                Console.WriteLine("mo[path]: " + mo["path"].ToString() + " and path: " + path);
-                if (mo["path"].ToString() != "" && path == mo["path"].ToString())
+                if (path == mo["path"].ToString())
                     p = mo["path"].ToString();
-            }
 
             if (p != "")
             {
@@ -136,7 +146,7 @@ namespace server
                 return output;
             }
             else
-                return "an error occurred";
+                return "bruh you failed";
         }
 
         public static string ShowFolders()
@@ -159,23 +169,16 @@ namespace server
             return output;
         }
 
-        public static string CopyFile(string target, string srcpath)
+        public static string CopyDir(string target, string srcpath)
         {
-            string newdir = @"C:\dump_folders\dump_folder No " + counter + " from " + target; //copyfile from DESKTOP-21F9ULD where dir=C:\testfolder2\uuu.txt
+            string newdir = @"C:\dump_folders\dump_folder No " + counter + " from " + target;
             Directory.CreateDirectory(newdir);
-            ++counter;
-            try
-            {
-                if (target == Environment.MachineName)
-                    File.Copy(srcpath, newdir + "\\" + Path.GetFileName(srcpath));
-                else
-                    File.Copy(@"\\" + target + "\\" + srcpath, newdir + "\\" + Path.GetFileName(srcpath));
-                return "copied the file";
-            }
-            catch(IOException e)
-            {
-                return CopyFile(target, srcpath);
-            }
+            counter++;
+            if (target == Environment.MachineName)
+                File.Copy(srcpath, newdir + "\\" + Path.GetFileName(srcpath));
+            else
+                File.Copy(@"\\" + target + "\\" + srcpath, newdir + "\\" + Path.GetFileName(srcpath));
+            return "copied the file";
         }
     }
 }
