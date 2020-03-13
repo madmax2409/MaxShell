@@ -1,6 +1,6 @@
 ﻿namespace terminal_graphics
 {
-    partial class Form3
+    partial class Login_Window
     {
         /// <summary>
         /// Required designer variable.

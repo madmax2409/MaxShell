@@ -1,6 +1,6 @@
 ﻿namespace terminal_graphics
 {
-    partial class Form3
+    partial class Exit_Window
     {
         /// <summary>
         /// Required designer variable.
@@ -30,8 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(300, 70);
-            this.Text = "choose a nickname";
+            this.ClientSize = new System.Drawing.Size(100, 40);
+            this.Text = "Exit Window";
         }
 
         #endregion
