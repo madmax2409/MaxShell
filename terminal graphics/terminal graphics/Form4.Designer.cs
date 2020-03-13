@@ -1,6 +1,6 @@
 ﻿namespace terminal_graphics
 {
-    partial class Shell
+    partial class Form4
     {
         /// <summary>
         /// Required designer variable.
@@ -28,18 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            // 
-            // Form1
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Name = "MaxShell";
-            this.Text = "MaxShell";
-            this.ResumeLayout(false);
-
+            this.ClientSize = new System.Drawing.Size(100, 40);
+            this.Text = "Exit Window";
         }
+
         #endregion
     }
 }
-

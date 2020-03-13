@@ -8,7 +8,7 @@ namespace server
     class Server
     {
         private static Dictionary<string, Func<string[], string>> dict = new Dictionary<string, Func<string[], string>>();
-        private static string[] funcs = { "getip", "freespace", "showproc", "disconnect", "killproc", "getdir", "startproc", "sharefolder", "listfiles", "write", "showfolders",
+        private static string[] funcs = { "getip", "freespace", "showproc", "disconnect", "killproc", "getdir", "startproc", "sharefolder", "listfiles", "showfolders",
             "help", "copyfile" };
         private static string[] keywords = { "from", "on", "where", "to" };
         private static string[] paramnames = { "name=", "dir=", "pc=" };
@@ -25,10 +25,9 @@ namespace server
                 targets => WmiFuncs.RemoteProcess(targets[1], targets[2]),
                 targets =>WmiFuncs.ShareFolder(targets[1], targets[2]),
                 targets =>WmiFuncs.ListFiles(targets[1], targets[2]),
-                targets => WmiFuncs.Write(targets[1], targets[2], targets[3]),
                 targets => WmiFuncs.ShowFolders(),
                 targets => File.ReadAllText(Environment.CurrentDirectory + "\\info.txt"),
-                targets =>WmiFuncs.CopyDir(targets[1], targets[2])};
+                targets =>WmiFuncs.CopyFile(targets[1], targets[2])};
 
             for (int i = 0; i < funcs.Length; i++)
                 dict.Add(funcs[i], methods[i]);
@@ -39,12 +38,10 @@ namespace server
             string output = "";
             bool flag = false;
             string[] pararms = Interpreter(command);
-            Console.WriteLine("pararms.Length: " + pararms.Length);
             if (pararms.Length >= 2)
             {
                 foreach (KeyValuePair<string, Func<string[], string>> pair in dict)
                 {
-                    Console.WriteLine("pair.Key: " + pair.Key + " , " + pararms[0]);
                     if (pair.Key == pararms[0])
                     {
                         flag = true;
@@ -83,7 +80,7 @@ namespace server
                     if (cmd[i] == "from" || cmd[i] == "on")
                     {
                         param.Push(cmd[i + 1]);
-                        i++;
+                        ++i;
                     }
 
                     else foreach (string para in paramnames)
@@ -94,7 +91,8 @@ namespace server
                 if (param.Count > 2)
                 {
                     returned = new string[param.Count];
-                    
+                    while (param.Count > 0)
+                        returned[param.Count - 1] = param.Pop();
                 }
                 else
                 {

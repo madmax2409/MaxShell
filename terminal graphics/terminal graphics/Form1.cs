@@ -42,7 +42,7 @@ namespace terminal_graphics
 
             command.Font = f;
             command.Location = new Point((int)size.Width + 11, 10);
-            command.Size = new Size((this.Width - (int)size.Width - 15) * 15, 10);
+            command.Size = new Size((this.Width - (int)size.Width - 15) * 5 + 30, 10);
             command.BorderStyle = BorderStyle.FixedSingle;
             command.KeyDown += new KeyEventHandler(OutputProcedure);
             Controls.Add(command);

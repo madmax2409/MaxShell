@@ -24,7 +24,7 @@ namespace terminal_graphics
                     ipAddress = ipHostInfo.AddressList[i];
 
             //ipAddress = ipHostInfo.AddressList[0];
-            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("172.16.10.200"), 11000); //int.Parse(File.ReadAllText(GetTheRightPath()))
+            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.214"), 11000); //int.Parse(File.ReadAllText(GetTheRightPath()))
             sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sender.Connect(remoteEP);
             sender.Send(Encoding.Unicode.GetBytes(Environment.MachineName + "+" + Form3.nickname));
@@ -41,6 +41,12 @@ namespace terminal_graphics
                     Thread t = new Thread(() => Application.Run(form2));
                     t.Start();
                     return "opened file manager";
+                }
+                else if (message == "disconnect")
+                {
+                    Form4 ew = new Form4();
+                    ew.ShowDialog();
+                    return "";
                 }
                 else
                 {
