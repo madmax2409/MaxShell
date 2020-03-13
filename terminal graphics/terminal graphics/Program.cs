@@ -27,7 +27,7 @@ namespace terminal_graphics
             IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.214"), 11000); //int.Parse(File.ReadAllText(GetTheRightPath()))
             sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sender.Connect(remoteEP);
-            sender.Send(Encoding.Unicode.GetBytes(Environment.MachineName + "+" + Form3.nickname));
+            sender.Send(Encoding.Unicode.GetBytes(Environment.MachineName + "+" + Login_Window.nickname));
         }
 
         public static string Maintain(string message)
@@ -44,7 +44,7 @@ namespace terminal_graphics
                 }
                 else if (message == "disconnect")
                 {
-                    Form4 ew = new Form4();
+                    Exit_WIndow ew = new Exit_WIndow();
                     ew.ShowDialog();
                     return "";
                 }
@@ -68,24 +68,12 @@ namespace terminal_graphics
                     return totaldata.Remove(totaldata.IndexOf("stoprightnow"), 12);
                 }
             }
-            catch (SocketException se)
+            catch (SocketException)
             {
                 MessageBox.Show("The Server is down, closing...", "Sorry!");
                 Application.Exit();
                 return "";
             }
-        }
-
-        private static string GetTheRightPath()
-        {
-            string curpath = Environment.CurrentDirectory;
-            char[] separator = { '\\' };
-            string[] dirs = curpath.Split(separator);
-            string output = "";
-            for (int i = 0; i < dirs.Length; i++)
-                if (i < dirs.Length - 4)
-                    output += dirs[i] + "\\";
-            return output + "\\server\\bin\\Debug\\port.txt";
         }
 
         public static string CallFunc(string command)
@@ -99,11 +87,11 @@ namespace terminal_graphics
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Form3 form3 = new Form3();
-            Application.Run(form3);
+            Login_Window form3 = new Login_Window();
+            form3.ShowDialog();
             Thread con = new Thread(new ThreadStart(Connection));
             con.Start();
-            Application.Run(new Form1());
+            Application.Run(new Shell());
         }
     }
 }

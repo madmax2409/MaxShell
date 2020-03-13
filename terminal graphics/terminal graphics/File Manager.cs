@@ -58,7 +58,6 @@ namespace terminal_graphics
         {
             if (dirchoice != null)
             {
-                MessageBox.Show("dirchoice: " + dirchoice + " filechoice: " + filechoice);
                 if (dirchoice == "My Shared Folders" || dirchoice == "My Dump Folders")
                     if (filechoice != null)
                         return;

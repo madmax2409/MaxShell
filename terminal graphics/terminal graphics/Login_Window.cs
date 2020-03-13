@@ -10,11 +10,21 @@ using System.Windows.Forms;
 
 namespace terminal_graphics
 {
-    public partial class Form3 : Form
+    public partial class Login_Window : Form
     {
         private static TextBox entry = new TextBox();
         public static string nickname;
         public static bool assure = false;
+        private const int CP_DISABLE_CLOSE_BUTTON = 0x200;
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ClassStyle = cp.ClassStyle | CP_DISABLE_CLOSE_BUTTON;
+                return cp;
+            }
+        }
         public void SendNick(object sender, EventArgs e)
         {
             nickname = entry.Text;
@@ -30,10 +40,15 @@ namespace terminal_graphics
                     Close();
                 }
         }
-        public Form3()
+
+        public Login_Window()
         {
-            this.KeyPreview = true;
-            this.KeyDown += new KeyEventHandler(SendNick_2);
+            KeyPreview = true;
+            KeyDown += new KeyEventHandler(SendNick_2);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
+            MinimizeBox = false;
+
 
             entry.Font = new Font("Comic Sans", 10);
             entry.Size = new Size(280, 50);
@@ -50,5 +65,7 @@ namespace terminal_graphics
 
             InitializeComponent();
         }
+
+
     }
 }

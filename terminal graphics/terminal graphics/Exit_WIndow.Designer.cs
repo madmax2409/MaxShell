@@ -1,6 +1,6 @@
 ﻿namespace terminal_graphics
 {
-    partial class Exit_Window
+    partial class Exit_WIndow
     {
         /// <summary>
         /// Required designer variable.

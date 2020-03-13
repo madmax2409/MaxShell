@@ -160,7 +160,7 @@ namespace server
             return output;
         }
 
-        public static string CopyFile(string target, string srcpath)
+        private static string CopyFile(string target, string srcpath)
         {
             string newdir = @"C:\dump_folders\dump_folder No " + counter + " from " + target; //copyfile from DESKTOP-21F9ULD where dir=C:\testfolder2\uuu.txt
             Directory.CreateDirectory(newdir);

@@ -25,7 +25,6 @@ F:\maxshell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.exe.
 F:\maxshell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.exe
 F:\maxshell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.pdb
 F:\maxshell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csprojResolveAssemblyReference.cache
-C:\Users\Maxim\Desktop\maxshell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Form1.resources
 C:\Users\Maxim\Desktop\MaxShell\MaxShell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.exe.config
 C:\Users\Maxim\Desktop\MaxShell\MaxShell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.exe
 C:\Users\Maxim\Desktop\MaxShell\MaxShell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.pdb
@@ -83,3 +82,4 @@ F:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal 
 F:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.exe
 F:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.pdb
 C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Form2.resources
+C:\Users\Maxim\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Shell.resources

@@ -11,7 +11,7 @@ using System.Timers;
 
 namespace terminal_graphics
 {
-    public partial class Exit_Window : Form
+    public partial class Exit_WIndow : Form
     {
         private void Window_Loaded(object sender, EventArgs e)
         {
@@ -23,13 +23,14 @@ namespace terminal_graphics
 
         void t_Elapsed(object sender, ElapsedEventArgs e)
         {
-            this.Close();
+            Close();
             Application.Exit();
         }
-        public Exit_Window()
+
+        public Exit_WIndow()
         {
-            this.Text = "Exiting...";
-            this.Load += new EventHandler(Window_Loaded);
+            Text = "Exiting...";
+            Load += new EventHandler(Window_Loaded);
 
             Label l = new Label();
             l.Font = new Font("Comic Sans", 10);
@@ -39,5 +40,6 @@ namespace terminal_graphics
 
             InitializeComponent();
         }
+        
     }
 }

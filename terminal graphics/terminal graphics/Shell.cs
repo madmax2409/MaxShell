@@ -13,51 +13,13 @@ using System.Management;
 
 namespace terminal_graphics
 {
-    public partial class Form1 : Form
+    public partial class Shell : Form
     {
         private Label direc = new Label();
         private TextBox command = new TextBox();
         private TextBox output = new TextBox();
         private Stack<string> older = new Stack<string>();
         private Stack<string> newer = new Stack<string>();
-
-        public Form1()
-        {
-            FormBorderStyle = FormBorderStyle.FixedSingle;
-            MaximizeBox = false;
-            MinimizeBox = false;
-
-            Font f = new Font("comic sans", 10);
-            direc.Font = f;
-            direc.Location = new Point(0, 10);
-            string dir = Directory.GetCurrentDirectory();
-            char[] seperate = { '\\' };
-            string[] dirs = dir.Split(seperate);
-            if (dirs.Length > 3)
-                dir = dirs[0] + @"\" + dirs[1] + @"\" + dirs[2] + @"\...\" + dirs[dirs.Length - 1] + ">";
-            direc.Text = dir;
-            SizeF size = direc.CreateGraphics().MeasureString(direc.Text, direc.Font);
-            direc.Size = new Size((int)size.Width + 10, (int)size.Height + 2);
-            Controls.Add(direc);
-
-            command.Font = f;
-            command.Location = new Point((int)size.Width + 11, 10);
-            command.Size = new Size((this.Width - (int)size.Width - 15) * 5 + 30, 10);
-            command.BorderStyle = BorderStyle.FixedSingle;
-            command.KeyDown += new KeyEventHandler(OutputProcedure);
-            Controls.Add(command);
-
-            output.Font = f;
-            output.Location = new Point(5, 40);
-            output.Multiline = true;
-            output.Size = new Size(790, 405);
-            output.BorderStyle = BorderStyle.Fixed3D;
-            output.ScrollBars = ScrollBars.Vertical;
-            output.KeyPress += new KeyPressEventHandler(BlockingInput);
-            Controls.Add(output);
-
-            InitializeComponent();
-        }
 
         private void BlockingInput(object sender, KeyPressEventArgs e)
         {
@@ -95,6 +57,7 @@ namespace terminal_graphics
                 {
                     cmd.Text = older.Pop();
                     newer.Push(cmd.Text);
+                    cmd.Select(cmd.Text.Length, 0);
                 }
             }
             else if (e.KeyData == Keys.Down)
@@ -103,6 +66,7 @@ namespace terminal_graphics
                 {
                     cmd.Text = newer.Pop();
                     older.Push(cmd.Text);
+                    cmd.Select(cmd.Text.Length, 0);
                 }
             }
         }
@@ -125,6 +89,43 @@ namespace terminal_graphics
                         Program.form2.Close();
                     break;
             }
+        }
+        public Shell()
+        {
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
+            MinimizeBox = false;
+
+            Font f = new Font("comic sans", 10);
+            direc.Font = f;
+            direc.Location = new Point(0, 10);
+            string dir = Directory.GetCurrentDirectory();
+            char[] seperate = { '\\' };
+            string[] dirs = dir.Split(seperate);
+            if (dirs.Length > 3)
+                dir = dirs[0] + @"\" + dirs[1] + @"\" + dirs[2] + @"\...\" + dirs[dirs.Length - 1] + ">";
+            direc.Text = dir;
+            SizeF size = direc.CreateGraphics().MeasureString(direc.Text, direc.Font);
+            direc.Size = new Size((int)size.Width + 10, (int)size.Height + 2);
+            Controls.Add(direc);
+
+            command.Font = f;
+            command.Location = new Point((int)size.Width + 11, 10);
+            command.Size = new Size((this.Width - (int)size.Width - 15) * 5 + 30, 10);
+            command.BorderStyle = BorderStyle.FixedSingle;
+            command.KeyDown += new KeyEventHandler(OutputProcedure);
+            Controls.Add(command);
+
+            output.Font = f;
+            output.Location = new Point(5, 40);
+            output.Multiline = true;
+            output.Size = new Size(790, 405);
+            output.BorderStyle = BorderStyle.Fixed3D;
+            output.ScrollBars = ScrollBars.Vertical;
+            output.KeyPress += new KeyPressEventHandler(BlockingInput);
+            Controls.Add(output);
+
+            InitializeComponent();
         }
     }
 }

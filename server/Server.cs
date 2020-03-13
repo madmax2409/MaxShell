@@ -10,7 +10,6 @@ namespace server
         private static Dictionary<string, Func<string[], string>> dict = new Dictionary<string, Func<string[], string>>();
         private static string[] funcs = { "getip", "freespace", "showproc", "disconnect", "killproc", "getdir", "startproc", "sharefolder", "listfiles", "showfolders",
             "help", "copyfile" };
-        private static string[] keywords = { "from", "on", "where", "to" };
         private static string[] paramnames = { "name=", "dir=", "pc=" };
 
         public static void SetCommands()
@@ -147,14 +146,19 @@ namespace server
             return target;
         }
 
-        public static string Disconnect()
+        private static string Disconnect()
         {
             return "disconnect";
         }
-        public static string MostSimilar(string input, string[] commands)
+        private static string MostSimilar(string input, string[] commands)
         {
             int counter, len, max = 0;
             string sim = "";
+
+            for (int i = 0; i < commands.Length; i++)
+                if (commands[i].IndexOf(input) != -1 && (input.Length - sim.Length > 2 || input.Length - sim.Length < -2))
+                    return ", did you mean " + commands[i] + "?";
+                
             for (int i = 0; i < commands.Length; i++)
             {
                 counter = 0;
@@ -173,6 +177,9 @@ namespace server
                     sim = commands[i];
                 }
             }
+
+            if (input.Length - sim.Length > 2 || input.Length - sim.Length < -2)
+                return "";
 
             if (sim == "")
                 return "";

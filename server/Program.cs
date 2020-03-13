@@ -55,12 +55,12 @@ namespace server
                     Console.WriteLine("Got a message: " + data);
                     data = Server.CommandOutput(data);
                     SendPackets(data, s);
-                    if (data.Contains("diconnect"))
+                    if (data.Contains("disconnect"))
                         break; // communication over
                 }
                 catch (SocketException)
                 {
-                    Console.WriteLine("Client has suddenly disconnectd");
+                    Console.WriteLine("Client has suddenly disconnected");
                     break;
                 }
             }
