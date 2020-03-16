@@ -1,18 +1,16 @@
-						Temporary Objectives
-- nickname handling
-- class client (?)
-- database for client management(?)
-- remote con socket: get server ip + port(!)
-- web client
+						General Objectives
+- nickname management for commnads
+- login window (password)
+- close down clients as server closing - another open socket on a thread(?)
+- get server ip + port(!) - web client?
+- seperate target pc name from command(?)
 						MILESTONE 3				
  			intptr
 - missing & illegal parameters handling
-- saved param names
-- check dividing by space (saved param names)
 
 			file manager
-- set up environment at home			
-						FIXING DAY - EX HANDLING  + CLEANUP
-- close down clients as server closing
-- login window (password)
+- set up environment at home...
+- display nicknames instead of machnames
+- COPY AND OPEN REMOTE FILE & FOLDER			
+
 

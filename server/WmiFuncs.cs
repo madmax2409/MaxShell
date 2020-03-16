@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Management;
 using System.Net;
+using System.Net.Sockets;
 using System.IO;
 
 namespace server
@@ -143,24 +144,20 @@ namespace server
         public static string ShowFolders()
         {
             string output = "";
-            Queue<string> q = Program.machname;
-            Console.WriteLine(q.Count);
-            for (int i = 0; i < q.Count; i++)
-            {
-                string mach = q.Dequeue();
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\\\" + mach + "\\root\\CIMV2", "SELECT * FROM Win32_Share");
 
+            foreach(KeyValuePair<Socket, string[]> pair in Client.clients)
+            {
+                string mach = pair.Value[1];
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\\\" + mach + "\\root\\CIMV2", "SELECT * FROM Win32_Share");
                 output += mach + "'s shared folders and drives: \n";
                 foreach (ManagementObject mo in searcher.Get())
                     if (!mo["Name"].ToString().Contains("$"))
                         output += mo["Path"] + "\n";
-
-                q.Enqueue(mach);
             }
             return output;
         }
 
-        private static string CopyFile(string target, string srcpath)
+        public static string CopyFile(string target, string srcpath)
         {
             string newdir = @"C:\dump_folders\dump_folder No " + counter + " from " + target; //copyfile from DESKTOP-21F9ULD where dir=C:\testfolder2\uuu.txt
             Directory.CreateDirectory(newdir);
@@ -173,7 +170,7 @@ namespace server
                     File.Copy(@"\\" + target + "\\" + srcpath, newdir + "\\" + Path.GetFileName(srcpath));
                 return "copied the file";
             }
-            catch (IOException e)
+            catch  //IOException e
             {
                 return CopyFile(target, srcpath);
             }

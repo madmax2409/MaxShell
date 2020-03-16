@@ -10,14 +10,19 @@ namespace server
 {
     class Client
     {
-        private static Queue<Socket> clients = new Queue<Socket>();
+        public static Dictionary<Socket, string[]> clients = new Dictionary<Socket, string[]>();
+        public static Queue<Client> q = new Queue<Client>();
         private Socket con;
-        private byte[] bytes;
-        public Client(Socket cl)
+        // private byte[] bytes;
+        private string nick;
+        private string mach;
+        public Client(Socket cl, string nickname, string machname)
         {
             con = cl;
-            clients.Enqueue(con);
-            bytes = new byte[4096];
+            nick = nickname;
+            mach = machname;
+            string[] st = { nick, mach };
+            clients.Add(cl, st);
         }
         public Socket GetSocket()
         {
@@ -29,17 +34,23 @@ namespace server
         }
         public static void Disconnect(Socket dis)
         {
+            clients.Remove(dis);
+        }
+        public static void CheckAndAdd(Socket cl, string mach, string nick)
+        {
             bool flag = true;
-            while (flag)
+            foreach(KeyValuePair<Socket, string[]> pair in clients)
             {
-                Socket sc = clients.Dequeue();
-                if (sc == dis)
+                if (pair.Value[1] == mach)
                 {
                     flag = false;
                     break;
                 }
-                clients.Enqueue(sc);
             }
+            if (flag || clients.Count == 0)
+                q.Enqueue(new Client(cl, mach, nick));
+
+            Console.WriteLine("Added a new client: mach: {0}, {1}",nick,mach);
         }
     }
 }

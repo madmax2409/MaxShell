@@ -11,8 +11,6 @@ namespace server
     {
         public static string data = null;
         public static IPAddress ipAddress = null;
-        public static Queue<string> machname = new Queue<string>();
-        public static Queue<string> nickname = new Queue<string>();
 
         private static void SendPackets(string fullstring, Socket handler)
         {
@@ -44,8 +42,8 @@ namespace server
             data = Encoding.Unicode.GetString(bytes, 0, bytesRec);
             char[] sep = { '+' };
             string[] datas = data.Split(sep);
-            CheckAndAdd(datas[0], datas[1]);
-            Console.WriteLine("got a nickname " + datas[1]);
+            Client.CheckAndAdd(s, datas[0], datas[1]);
+            Console.WriteLine("got a nickname: " + datas[1]);
             while (true)
             {
                 try
@@ -65,27 +63,7 @@ namespace server
                 }
             }
         }
-        private static void CheckAndAdd(string mach, string nick)
-        {
-            bool flag = true;
-            for (int i = 0; i < machname.Count; i++)
-            {
-                string temp = machname.Dequeue();
-                Console.WriteLine("mach: " + mach + " temp: " + temp);
-                if (temp == mach)
-                {
-                    flag = false;
-                    machname.Enqueue(temp);
-                    break;
-                }
-                machname.Enqueue(temp);
-            }
-            if (flag || machname.Count == 0)
-            {
-                machname.Enqueue(mach);
-                nickname.Enqueue(nick);
-            }
-        }
+
         static void Main(string[] args)
         {
             Server.SetCommands();

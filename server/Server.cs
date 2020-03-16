@@ -54,7 +54,7 @@ namespace server
             return "no such command as --> " + pararms[0] + MostSimilar(pararms[0], funcs) + "stoprightnow";
         }
         
-        private static string[] Interpreter(string command)
+        private static string[] Interpreter(string command) //killproc on DESKTOP-21F9ULD where name=terminal graphics.exe
         {
             char[] sep = { ' ' }; 
             string[] cmd = command.Split(sep);
@@ -84,7 +84,11 @@ namespace server
 
                     else foreach (string para in paramnames)
                             if (cmd[i].Contains(para))
-                                param.Push(cmd[i].Substring(cmd[i].IndexOf("=") + 1));
+                            {
+                                string right = cmd[i].Substring(cmd[i].IndexOf("'") + 1);
+                                right = right.Substring(0, right.IndexOf("'"));
+                                param.Push(right);
+                            }
                 }
 
                 if (param.Count > 2)
@@ -108,42 +112,6 @@ namespace server
                 returned[1] = Environment.MachineName;
             }
             return returned;
-        }
-        public static string GetMach(string target)
-        {
-            bool flag = false;
-            int counter = 1;
-            for (int i = 0; i < Program.machname.Count; i++)
-            {
-                string mach = Program.machname.Dequeue();
-                Program.machname.Enqueue(mach);
-                if (target == mach)
-                {
-                    flag = true;
-                    break;
-                }
-            }
-
-            if (!flag)
-            {
-                for (int i = 0; i < Program.nickname.Count; i++)
-                {
-                    string nick = Program.nickname.Dequeue();
-                    Program.nickname.Enqueue(nick);
-                    if (target != nick)
-                        counter++;
-                    else
-                        break;
-                }
-
-                while (counter > 0)
-                {
-                    target = Program.machname.Dequeue();
-                    Program.machname.Enqueue(target);
-                    counter--;
-                }
-            }
-            return target;
         }
 
         private static string Disconnect()
