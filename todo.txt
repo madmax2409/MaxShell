@@ -1,9 +1,7 @@
 						General Objectives
-- nickname management for commnads
-- login window (password)
-- close down clients as server closing - another open socket on a thread(?)
-- get server ip + port(!) - web client?
-- seperate target pc name from command(?)
+- login window (password) + admin
+- updating thread for each client
+- get server ip + port(!) - web client or scapi on c#
 						MILESTONE 3				
  			intptr
 - missing & illegal parameters handling
@@ -12,5 +10,4 @@
 - set up environment at home...
 - display nicknames instead of machnames
 - COPY AND OPEN REMOTE FILE & FOLDER			
-
 

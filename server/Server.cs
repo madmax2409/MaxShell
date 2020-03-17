@@ -78,7 +78,7 @@ namespace server
                 {
                     if (cmd[i] == "from" || cmd[i] == "on")
                     {
-                        param.Push(cmd[i + 1]);
+                        PushTheMach(param, cmd[i + 1]);
                         ++i;
                     }
 
@@ -113,7 +113,21 @@ namespace server
             }
             return returned;
         }
-
+        
+        private static void PushTheMach(Stack<string> st, string name)
+        {
+            for(int i = 0; i< Client.clientqueue.Count; i++)
+            {
+                Client temp = Client.clientqueue.Dequeue();
+                if (temp.GetMach() == name || temp.GetNick() == name)
+                {
+                    st.Push(temp.GetMach());
+                    Client.clientqueue.Enqueue(temp);
+                    break;
+                }
+                Client.clientqueue.Enqueue(temp);
+            }
+        }
         private static string Disconnect()
         {
             return "disconnect";

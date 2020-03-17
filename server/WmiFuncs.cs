@@ -144,15 +144,18 @@ namespace server
         public static string ShowFolders()
         {
             string output = "";
-
-            foreach(KeyValuePair<Socket, string[]> pair in Client.clients)
+            Queue <Client> q = Client.clientqueue;
+            //Console.WriteLine(q.Count);
+            for(int i = 0; i < q.Count; i++)
             {
-                string mach = pair.Value[1];
+                Client temp = q.Dequeue();
+                string mach = temp.GetMach();
                 ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\\\" + mach + "\\root\\CIMV2", "SELECT * FROM Win32_Share");
                 output += mach + "'s shared folders and drives: \n";
                 foreach (ManagementObject mo in searcher.Get())
                     if (!mo["Name"].ToString().Contains("$"))
                         output += mo["Path"] + "\n";
+                q.Enqueue(temp);
             }
             return output;
         }

@@ -11,14 +11,15 @@ namespace server
     class Client
     {
         public static Dictionary<Socket, string[]> clients = new Dictionary<Socket, string[]>();
-        public static Queue<Client> q = new Queue<Client>();
-        private Socket con;
+        public static Queue<Client> clientqueue = new Queue<Client>();
+        private Socket my;
+        private Socket update; //notifications
         // private byte[] bytes;
         private string nick;
         private string mach;
         public Client(Socket cl, string nickname, string machname)
         {
-            con = cl;
+            my = cl;
             nick = nickname;
             mach = machname;
             string[] st = { nick, mach };
@@ -26,11 +27,15 @@ namespace server
         }
         public Socket GetSocket()
         {
-            return con;
+            return my;
         }
-        public void SetSocket(Socket sc)
+        public string GetNick()
         {
-            this.con = sc;
+            return nick;
+        }
+        public string GetMach()
+        {
+            return mach;
         }
         public static void Disconnect(Socket dis)
         {
@@ -48,9 +53,9 @@ namespace server
                 }
             }
             if (flag || clients.Count == 0)
-                q.Enqueue(new Client(cl, mach, nick));
+                clientqueue.Enqueue(new Client(cl, nick, mach));
 
-            Console.WriteLine("Added a new client: mach: {0}, {1}",nick,mach);
+            Console.WriteLine("Added a new client: nick: {0}, mach: {1}",nick,mach);
         }
     }
 }

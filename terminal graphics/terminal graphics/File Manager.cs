@@ -16,8 +16,8 @@ namespace terminal_graphics
         private static Button open = new Button();
         private static Button refresh = new Button();
         private static TreeView tv = new TreeView();
-        private static string filechoice;
-        private static string dirchoice;
+        private static string filechoice = "";
+        private static string dirchoice = "";
         private static void ProcessDirectory(string dir, TreeNode Node)
         {
             try
@@ -56,19 +56,17 @@ namespace terminal_graphics
 
         private static void OpenFile(object sender, EventArgs e)
         {
-            if (dirchoice != null)
-            {
+            if (dirchoice != "")
                 if (dirchoice == "My Shared Folders" || dirchoice == "My Dump Folders")
-                    if (filechoice != null)
-                        return;
-                    else
+                {
+                    if (filechoice != "" && filechoice != "My Shared Folders" && filechoice != "My Dump Folders")
                         Process.Start(filechoice);
+                }
                 else
                 {
                     int end = dirchoice.IndexOf("'s shared folders and drives");
                     Program.CallFunc("CopyFile " + dirchoice.Substring(0, end - 1) + " " + filechoice);
                 }
-            }
                     
         }
 
