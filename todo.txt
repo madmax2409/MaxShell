@@ -1,13 +1,14 @@
-						General Objectives
+						MILESTONE 2
+			file manager				
+- set up environment at home...			
+- display nicknames instead of machnames
+- COPY AND OPEN REMOTE FILE & FOLDER		
+						MILESTONE 3
+			intptr
+
+			GUI
 - login window (password) + admin
+			
+			Con
 - updating thread for each client
 - get server ip + port(!) - web client or scapi on c#
-						MILESTONE 3				
- 			intptr
-- missing & illegal parameters handling
-
-			file manager
-- set up environment at home...
-- display nicknames instead of machnames
-- COPY AND OPEN REMOTE FILE & FOLDER			
-

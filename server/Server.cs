@@ -44,7 +44,14 @@ namespace server
                     if (pair.Key == pararms[0])
                     {
                         flag = true;
-                        output = pair.Value(pararms);
+                        try
+                        {
+                            output = pair.Value(pararms);
+                        }
+                        catch
+                        {
+                            output = "an error occurred, please check your parameters";
+                        }
                     }
                 }
             }
@@ -116,6 +123,7 @@ namespace server
         
         private static void PushTheMach(Stack<string> st, string name)
         {
+            Console.WriteLine("name: " + name);
             for(int i = 0; i< Client.clientqueue.Count; i++)
             {
                 Client temp = Client.clientqueue.Dequeue();
@@ -123,10 +131,11 @@ namespace server
                 {
                     st.Push(temp.GetMach());
                     Client.clientqueue.Enqueue(temp);
-                    break;
+                    return;
                 }
                 Client.clientqueue.Enqueue(temp);
             }
+            st.Push(name);
         }
         private static string Disconnect()
         {

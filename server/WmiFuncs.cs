@@ -74,7 +74,7 @@ namespace server
                     return "Termiated " + targetprocess + " on " + targetmachine + ", It can't harm us anymore";
                 }
 
-            return "Could not kill the specified process";
+            return "Could not kill the specified process, please recheck your parameters";
         }
 
         public static string RemoteProcess(string targetmachine, string procname)
