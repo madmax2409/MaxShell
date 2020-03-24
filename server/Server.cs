@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Management;
 
 
 namespace server
@@ -11,19 +12,20 @@ namespace server
         private static string[] funcs = { "getip", "freespace", "showproc", "disconnect", "killproc", "getdir", "startproc", "sharefolder", "listfiles", "showfolders",
             "help", "copyfile" };
         private static string[] paramnames = { "name=", "dir=", "pc=" };
+        public static ManagementScope ms = new ManagementScope();
 
         public static void SetCommands()
         {
             Func<string[], string>[] methods = {
                 targets => WmiFuncs.GetIp(),
-                targets => WmiFuncs.FreeSpace(targets[1]),
-                targets => WmiFuncs.ShowProcess(targets[1]),
+                targets => WmiFuncs.FreeSpace(ms, targets[1]),
+                targets => WmiFuncs.ShowProcess(ms, targets[1]),
                 targets => Disconnect(),
-                targets => WmiFuncs.KillProcess(targets[1], targets[2]),
+                targets => WmiFuncs.KillProcess(ms, targets[1], targets[2]),
                 targets => Directory.GetCurrentDirectory(),
-                targets => WmiFuncs.RemoteProcess(targets[1], targets[2]),
-                targets =>WmiFuncs.ShareFolder(targets[1], targets[2]),
-                targets =>WmiFuncs.ListFiles(targets[1], targets[2]),
+                targets => WmiFuncs.RemoteProcess(ms, targets[1], targets[2]),
+                targets =>WmiFuncs.ShareFolder(ms, targets[1], targets[2]),
+                targets =>WmiFuncs.ListFiles(ms, targets[1], targets[2]),
                 targets => WmiFuncs.ShowFolders(),
                 targets => File.ReadAllText(Environment.CurrentDirectory + "\\info.txt"),
                 targets =>WmiFuncs.CopyFile(targets[1], targets[2])};
@@ -46,11 +48,15 @@ namespace server
                         flag = true;
                         try
                         {
+                            if (pararms[1] != Environment.MachineName)
+                                ms = WmiFuncs.RemoteConnectTheScope(pararms[1]);
+                            else
+                                ms = new ManagementScope("\\\\" + pararms[1] + "\\root\\cimv2");
                             output = pair.Value(pararms);
                         }
-                        catch
+                        catch (Exception e)
                         {
-                            output = "an error occurred, please check your parameters";
+                            output = "an error occurred, please check your parameters\n" + e.ToString();
                         }
                     }
                 }
@@ -123,7 +129,6 @@ namespace server
         
         private static void PushTheMach(Stack<string> st, string name)
         {
-            Console.WriteLine("name: " + name);
             for(int i = 0; i< Client.clientqueue.Count; i++)
             {
                 Client temp = Client.clientqueue.Dequeue();

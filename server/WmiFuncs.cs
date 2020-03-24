@@ -13,6 +13,18 @@ namespace server
     class WmiFuncs
     {
         private static int counter = 1;
+
+        public static ManagementScope RemoteConnectTheScope(string target)
+        {
+            ConnectionOptions co = new ConnectionOptions();
+            co.Username = "maxim";
+            co.Password = "Barmaley2409";
+            co.Impersonation = ImpersonationLevel.Impersonate;
+            co.EnablePrivileges = true;
+            ManagementScope ms = new ManagementScope("\\\\" + target + "\\root\\cimv2", co);
+            ms.Connect();
+            return ms;
+        }
         public static string GetIp()
         {
             IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
@@ -22,13 +34,13 @@ namespace server
                     ipAddress = ipHostInfo.AddressList[i];
             return ipAddress.ToString();
         }
-        public static string FreeSpace(string target)
+        public static string FreeSpace(ManagementScope ms, string target)
         {
             string outpt = "";
-            var dskQuery = new SelectQuery("Win32_LogicalDisk", "DriveType=3"); // Define your query (what you want to return from WMI).
-            var mgmtScope = new ManagementScope("\\\\" + target + "\\root\\cimv2"); // Define your scope (what system you want to connect to and WMI path).
-            mgmtScope.Connect(); // Connect to WMI.
-            var mgmtSrchr = new ManagementObjectSearcher(mgmtScope, dskQuery); //Define a searcher for the query.
+            SelectQuery dskQuery = new SelectQuery("Win32_LogicalDisk", "DriveType=3"); // Define your query (what you want to return from WMI).
+            //var mgmtScope = new ManagementScope("\\\\" + target + "\\root\\cimv2"); // Define your scope (what system you want to connect to and WMI path).
+            //mgmtScope.Connect(); // Connect to WMI.
+            ManagementObjectSearcher mgmtSrchr = new ManagementObjectSearcher(ms, dskQuery); //Define a searcher for the query.
 
             foreach (var disk in mgmtSrchr.Get()) //Call searcher’s Get method and loop through results.
             {
@@ -43,12 +55,13 @@ namespace server
             return outpt;
         }
 
-        public static string ShowProcess(string target)
+        public static string ShowProcess(ManagementScope ms, string target)
         {
             string outpt = "";
             try
             {
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\\\" + target + "\\root\\CIMV2", "SELECT * FROM Win32_Process");
+                SelectQuery oq = new SelectQuery("SELECT * FROM Win32_Process");
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher(ms,oq);
 
                 foreach (ManagementObject queryObj in searcher.Get())
                     outpt += "Process: " + queryObj["Caption"] + "\n";
@@ -60,32 +73,32 @@ namespace server
             }
         }
 
-        public static string KillProcess(string targetmachine, string targetprocess)
+        public static string KillProcess(ManagementScope ms, string target, string targetprocess)
         {
-            Console.WriteLine("target: " + targetmachine + " targetprocess: " + targetprocess);
             //Execute the query
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\\\" + targetmachine + "\\root\\CIMV2", "SELECT * FROM Win32_Process");
+            SelectQuery oq = new SelectQuery("SELECT * FROM Win32_Process");
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher(ms, oq);
 
             foreach (ManagementObject ret in searcher.Get()) //loop through found processes and terminate
                 if (ret["Name"].ToString().ToLower() == targetprocess)
                 {
                     object[] obj = new object[] { 0 };
                     ret.InvokeMethod("Terminate", obj);
-                    return "Termiated " + targetprocess + " on " + targetmachine + ", It can't harm us anymore";
+                    return "Termiated " + targetprocess + ", It can't harm us anymore";
                 }
 
             return "Could not kill the specified process, please recheck your parameters";
         }
 
-        public static string RemoteProcess(string targetmachine, string procname)
+        public static string RemoteProcess(ManagementScope ms, string target, string procname)
         {
-            ManagementClass cl = new ManagementClass("\\\\" + targetmachine + "\\root\\CIMV2:Win32_Process");
-            object[] methodArgs = { procname, null, null, 0 };
-            cl.InvokeMethod("Create", methodArgs);
-            return "the process " + procname + " started successfully";
+            object[] proc = new[] { procname };
+            ManagementClass wmiProcess = new ManagementClass(ms, new ManagementPath("Win32_Process"), new ObjectGetOptions());
+            wmiProcess.InvokeMethod("Create", proc);
+            return "Process created";
         }
 
-        public static string ShareFolder(string target, string sharefolder)
+        public static string ShareFolder(ManagementScope ms, string target, string sharefolder)
         {
             if (!Directory.Exists(sharefolder))
             {
@@ -95,7 +108,7 @@ namespace server
             try
             {
                 Random rnd = new Random();
-                ManagementClass managementClass = new ManagementClass("Win32_Share");
+                ManagementClass managementClass = new ManagementClass(ms, new ManagementPath("Win32_Share"), new ObjectGetOptions());
                 ManagementBaseObject inParams = managementClass.GetMethodParameters("Create");
                 ManagementBaseObject outParams;
                 inParams["Description"] = "SharedTestApplication";
@@ -115,11 +128,12 @@ namespace server
             }
         }
 
-        public static string ListFiles(string target, string path)
+        public static string ListFiles(ManagementScope ms, string target, string path)
         {
             string p = "";
             string output = "";
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\\\" + target + "\\root\\CIMV2", "SELECT * FROM Win32_Share");
+            SelectQuery oq = new SelectQuery("SELECT * FROM Win32_Share");
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher(ms, oq);
 
             foreach (ManagementObject mo in searcher.Get())
             {
