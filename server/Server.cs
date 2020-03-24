@@ -12,20 +12,19 @@ namespace server
         private static string[] funcs = { "getip", "freespace", "showproc", "disconnect", "killproc", "getdir", "startproc", "sharefolder", "listfiles", "showfolders",
             "help", "copyfile" };
         private static string[] paramnames = { "name=", "dir=", "pc=" };
-        public static ManagementScope ms = new ManagementScope();
 
         public static void SetCommands()
         {
             Func<string[], string>[] methods = {
                 targets => WmiFuncs.GetIp(),
-                targets => WmiFuncs.FreeSpace(ms, targets[1]),
-                targets => WmiFuncs.ShowProcess(ms, targets[1]),
+                targets => WmiFuncs.FreeSpace(WmiFuncs.ms, targets[1]),
+                targets => WmiFuncs.ShowProcess(WmiFuncs.ms, targets[1]),
                 targets => Disconnect(),
-                targets => WmiFuncs.KillProcess(ms, targets[1], targets[2]),
+                targets => WmiFuncs.KillProcess(WmiFuncs.ms, targets[1], targets[2]),
                 targets => Directory.GetCurrentDirectory(),
-                targets => WmiFuncs.RemoteProcess(ms, targets[1], targets[2]),
-                targets =>WmiFuncs.ShareFolder(ms, targets[1], targets[2]),
-                targets =>WmiFuncs.ListFiles(ms, targets[1], targets[2]),
+                targets => WmiFuncs.RemoteProcess(WmiFuncs.ms, targets[1], targets[2]),
+                targets =>WmiFuncs.ShareFolder(WmiFuncs.ms, targets[1], targets[2]),
+                targets =>WmiFuncs.ListFiles(WmiFuncs.ms, targets[1], targets[2]),
                 targets => WmiFuncs.ShowFolders(),
                 targets => File.ReadAllText(Environment.CurrentDirectory + "\\info.txt"),
                 targets =>WmiFuncs.CopyFile(targets[1], targets[2])};
@@ -48,10 +47,7 @@ namespace server
                         flag = true;
                         try
                         {
-                            if (pararms[1] != Environment.MachineName)
-                                ms = WmiFuncs.RemoteConnectTheScope(pararms[1]);
-                            else
-                                ms = new ManagementScope("\\\\" + pararms[1] + "\\root\\cimv2");
+                            WmiFuncs.TryCon(pararms[1]);
                             output = pair.Value(pararms);
                         }
                         catch (Exception e)

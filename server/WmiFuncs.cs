@@ -13,6 +13,7 @@ namespace server
     class WmiFuncs
     {
         private static int counter = 1;
+        public static ManagementScope ms = new ManagementScope();
 
         public static ManagementScope RemoteConnectTheScope(string target)
         {
@@ -25,7 +26,16 @@ namespace server
             ms.Connect();
             return ms;
         }
-        public static string GetIp()
+
+        public static void TryCon(string target)
+        {
+            if (target != Environment.MachineName)
+                ms = RemoteConnectTheScope(target);
+            else
+                ms = new ManagementScope("\\\\" + target + "\\root\\cimv2");
+        }
+    
+    public static string GetIp()
         {
             IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
             IPAddress ipAddress = ipHostInfo.AddressList[0];
@@ -38,8 +48,6 @@ namespace server
         {
             string outpt = "";
             SelectQuery dskQuery = new SelectQuery("Win32_LogicalDisk", "DriveType=3"); // Define your query (what you want to return from WMI).
-            //var mgmtScope = new ManagementScope("\\\\" + target + "\\root\\cimv2"); // Define your scope (what system you want to connect to and WMI path).
-            //mgmtScope.Connect(); // Connect to WMI.
             ManagementObjectSearcher mgmtSrchr = new ManagementObjectSearcher(ms, dskQuery); //Define a searcher for the query.
 
             foreach (var disk in mgmtSrchr.Get()) //Call searcher’s Get method and loop through results.
@@ -159,12 +167,13 @@ namespace server
         {
             string output = "";
             Queue <Client> q = Client.clientqueue;
-            //Console.WriteLine(q.Count);
             for(int i = 0; i < q.Count; i++)
             {
                 Client temp = q.Dequeue();
                 string mach = temp.GetMach();
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher("\\\\" + mach + "\\root\\CIMV2", "SELECT * FROM Win32_Share");
+                TryCon(mach);
+                SelectQuery sq = new SelectQuery("SELECT * FROM Win32_Share");
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher(ms,sq);
                 output += mach + "'s shared folders and drives: \n";
                 foreach (ManagementObject mo in searcher.Get())
                     if (!mo["Name"].ToString().Contains("$"))

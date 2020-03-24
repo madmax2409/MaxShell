@@ -5,11 +5,11 @@
 - COPY AND OPEN REMOTE FILE & FOLDER		
 						MILESTONE 3
 			intptr
-- pass pc name
 - default  target origin and not server
+
 			GUI
-- first con and then login
-- login window (password) + admin
+- first connect and then login
+- login window (password) + admin(?)
 	
 			Con
 - updating thread for each client
