@@ -39,3 +39,4 @@ F:\MaxShellcopy\MaxShell\server\bin\Debug\server.pdb
 F:\MaxShellcopy\MaxShell\server\obj\Debug\server.csprojAssemblyReference.cache
 F:\MaxShellcopy\MaxShell\server\obj\Debug\server.exe
 F:\MaxShellcopy\MaxShell\server\obj\Debug\server.pdb
+C:\Users\maxim\Desktop\MaxShell\server\obj\Debug\server.csproj.CoreCompileInputs.cache

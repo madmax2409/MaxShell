@@ -2,12 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
 using System.Diagnostics;
-using System.Text.RegularExpressions;
 
 namespace terminal_graphics
 {
@@ -48,7 +43,7 @@ namespace terminal_graphics
                     dirchoice = temp.Text;
                 }
             }
-            catch
+            catch (NullReferenceException)
             {
                 filechoice = e.Node.Text;
             }

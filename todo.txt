@@ -1,18 +1,19 @@
 						MILESTONE 2
 			file manager				
+<<<<<<< HEAD
 - debug all remote commands
 - auto create dump_folders
 - COPY AND OPEN REMOTE FILE & FOLDER
+=======
+- display depth of remote folders
+- COPY AND OPEN REMOTE FILE & FOLDER check
+>>>>>>> 680f1f55f7addbd343d4d78700ac7c86213eaf7d
 
 			Con
 - updating thread for each client
 - get server ip + port - web client or scapi on c#(!)
 		
 						MILESTONE 3
-			intptr
-- default  target origin and not server
-- (possible future changes)
-
 			GUI
 - file manager button
 - display nicknames instead of machnames

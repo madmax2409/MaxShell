@@ -78,7 +78,6 @@ namespace server
             Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             listener.Bind(localEndPoint);
             listener.Listen(3);
-            //Client handler = new Client()
             Console.WriteLine("listening");
             while (true)
             {
