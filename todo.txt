@@ -1,14 +1,21 @@
 						MILESTONE 2
 			file manager				
-- set up environment at home...			
-- display nicknames instead of machnames
-- COPY AND OPEN REMOTE FILE & FOLDER		
-						MILESTONE 3
-			intptr
+- debug all remote commands
+- COPY AND OPEN REMOTE FILE & FOLDER
 
-			GUI
-- login window (password) + admin
-			
 			Con
 - updating thread for each client
-- get server ip + port(!) - web client or scapi on c#
+- get server ip + port - web client or scapi on c#(!)
+		
+						MILESTONE 3
+			intptr
+- default  target origin and not server
+- (possible future changes)
+
+			GUI
+- file manager button
+- display nicknames instead of machnames
+- first connect and then login
+- send message button(?)
+- login window (password) + admin(?)
+	

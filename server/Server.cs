@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 
-
 namespace server
 {
     class Server
@@ -16,14 +15,14 @@ namespace server
         {
             Func<string[], string>[] methods = {
                 targets => WmiFuncs.GetIp(),
-                targets => WmiFuncs.FreeSpace(targets[1]),
-                targets => WmiFuncs.ShowProcess(targets[1]),
+                targets => WmiFuncs.FreeSpace(WmiFuncs.ms, targets[1]),
+                targets => WmiFuncs.ShowProcess(WmiFuncs.ms, targets[1]),
                 targets => Disconnect(),
-                targets => WmiFuncs.KillProcess(targets[1], targets[2]),
+                targets => WmiFuncs.KillProcess(WmiFuncs.ms, targets[1], targets[2]),
                 targets => Directory.GetCurrentDirectory(),
-                targets => WmiFuncs.RemoteProcess(targets[1], targets[2]),
-                targets =>WmiFuncs.ShareFolder(targets[1], targets[2]),
-                targets =>WmiFuncs.ListFiles(targets[1], targets[2]),
+                targets => WmiFuncs.RemoteProcess(WmiFuncs.ms, targets[1], targets[2]),
+                targets =>WmiFuncs.ShareFolder(WmiFuncs.ms, targets[1], targets[2]),
+                targets =>WmiFuncs.ListFiles(WmiFuncs.ms, targets[1], targets[2]),
                 targets => WmiFuncs.ShowFolders(),
                 targets => File.ReadAllText(Environment.CurrentDirectory + "\\info.txt"),
                 targets =>WmiFuncs.CopyFile(targets[1], targets[2])};
@@ -46,11 +45,12 @@ namespace server
                         flag = true;
                         try
                         {
+                            WmiFuncs.TryCon(pararms[1]);
                             output = pair.Value(pararms);
                         }
-                        catch
+                        catch (Exception e)
                         {
-                            output = "an error occurred, please check your parameters";
+                            output = "an error occurred, please check your parameters\n" + e.ToString();
                         }
                     }
                 }
@@ -123,7 +123,6 @@ namespace server
         
         private static void PushTheMach(Stack<string> st, string name)
         {
-            Console.WriteLine("name: " + name);
             for(int i = 0; i< Client.clientqueue.Count; i++)
             {
                 Client temp = Client.clientqueue.Dequeue();
