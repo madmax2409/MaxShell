@@ -65,7 +65,7 @@ namespace terminal_graphics
                 else
                 {
                     int end = dirchoice.IndexOf("'s shared folders and drives");
-                    Program.CallFunc("CopyFile " + dirchoice.Substring(0, end - 1) + " " + filechoice);
+                    Program.CallFunc("CopyFile " + dirchoice.Substring(0, end) + " " + filechoice);
                 }
                     
         }

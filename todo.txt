@@ -1,6 +1,7 @@
 						MILESTONE 2
 			file manager				
 - debug all remote commands
+- auto create dump_folders
 - COPY AND OPEN REMOTE FILE & FOLDER
 
 			Con

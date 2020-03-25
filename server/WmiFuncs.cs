@@ -11,22 +11,21 @@ namespace server
         private static int counter = 1;
         public static ManagementScope ms = new ManagementScope();
 
-        public static ManagementScope RemoteConnectTheScope(string target)
+        public static void RemoteConnectTheScope(string target)
         {
             ConnectionOptions co = new ConnectionOptions();
             co.Username = "maxim";
             co.Password = "Barmaley2409";
             co.Impersonation = ImpersonationLevel.Impersonate;
             co.EnablePrivileges = true;
-            ManagementScope ms = new ManagementScope("\\\\" + target + "\\root\\cimv2", co);
-            ms.Connect();
-            return ms;
+            Console.WriteLine("target: " + target);
+            ms = new ManagementScope("\\\\" + target + "\\root\\cimv2", co);
         }
 
         public static void TryCon(string target)
         {
             if (target != Environment.MachineName)
-                ms = RemoteConnectTheScope(target);
+                RemoteConnectTheScope(target);
             else
                 ms = new ManagementScope("\\\\" + target + "\\root\\cimv2");
         }
@@ -40,7 +39,7 @@ namespace server
                     ipAddress = ipHostInfo.AddressList[i];
             return ipAddress.ToString();
         }
-        public static string FreeSpace(ManagementScope ms, string target)
+        public static string FreeSpace(string target)
         {
             string outpt = "";
             SelectQuery dskQuery = new SelectQuery("Win32_LogicalDisk", "DriveType=3"); // Define your query (what you want to return from WMI).
@@ -59,7 +58,7 @@ namespace server
             return outpt;
         }
 
-        public static string ShowProcess(ManagementScope ms, string target)
+        public static string ShowProcess(string target)
         {
             string outpt = "";
             try
@@ -77,7 +76,7 @@ namespace server
             }
         }
 
-        public static string KillProcess(ManagementScope ms, string target, string targetprocess)
+        public static string KillProcess(string target, string targetprocess)
         {
             //Execute the query
             SelectQuery oq = new SelectQuery("SELECT * FROM Win32_Process");
@@ -94,7 +93,7 @@ namespace server
             return "Could not kill the specified process, please recheck your parameters";
         }
 
-        public static string RemoteProcess(ManagementScope ms, string target, string procname)
+        public static string RemoteProcess(string target, string procname)
         {
             object[] proc = new[] { procname };
             ManagementClass wmiProcess = new ManagementClass(ms, new ManagementPath("Win32_Process"), new ObjectGetOptions());
@@ -102,12 +101,14 @@ namespace server
             return "Process created";
         }
 
-        public static string ShareFolder(ManagementScope ms, string target, string sharefolder)
+        public static string ShareFolder(string target, string sharefolder)
         {
             if (!Directory.Exists(sharefolder))
             {
                 string rightpath = sharefolder.Replace(':', '$');
+                Console.WriteLine("Created");
                 Directory.CreateDirectory("\\\\" + target + "\\" + rightpath);
+                
             }
             try
             {
@@ -132,7 +133,7 @@ namespace server
             }
         }
 
-        public static string ListFiles(ManagementScope ms, string target, string path)
+        public static string ListFiles(string target, string path)
         {
             string p = "";
             string output = "";
@@ -172,8 +173,10 @@ namespace server
                 ManagementObjectSearcher searcher = new ManagementObjectSearcher(ms,sq);
                 output += mach + "'s shared folders and drives: \n";
                 foreach (ManagementObject mo in searcher.Get())
-                    if (!mo["Name"].ToString().Contains("$"))
+                {
+                    if (!mo["Name"].ToString().Contains("$") && !mo["Name"].ToString().Contains("Users") && !mo["Name"].ToString().Contains("C"))
                         output += mo["Path"] + "\n";
+                }
                 q.Enqueue(temp);
             }
             return output;
