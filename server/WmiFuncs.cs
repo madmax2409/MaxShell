@@ -172,10 +172,20 @@ namespace server
                 ManagementObjectSearcher searcher = new ManagementObjectSearcher(ms,sq);
                 output += mach + "'s shared folders and drives: \n";
                 foreach (ManagementObject mo in searcher.Get())
-                    if (!mo["Name"].ToString().Contains("$"))
+                {
+                    Console.WriteLine(mo["Name"].ToString());
+                    if (!mo["Name"].ToString().Contains("$") && mo["Path"].ToString().Length > 3 && mo["Name"].ToString() != "Users")
                         output += mo["Path"] + "\n";
+                }
                 q.Enqueue(temp);
             }
+
+            ManagementObjectSearcher searcher2 = new ManagementObjectSearcher("\\\\" + Environment.MachineName + "\\root\\cimv2", "SELECT * FROM Win32_Share");
+            output +=  "\n" + Environment.MachineName + "'s shared folders and drives: \n";
+            foreach (ManagementObject mo in searcher2.Get())
+                if (!mo["Name"].ToString().Contains("$") && mo["Name"].ToString().Length > 3 && mo["Name"].ToString() != "Users")
+                    output += mo["Path"] + "\n";
+
             return output;
         }
 

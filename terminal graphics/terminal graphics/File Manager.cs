@@ -43,7 +43,7 @@ namespace terminal_graphics
                     dirchoice = temp.Text;
                 }
             }
-            catch
+            catch (NullReferenceException)
             {
                 filechoice = e.Node.Text;
             }
