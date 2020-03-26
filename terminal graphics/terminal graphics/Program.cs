@@ -34,6 +34,7 @@ namespace terminal_graphics
                 if (message == "file manager")
                 {
                     string data = CallFunc("showfolders");
+                    data = Form2.AddInsides(data);
                     form2 = new Form2(data);
                     Thread t = new Thread(() => Application.Run(form2));
                     t.Start();

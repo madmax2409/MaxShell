@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace terminal_graphics
 {
@@ -48,15 +49,30 @@ namespace terminal_graphics
                 filechoice = e.Node.Text;
             }
         }
+        public static string AddInsides(string data)
+        {
+            string temp, mach = "";
+            string[] datas = data.Split(new char[] { '\n' });
+            for(int i = 0; i<datas.Length;i++)
+            {
+                if (datas[i].IndexOf(Environment.MachineName) == -1 && datas[i].IndexOf("'s shared folders and drives") != -1)
+                    mach = datas[i].Substring(0, datas[i].IndexOf("'s shared folders and drives"));
 
+                else if (mach != "" && mach != Environment.MachineName)
+                {
+                    temp = Program.CallFunc("listfiles on " + mach + " where dir='" + datas[i] + "'");
+                    if (temp.IndexOf("\\") != -1)
+                        data = data.Insert(data.IndexOf(datas[i]) + datas[i].Length, "\n" + temp.Substring(0, temp.IndexOf("stoprightnow")));
+                }
+            }
+            return data;
+        }
         private static void OpenFile(object sender, EventArgs e)
         {
             if (dirchoice != "")
                 if (dirchoice == "My Shared Folders" || dirchoice == "My Dump Folders")
-                {
                     if (filechoice != "" && filechoice != "My Shared Folders" && filechoice != "My Dump Folders")
                         Process.Start(filechoice);
-                }
                 else
                 {
                     int end = dirchoice.IndexOf("'s shared folders and drives");
@@ -68,21 +84,21 @@ namespace terminal_graphics
         private static void Refresh(object sender, EventArgs e)
         {
             string dirs = Program.CallFunc("showfolders");
-            char[] seperator = { '\n' };
-            string[] direcs = dirs.Split(seperator);
+            dirs = AddInsides(dirs);
+            string[] direcs = dirs.Split(new char[] { '\n' });
             tv.Nodes.Clear();
             BuildTree(direcs);
         }
         private static void BuildTree(string[] direcs)
         {
             TreeNode tn = new TreeNode();
-            TreeNode temp;
+            TreeNode temp = null;
             tn.Name = "sourcenode";
             tn.Text = "My Shared Folders";
             tv.Nodes.Add(tn);
             TreeNode temp2 = tn;
             foreach (string dir in direcs)
-                if (dir.Length < 3 || dir != "stoprightnow" || dir.Contains("$"))
+                if (dir.Length > 3 && dir != "stoprightnow")
                     if (dir.Contains("'s shared folders and drives"))
                         if (dir.Substring(0, dir.IndexOf("'s shared folders and drives")) != Environment.MachineName)
                         {
@@ -95,8 +111,13 @@ namespace terminal_graphics
                             continue;
                     else
                     {
-                        temp = temp2.Nodes.Add(dir);
-                        ProcessDirectory(dir, temp);
+                        if (dir[0] == '\\')
+                            temp.Nodes.Add(dir);
+                        else
+                        {
+                            temp = temp2.Nodes.Add(dir);
+                            ProcessDirectory(dir, temp);
+                        }
                     }
             ShowDumps();
         }
@@ -119,8 +140,7 @@ namespace terminal_graphics
         }
         public Form2(string dirs)
         {
-            char[] seperator = { '\n' };
-            string[] direcs = dirs.Split(seperator);
+            string[] direcs = dirs.Split(new char[] { '\n' });
             BuildTree(direcs);
             
             tv.Font = new Font("comic sans", 10);

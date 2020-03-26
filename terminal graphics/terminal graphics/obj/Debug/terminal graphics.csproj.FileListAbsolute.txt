@@ -83,4 +83,3 @@ F:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal 
 F:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.pdb
 C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Form2.resources
 C:\Users\Maxim\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Shell.resources
-C:\Users\maxim\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csproj.CoreCompileInputs.cache
