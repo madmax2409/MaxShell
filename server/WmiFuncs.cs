@@ -10,7 +10,19 @@ namespace server
     {
         private static int counter = 1;
         public static ManagementScope ms = new ManagementScope();
+        public static Dictionary<string, string> paths = new Dictionary<string, string>();
 
+        public static void SetPaths()
+        {
+            string data = ShowFolders();
+            string[] datas = data.Split(new char[] { '\n' });
+            foreach (string item in datas)
+                try { 
+                    paths.Add(item, ("\\\\" + Environment.MachineName + "\\" + item).Replace(':', '$')); 
+                    }
+                catch { }
+                
+        }
         public static void RemoteConnectTheScope(string target)
         {
             ConnectionOptions co = new ConnectionOptions();
@@ -103,57 +115,70 @@ namespace server
 
         public static string ShareFolder(string target, string sharefolder)
         {
+            int counter = 1;
+            string rightpath = "";
             if (!Directory.Exists(sharefolder))
             {
-                string rightpath = sharefolder.Replace(':', '$');
+                rightpath = sharefolder.Replace(':', '$');
                 Console.WriteLine("Created");
                 Directory.CreateDirectory("\\\\" + target + "\\" + rightpath);
                 
             }
             try
             {
-                Random rnd = new Random();
                 ManagementClass managementClass = new ManagementClass(ms, new ManagementPath("Win32_Share"), new ObjectGetOptions());
                 ManagementBaseObject inParams = managementClass.GetMethodParameters("Create");
                 ManagementBaseObject outParams;
                 inParams["Description"] = "SharedTestApplication";
-                inParams["Name"] = "sharefolder" + rnd.Next(10, 99);
+                inParams["Name"] = rightpath.Substring(3);
                 inParams["Path"] = sharefolder;
                 inParams["Type"] = 0x0;
                 outParams = managementClass.InvokeMethod("Create", inParams, null);
-
+                Console.WriteLine("rightpath: " + rightpath.Substring(3) + " sharefolder: " + sharefolder);
                 if ((uint)outParams.Properties["ReturnValue"].Value != 0)
                     return "error no: " + (uint)outParams.Properties["ReturnValue"].Value;
                 else
+                {
+                    ShowFolders();
+                    paths.Add(sharefolder, rightpath);
                     return "folder successfully set as shared with the net-name " + inParams["Name"];
+                }
             }
             catch (Exception ex)
             {
-                return "an exception occured" + ex.Message;
+                counter++;
+                return ShareFolder(target, sharefolder);
             }
         }
 
         public static string ListFiles(string target, string path)
         {
-            string p = "";
+            ManagementObject m = null;
             string output = "";
             SelectQuery oq = new SelectQuery("SELECT * FROM Win32_Share");
             ManagementObjectSearcher searcher = new ManagementObjectSearcher(ms, oq);
 
             foreach (ManagementObject mo in searcher.Get())
-            {
-                Console.WriteLine("mo[path]: " + mo["path"].ToString() + " and path: " + path);
                 if (mo["path"].ToString() != "" && path == mo["path"].ToString())
-                    p = mo["path"].ToString();
-            }
-
-            if (p != "")
+                {
+                    m = mo;
+                    break;
+                }
+                   
+            if (m != null)
             {
-                string rightpath = p.Substring(3);
+                string[] str = null;
+                string rightpath = m["Path"].ToString();
                 Console.WriteLine("rightpath: " + rightpath);
-                string[] paths = Directory.GetFiles("\\\\" + target + "\\" + rightpath);
-                for (int i = 0; i < paths.Length; i++)
-                    output += paths[i] + "\n";
+                foreach (KeyValuePair<string, string> pair in paths)
+                    if (rightpath == pair.Key)
+                    {
+                        str = Directory.GetFiles(pair.Value);
+                        break;
+                    }
+                if (str != null)
+                    for (int i = 0; i < str.Length; i++)
+                        output += str[i] + "\n";
                 return output;
             }
             else
@@ -174,12 +199,7 @@ namespace server
                 output += mach + "'s shared folders and drives: \n";
                 foreach (ManagementObject mo in searcher.Get())
                 {
-<<<<<<< HEAD
-                    if (!mo["Name"].ToString().Contains("$") && !mo["Name"].ToString().Contains("Users") && !mo["Name"].ToString().Contains("C"))
-=======
-                    Console.WriteLine(mo["Name"].ToString());
                     if (!mo["Name"].ToString().Contains("$") && mo["Path"].ToString().Length > 3 && mo["Name"].ToString() != "Users")
->>>>>>> 680f1f55f7addbd343d4d78700ac7c86213eaf7d
                         output += mo["Path"] + "\n";
                 }
                 q.Enqueue(temp);

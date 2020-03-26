@@ -67,7 +67,7 @@ namespace server
         static void Main(string[] args)
         {
             Server.SetCommands();
-
+            WmiFuncs.SetPaths();
             byte[] bytes = new byte[4096];
             IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
             for (int i = 0; i < ipHostInfo.AddressList.Length; i++)

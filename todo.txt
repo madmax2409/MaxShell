@@ -1,13 +1,9 @@
 						MILESTONE 2
-			file manager				
-<<<<<<< HEAD
-- debug all remote commands
+			file manager
+- debug listfiles for D drive
 - auto create dump_folders
 - COPY AND OPEN REMOTE FILE & FOLDER
-=======
-- display depth of remote folders
-- COPY AND OPEN REMOTE FILE & FOLDER check
->>>>>>> 680f1f55f7addbd343d4d78700ac7c86213eaf7d
+- network paths dict addition for every client
 
 			Con
 - updating thread for each client
