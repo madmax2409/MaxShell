@@ -70,13 +70,18 @@ namespace terminal_graphics
         private static void OpenFile(object sender, EventArgs e)
         {
             if (dirchoice != "")
-                if (dirchoice == "My Shared Folders" || dirchoice == "My Dump Folders")
-                    if (filechoice != "" && filechoice != "My Shared Folders" && filechoice != "My Dump Folders")
+                if (dirchoice.IndexOf(Environment.MachineName) != -1 || dirchoice == "My Dump Folders")
+                {
+                    if (filechoice != "" && filechoice.IndexOf(Environment.MachineName) == -1 && filechoice != "My Dump Folders") //"My shared Folders!"
                         Process.Start(filechoice);
+                }
                 else
                 {
                     int end = dirchoice.IndexOf("'s shared folders and drives");
-                    Program.CallFunc("CopyFile " + dirchoice.Substring(0, end) + " " + filechoice);
+                    string st = filechoice.Substring(filechoice.IndexOf("C$")).Replace("$", ":");
+                    MessageBox.Show(st);
+                    Program.CallFunc("copyfile from " + dirchoice.Substring(0, end) + " where dir='" + filechoice + "'");
+                    MessageBox.Show("Success!");
                 }
                     
         }

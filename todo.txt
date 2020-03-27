@@ -1,8 +1,10 @@
 						MILESTONE 2
 			file manager
-- debug listfiles for D drive
+
 - auto create dump_folders
-- COPY AND OPEN REMOTE FILE & FOLDER
+- change from hardcoded d rive
+- add local "My shared folders"
+- debug d drive for listfiles
 - network paths dict addition for every client
 
 			Con
