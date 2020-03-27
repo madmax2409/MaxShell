@@ -31,7 +31,6 @@ namespace server
             co.Password = "Barmaley2409";
             co.Impersonation = ImpersonationLevel.Impersonate;
             co.EnablePrivileges = true;
-            Console.WriteLine("target: " + target);
             ms = new ManagementScope("\\\\" + target + "\\root\\cimv2", co);
         }
 
@@ -117,13 +116,11 @@ namespace server
         public static string ShareFolder(string target, string sharefolder)
         {
             int counter = 1;
-            string rightpath = "";
-            if (!Directory.Exists(sharefolder))
+            string rightpath = sharefolder.Replace(':', '$');
+            if (!Directory.Exists("\\\\" + target + "\\" + rightpath))
             {
-                rightpath = sharefolder.Replace(':', '$');
-                Console.WriteLine("Created");
                 Directory.CreateDirectory("\\\\" + target + "\\" + rightpath);
-                
+                Console.WriteLine("Created");
             }
             try
             {
