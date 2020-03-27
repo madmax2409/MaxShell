@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Management;
 using System.Net;
+using System.Net.Sockets;
 using System.IO;
 
 namespace server
@@ -214,10 +215,19 @@ namespace server
             return output;
         }
 
-        public static string CopyFile(string target, string srcpath)
+        public static string CopyFile(Socket src, string target, string srcpath)
         {
-            string newdir = @"C:\dump_folders\dump_folder No " + counter + " from " + target; //copyfile from DESKTOP-21F9ULD where dir=C:\testfolder2\uuu.txt
+            string source = "";
+            foreach (KeyValuePair<Socket, string[]> pair in Client.clients)
+                if (src == pair.Key)
+                {
+                    source = pair.Value[1];
+                    break;
+                }
+
+            string newdir = @"\\" + source + @"\C$\dump_folders\dump_folder No " + counter + " from " + target; //copyfile from DESKTOP-21F9ULD where dir=C:\testfolder2\uuu.txt
             Directory.CreateDirectory(newdir);
+            Console.WriteLine("Created dir on source");
             ++counter;
             try
             {
@@ -227,9 +237,9 @@ namespace server
                     File.Copy(@"\\" + target + "\\" + srcpath, newdir + "\\" + Path.GetFileName(srcpath));
                 return "copied the file";
             }
-            catch  //IOException e
+            catch (IOException)
             {
-                return CopyFile(target, srcpath);
+                return CopyFile(src, target, srcpath);
             }
         }
     }

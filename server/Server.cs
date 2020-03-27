@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Sockets;
 
 namespace server
 {
@@ -10,6 +11,7 @@ namespace server
         private static string[] funcs = { "getip", "freespace", "showproc", "disconnect", "killproc", "getdir", "startproc", "sharefolder", "listfiles", "showfolders",
             "help", "copyfile" };
         private static string[] paramnames = { "name=", "dir=", "pc=" };
+        public static Socket pass;
 
         public static void SetCommands()
         {
@@ -25,13 +27,13 @@ namespace server
                 targets =>WmiFuncs.ListFiles(targets[1], targets[2]),
                 targets => WmiFuncs.ShowFolders(),
                 targets => File.ReadAllText(Environment.CurrentDirectory + "\\info.txt"),
-                targets =>WmiFuncs.CopyFile(targets[1], targets[2])};
+                targets =>WmiFuncs.CopyFile(pass, targets[1], targets[2])};
 
             for (int i = 0; i < funcs.Length; i++)
                 dict.Add(funcs[i], methods[i]);
         }
 
-        public static string CommandOutput(string command)
+        public static string CommandOutput(string command, Socket sc)
         { 
             string output = "";
             bool flag = false;
@@ -45,6 +47,8 @@ namespace server
                         flag = true;
                         try
                         {
+                            if (sc != null && sc != pass)
+                                pass = sc;
                             WmiFuncs.TryCon(pararms[1]);
                             output = pair.Value(pararms);
                         }
