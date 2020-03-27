@@ -1,9 +1,8 @@
 						MILESTONE 2
 			file manager
-
-- auto create dump_folders
-- change from hardcoded d rive
 - add local "My shared folders"
+- pass socket not through temp param
+- change from hardcoded c$ drive
 - debug d drive for listfiles
 - network paths dict addition for every client
 

@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.IO;
 
 namespace terminal_graphics
 {
@@ -25,8 +26,14 @@ namespace terminal_graphics
             sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sender.Connect(remoteEP);
             sender.Send(Encoding.Unicode.GetBytes(Environment.MachineName + "+" + Login_Window.nickname));
-        }
 
+            if (!Directory.Exists("C:\\dump_folders"))
+            {
+                MessageBox.Show("YAY");
+                CallFunc("sharefolder on " + Environment.MachineName + " where dir='C:\\dump_folders'");
+                MessageBox.Show("yay");
+            }
+        }
         public static string Maintain(string message)
         {
             try
