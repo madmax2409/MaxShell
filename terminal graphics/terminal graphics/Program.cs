@@ -14,6 +14,7 @@ namespace terminal_graphics
         private static byte[] bytes = new byte[4096];
         private static IPAddress ipAddress;
         public static Form2 form2;
+
         private static void Connection()
         {
             IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
@@ -28,11 +29,7 @@ namespace terminal_graphics
             sender.Send(Encoding.Unicode.GetBytes(Environment.MachineName + "+" + Login_Window.nickname));
 
             if (!Directory.Exists("C:\\dump_folders"))
-            {
-                MessageBox.Show("YAY");
                 CallFunc("sharefolder on " + Environment.MachineName + " where dir='C:\\dump_folders'");
-                MessageBox.Show("yay");
-            }
         }
         public static string Maintain(string message)
         {

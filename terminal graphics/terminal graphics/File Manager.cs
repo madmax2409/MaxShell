@@ -13,6 +13,7 @@ namespace terminal_graphics
         private static Button refresh = new Button();
         private static TreeView tv = new TreeView();
         private static string filechoice = "";
+        private static TreeNode temp;
         private static string dirchoice = "";
         private static void ProcessDirectory(string dir, TreeNode Node)
         {
@@ -46,6 +47,7 @@ namespace terminal_graphics
             }
             catch (NullReferenceException)
             {
+                temp = e.Node;
                 filechoice = e.Node.Text;
             }
         }
@@ -70,18 +72,16 @@ namespace terminal_graphics
         private static void OpenFile(object sender, EventArgs e)
         {
             if (dirchoice != "")
-                if (dirchoice.IndexOf(Environment.MachineName) != -1 || dirchoice == "My Dump Folders")
+                if (dirchoice == "My shared folders" || dirchoice == "My Dump Folders")
                 {
                     if (filechoice != "" && filechoice.IndexOf(Environment.MachineName) == -1 && filechoice != "My Dump Folders") //"My shared Folders!"
                         Process.Start(filechoice);
                 }
-                else
+                else if (temp != null && temp.Nodes == null)
                 {
                     int end = dirchoice.IndexOf("'s shared folders and drives");
-                    string st = filechoice.Substring(filechoice.IndexOf("C$")).Replace("$", ":");
-                    MessageBox.Show(st);
+                    string st = filechoice.Substring(filechoice.IndexOf("$")-1).Replace("$", ":");
                     Program.CallFunc("copyfile from " + dirchoice.Substring(0, end) + " where dir='" + filechoice + "'");
-                    MessageBox.Show("Success!");
                 }
                     
         }
@@ -99,11 +99,11 @@ namespace terminal_graphics
             TreeNode tn = new TreeNode();
             TreeNode temp = null;
             tn.Name = "sourcenode";
-            tn.Text = "My Shared Folders";
+            tn.Text = "My shared folders";
             tv.Nodes.Add(tn);
             TreeNode temp2 = tn;
             foreach (string dir in direcs)
-                if (dir.Length > 3 && dir != "stoprightnow")
+                if (dir.Length > 3 && dir != "stoprightnow" && dir != "C:\\dump_folders")
                     if (dir.Contains("'s shared folders and drives"))
                         if (dir.Substring(0, dir.IndexOf("'s shared folders and drives")) != Environment.MachineName)
                         {

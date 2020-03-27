@@ -1,20 +1,23 @@
 						MILESTONE 2
 			file manager
-- add local "My shared folders"
+- create/delete files		
+- undestroy treeview
 - pass socket not through temp param
-- change from hardcoded c$ drive
+- debug space management
 - debug d drive for listfiles
-- network paths dict addition for every client
+- network paths dict addition for every client (now it's only for serv pc)
 
 			Con
+- debug a lot of empty messages
 - updating thread for each client
-- get server ip + port - web client or scapi on c#(!)
+- get server ip + port - scapi on c#
 		
-						MILESTONE 3
+						MILESTONE 3 - graphic sysinfo, graphic 4GL, multi-user
 			GUI
 - file manager button
 - display nicknames instead of machnames
 - first connect and then login
 - send message button(?)
 - login window (password) + admin(?)
+		
 	
