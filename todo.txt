@@ -1,23 +1,28 @@
 						MILESTONE 2
-			file manager
-- create/delete files		
+				file manager
+- display nicknames instead of machnames
+- fix duplicate local
 - undestroy treeview
+- create/delete files	
+				Con
+- updating thread for each client
+- debug a lot of empty messages
+- get server ip + port - scapi on c#
+- check multi-user compatibility(?)
+						MILESTONE 3
+				intptr
 - pass socket not through temp param
-- debug space management
+- FIX INTPTR BY KEYWORDS (check params between keywords)
 - debug d drive for listfiles
 - network paths dict addition for every client (now it's only for serv pc)
-
-			Con
-- debug a lot of empty messages
-- updating thread for each client
-- get server ip + port - scapi on c#
-		
-						MILESTONE 3 - graphic sysinfo, graphic 4GL, multi-user
-			GUI
+						
+				GUI
 - file manager button
-- display nicknames instead of machnames
 - first connect and then login
+- login window (password)
+- GRAPHIC SYSINFO
+- GRAPHIC 4GL
 - send message button(?)
-- login window (password) + admin(?)
+
 		
 	

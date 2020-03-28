@@ -13,8 +13,9 @@ namespace terminal_graphics
         private static Button refresh = new Button();
         private static TreeView tv = new TreeView();
         private static string filechoice = "";
-        private static TreeNode temp;
+        private static TreeNode tamp;
         private static string dirchoice = "";
+        private static TreeNode dumps;
         private static void ProcessDirectory(string dir, TreeNode Node)
         {
             try
@@ -47,7 +48,7 @@ namespace terminal_graphics
             }
             catch (NullReferenceException)
             {
-                temp = e.Node;
+                tamp = e.Node;
                 filechoice = e.Node.Text;
             }
         }
@@ -69,6 +70,7 @@ namespace terminal_graphics
             }
             return data;
         }
+
         private static void OpenFile(object sender, EventArgs e)
         {
             if (dirchoice != "")
@@ -77,16 +79,20 @@ namespace terminal_graphics
                     if (filechoice != "" && filechoice.IndexOf(Environment.MachineName) == -1 && filechoice != "My Dump Folders") //"My shared Folders!"
                         Process.Start(filechoice);
                 }
-                else if (temp != null && temp.Nodes == null)
+                else if (tamp != null && tamp.Nodes.Count == 0)
                 {
                     int end = dirchoice.IndexOf("'s shared folders and drives");
-                    string st = filechoice.Substring(filechoice.IndexOf("$")-1).Replace("$", ":");
                     Program.CallFunc("copyfile from " + dirchoice.Substring(0, end) + " where dir='" + filechoice + "'");
+                    RefreshWindow();
+                    Process.Start(dumps.LastNode.LastNode.Text);
                 }
-                    
+                  
         }
-
-        private static void Refresh(object sender, EventArgs e)
+        public static void Refresh(object sender, EventArgs e)
+        {
+            RefreshWindow();
+        }
+        public static void RefreshWindow()
         {
             string dirs = Program.CallFunc("showfolders");
             dirs = AddInsides(dirs);
@@ -131,12 +137,12 @@ namespace terminal_graphics
         {
             if (Directory.Exists("C:\\dump_folders"))
             {
-                TreeNode tn = new TreeNode("My Dump Folders");
-                tv.Nodes.Add(tn);
+                dumps = new TreeNode("My Dump Folders");
+                tv.Nodes.Add(dumps);
                 foreach (string dir in Directory.GetFileSystemEntries("C:\\dump_folders"))
                 {
                     TreeNode temp = new TreeNode(dir);
-                    tn.Nodes.Add(temp);
+                    dumps.Nodes.Add(temp);
                     ProcessDirectory(dir, temp);
                 }
             }
