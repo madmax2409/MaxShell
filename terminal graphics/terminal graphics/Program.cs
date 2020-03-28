@@ -38,7 +38,6 @@ namespace terminal_graphics
                 if (message == "file manager")
                 {
                     string data = CallFunc("showfolders");
-                    MessageBox.Show(data);
                     data = Form2.AddInsides(data);
                     form2 = new Form2(data);
                     Thread t = new Thread(() => Application.Run(form2));
@@ -90,9 +89,9 @@ namespace terminal_graphics
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Thread con = new Thread(new ThreadStart(Connection));
             Login_Window form3 = new Login_Window();
             form3.ShowDialog();
-            Thread con = new Thread(new ThreadStart(Connection));
             con.Start();
             Application.Run(new Shell());
         }

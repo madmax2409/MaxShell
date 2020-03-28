@@ -1,12 +1,14 @@
 						MILESTONE 2
 				file manager
 - undestroy treeview
-- create/delete files	
+- recursive deletion of filesysentries
+- deletefile function in server
+- create file window
+- reopen nodes(?)
 - display nicknames instead of machnames(?)		
 	
 				Con
 - updating thread for each client
-- debug a lot of empty messages
 - get server ip + port - scapi on c#
 - check multi-user compatibility(?)
 						MILESTONE 3
@@ -18,11 +20,10 @@
 						
 				GUI
 - file manager button
-- first connect and then login
 - login window (password)
-- GRAPHIC SYSINFO
-- GRAPHIC 4GL
-- send message button(?)
+- GRAPHIC SYSINFO - plan + execute
+- GRAPHIC 4GL - plan + execute
+
 
 		
 	

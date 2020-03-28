@@ -11,6 +11,8 @@ namespace terminal_graphics
     {
         private static Button open = new Button();
         private static Button refresh = new Button();
+        private static Button delete = new Button();
+        private static Button create = new Button(); // new window
         private static TreeView tv = new TreeView();
         private static string filechoice = "";
         private static TreeNode tamp;
@@ -79,7 +81,7 @@ namespace terminal_graphics
                     if (filechoice != "" && filechoice.IndexOf(Environment.MachineName) == -1 && filechoice != "My Dump Folders") //"My shared Folders!"
                         Process.Start(filechoice);
                 }
-                else if (tamp != null && tamp.Nodes.Count == 0)
+                else if (filechoice != null && !Directory.Exists(filechoice))
                 {
                     int end = dirchoice.IndexOf("'s shared folders and drives");
                     Program.CallFunc("copyfile from " + dirchoice.Substring(0, end) + " where dir='" + filechoice + "'");
@@ -99,6 +101,44 @@ namespace terminal_graphics
             string[] direcs = dirs.Split(new char[] { '\n' });
             tv.Nodes.Clear();
             BuildTree(direcs);
+        }
+        public static void DeleteFile(object sender, EventArgs e)
+        {
+            if (!Directory.Exists(filechoice))
+            {
+                if (dirchoice == "My shared folders")
+                    File.Delete(tamp.Text);
+                    
+                else if (dirchoice == "My Dump Folders")
+                {
+                    File.Delete(tamp.Text);
+                    Directory.Delete(tamp.Parent.Text);
+                }
+                else if (tamp != null && !Directory.Exists(tamp.Text))
+                {
+                    int end = dirchoice.IndexOf("'s shared folders and drives");
+                    Program.CallFunc("deletefile from " + dirchoice.Substring(0, end) + " where dir='" + filechoice + "'");
+                }
+            }
+            else
+            {
+                if (dirchoice == "My shared folders")
+                {
+                    //RecourseDelete()
+                }
+
+                else if (dirchoice == "My Dump Folders")
+                {
+                    File.Delete(tamp.LastNode.Text);
+                    Directory.Delete(tamp.Text);
+                }
+                else if (tamp != null && !Directory.Exists(tamp.Text))
+                {
+                    int end = dirchoice.IndexOf("'s shared folders and drives");
+                    Program.CallFunc("deletefile from " + dirchoice.Substring(0, end) + " where dir='" + filechoice + "'");
+                }
+            }
+            RefreshWindow();
         }
         private static void BuildTree(string[] direcs)
         {
@@ -166,6 +206,7 @@ namespace terminal_graphics
             open.Text = "open";
             open.Click += new EventHandler(OpenFile);
             open.Size = new Size(70, 30);
+            open.BackColor = Color.Yellow;
             Controls.Add(open);
 
             refresh.Font = new Font("comic sans", 10);
@@ -173,7 +214,24 @@ namespace terminal_graphics
             refresh.Text = "refresh";
             refresh.Click += delegate (object sender, EventArgs e) { Refresh(sender, e); };
             refresh.Size = new Size(70, 30);
+            refresh.BackColor = Color.Turquoise;
             Controls.Add(refresh);
+
+            delete.Font = new Font("comic sans", 10);
+            delete.Location = new Point(180, 410);
+            delete.Text = "delete";
+            delete.Click += delegate (object sender, EventArgs e) { DeleteFile(sender, e); };
+            delete.Size = new Size(70, 30);
+            delete.BackColor = Color.Tomato;
+            Controls.Add(delete);
+
+            create.Font = new Font("comic sans", 10);
+            create.Location = new Point(260, 410);
+            create.Text = "create";
+            //create.Click += delegate (object sender, EventArgs e) { Refresh(sender, e); };
+            create.Size = new Size(70, 30);
+            create.BackColor = Color.SpringGreen;
+            Controls.Add(create);
 
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
