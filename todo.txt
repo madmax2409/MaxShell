@@ -1,9 +1,9 @@
 						MILESTONE 2
 				file manager
-- display nicknames instead of machnames
-- fix duplicate local
 - undestroy treeview
 - create/delete files	
+- display nicknames instead of machnames(?)		
+	
 				Con
 - updating thread for each client
 - debug a lot of empty messages

@@ -39,19 +39,22 @@ namespace server
         }
         public static void CheckAndAdd(Socket cl, string mach, string nick)
         {
-            bool flag = true;
-            foreach(KeyValuePair<Socket, string[]> pair in clients)
+            if (mach != Environment.MachineName)
             {
-                if (pair.Value[1] == mach)
+                bool flag = true;
+                foreach (KeyValuePair<Socket, string[]> pair in clients)
                 {
-                    flag = false;
-                    break;
+                    if (pair.Value[1] == mach)
+                    {
+                        flag = false;
+                        break;
+                    }
                 }
-            }
-            if (flag || clients.Count == 0)
-                clientqueue.Enqueue(new Client(cl, nick, mach));
+                if (flag || clients.Count == 0)
+                    clientqueue.Enqueue(new Client(cl, nick, mach));
 
-            Console.WriteLine("Added a new client: nick: {0}, mach: {1}",nick,mach);
+                Console.WriteLine("Added a new client: nick: {0}, mach: {1}", nick, mach);
+            }
         }
     }
 }
