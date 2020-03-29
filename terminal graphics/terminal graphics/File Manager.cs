@@ -104,42 +104,53 @@ namespace terminal_graphics
         }
         public static void DeleteFile(object sender, EventArgs e)
         {
-            if (!Directory.Exists(filechoice))
+            DialogResult result = MessageBox.Show("Are you sure you want to delete the file?", "Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (result == DialogResult.Yes)
             {
-                if (dirchoice == "My shared folders")
-                    File.Delete(tamp.Text);
-                    
-                else if (dirchoice == "My Dump Folders")
+                if (!Directory.Exists(filechoice))
                 {
-                    File.Delete(tamp.Text);
-                    Directory.Delete(tamp.Parent.Text);
-                }
-                else if (tamp != null && !Directory.Exists(tamp.Text))
-                {
-                    int end = dirchoice.IndexOf("'s shared folders and drives");
-                    Program.CallFunc("deletefile from " + dirchoice.Substring(0, end) + " where dir='" + filechoice + "'");
-                }
-            }
-            else
-            {
-                if (dirchoice == "My shared folders")
-                {
-                    //RecourseDelete()
-                }
+                    if (dirchoice == "My shared folders")
+                        File.Delete(tamp.Text);
 
-                else if (dirchoice == "My Dump Folders")
-                {
-                    File.Delete(tamp.LastNode.Text);
-                    Directory.Delete(tamp.Text);
+                    else if (dirchoice == "My Dump Folders")
+                    {
+                        File.Delete(tamp.Text);
+                        Directory.Delete(tamp.Parent.Text);
+                    }
+                    else if (tamp != null && !Directory.Exists(tamp.Text))
+                    {
+                        int end = dirchoice.IndexOf("'s shared folders and drives");
+                        Program.CallFunc("deletefile from " + dirchoice.Substring(0, end) + " where dir='" + filechoice + "'");
+                    }
                 }
-                else if (tamp != null && !Directory.Exists(tamp.Text))
+                else
                 {
-                    int end = dirchoice.IndexOf("'s shared folders and drives");
-                    Program.CallFunc("deletefile from " + dirchoice.Substring(0, end) + " where dir='" + filechoice + "'");
+                    if (dirchoice == "My shared folders")
+                    {
+                        Directory.Delete(filechoice, true);
+                    }
+
+                    else if (dirchoice == "My Dump Folders")
+                    {
+                        File.Delete(tamp.LastNode.Text);
+                        Directory.Delete(tamp.Text);
+                    }
+                    else if (tamp != null && !Directory.Exists(tamp.Text))
+                    {
+                        int end = dirchoice.IndexOf("'s shared folders and drives");
+                        Program.CallFunc("deletefile from " + dirchoice.Substring(0, end) + " where dir='" + filechoice + "'");
+                    }
                 }
+                RefreshWindow();
             }
-            RefreshWindow();
         }
+
+        public static void CreateFile(object sender, EventArgs e)
+        {
+            Create cr = new Create();
+            cr.ShowDialog();
+        }
+
         private static void BuildTree(string[] direcs)
         {
             TreeNode tn = new TreeNode();
@@ -220,7 +231,7 @@ namespace terminal_graphics
             delete.Font = new Font("comic sans", 10);
             delete.Location = new Point(180, 410);
             delete.Text = "delete";
-            delete.Click += delegate (object sender, EventArgs e) { DeleteFile(sender, e); };
+            delete.Click += new EventHandler(DeleteFile);
             delete.Size = new Size(70, 30);
             delete.BackColor = Color.Tomato;
             Controls.Add(delete);
@@ -228,7 +239,7 @@ namespace terminal_graphics
             create.Font = new Font("comic sans", 10);
             create.Location = new Point(260, 410);
             create.Text = "create";
-            //create.Click += delegate (object sender, EventArgs e) { Refresh(sender, e); };
+            create.Click += new EventHandler(CreateFile);
             create.Size = new Size(70, 30);
             create.BackColor = Color.SpringGreen;
             Controls.Add(create);
