@@ -1,30 +1,21 @@
-						MILESTONE 2
-				file manager
+						MILESTONE 2 (Remnants)
 - undestroy treeview
-- deletefile function in server
-- remote creation
-- reopen nodes(?)
-- copy folder(?)
+- create & delete funcs in server
+- list of nodes to reopen after refresh
+- copy folder(?) - compress...
 - display nicknames instead of machnames(?)		
-	
-				Con
-- debug disconnect & a lot of messages
-- updating thread for each client
-- get server ip + port - scapi on c#
-- check multi-user compatibility(?)
 						MILESTONE 3
 				intptr
-- pass socket not through temp param
-- FIX INTPTR BY KEYWORDS (check params between keywords)
 - debug d drive for listfiles
+- pass socket not through temp param
 - network paths dict addition for every client (now it's only for serv pc)
-						
+- FIX INTPTR BY KEYWORDS (check params between keywords)
+
+				Con
+- updating thread for each client
+- get server ip + port - scapi on c#
+- password setup and check
+					
 				GUI
-- file manager button
-- login window (password)
-- GRAPHIC SYSINFO - plan + execute
-- GRAPHIC 4GL - plan + execute
-
-
-		
-	
+- login fix
+- GRAPHIC 4GL buttons spaces: all main funcs + file manager + sysinfo

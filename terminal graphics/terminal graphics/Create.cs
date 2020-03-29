@@ -14,10 +14,10 @@ namespace terminal_graphics
 {
     public partial class Create : Form
     {
-        private static TextBox filename;
-        private static ComboBox exts;
-        private static Button ok;
-        private static Button cancel;
+        private static TextBox filename = new TextBox();
+        private static ComboBox exts = new ComboBox();
+        private static Button ok = new Button();
+        private static Button cancel = new Button();
         private static int counter = 0;
 
         public static void OutCreate(object sender, EventArgs e)
@@ -52,25 +52,25 @@ namespace terminal_graphics
         }
         public Create()
         {
-            filename = new TextBox();
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
+            MinimizeBox = false;
+
             filename.Location = new Point(20, 20);
             Controls.Add(filename);
 
-            exts = new ComboBox();
             exts.DropDownStyle = ComboBoxStyle.DropDownList;
             exts.Location = new Point(130, 20);
             foreach (string item in new string[] { "txt", "docx", "pdf" })
                 exts.Items.Add(item);
             Controls.Add(exts);
 
-            ok = new Button();
             ok.Font = new Font("comic sans", 10);
             ok.Text = "create";
             ok.Location = new Point(20, 50);
             ok.Click += new EventHandler(OutCreate);
             Controls.Add(ok);
 
-            cancel = new Button();
             cancel.Font = new Font("comic sans", 10);
             cancel.Text = "cancel";
             cancel.Location = new Point(110, 50);

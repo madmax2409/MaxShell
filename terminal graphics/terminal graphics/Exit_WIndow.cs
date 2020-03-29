@@ -17,7 +17,6 @@ namespace terminal_graphics
 
         void t_Elapsed(object sender, ElapsedEventArgs e)
         {
-            Close();
             Application.Exit();
         }
 

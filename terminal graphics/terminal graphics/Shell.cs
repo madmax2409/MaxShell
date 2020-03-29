@@ -34,6 +34,8 @@ namespace terminal_graphics
                 string command = cmd.Text;
                 older.Push(command);
                 string outpt = Program.Maintain(command);
+                if (outpt == "")
+                    return;
                 char[] seperate = { '\n' };
                 string[] dirs = outpt.Split(seperate);
                 for (int i = 0; i < dirs.Length; i++)

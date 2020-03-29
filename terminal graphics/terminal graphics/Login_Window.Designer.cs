@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(300, 70);
+            this.ClientSize = new System.Drawing.Size(250, 100);
             this.Text = "choose a nickname";
         }
 

@@ -10,6 +10,9 @@ namespace terminal_graphics
         public static string nickname;
         public static bool assure = false;
         private const int CP_DISABLE_CLOSE_BUTTON = 0x200;
+        private static Label nick = new Label();
+        private static Label pass = new Label();
+        private static TextBox password = new TextBox();
         protected override CreateParams CreateParams
         {
             get
@@ -43,19 +46,41 @@ namespace terminal_graphics
             MaximizeBox = false;
             MinimizeBox = false;
 
+            nick.Font = new Font("Comic Sans", 10);
+            nick.Location = new Point(10, 10);
+            nick.Size = new Size(75, 20);
+            nick.Text = "nickname:";
+            Controls.Add(nick);
+
+            pass.Font = new Font("Comic Sans", 10);
+            pass.Location = new Point(10, 40);
+            pass.Size = new Size(75, 20);
+            pass.Text = "password:";
+            Controls.Add(pass);
 
             entry.Font = new Font("Comic Sans", 10);
-            entry.Size = new Size(280, 50);
-            entry.Location = new Point(10, 10);
+            entry.Size = new Size(160, 50);
+            entry.Location = new Point(85, 10);
             Controls.Add(entry);
-            
+
+            password.Font = new Font("Comic Sans", 10);
+            password.Size = new Size(160, 80);
+            password.Location = new Point(85, 40);
+            Controls.Add(password);
 
             Button choose = new Button();
             choose.Text = "ok";
             choose.Font = new Font("Comic Sans", 10);
-            choose.Location = new Point(110, 40);
+            choose.Location = new Point(85, 70);
             choose.Click += new EventHandler(SendNick);
             Controls.Add(choose);
+
+            Button exit = new Button();
+            exit.Text = "exit";
+            exit.Font = new Font("Comic Sans", 10);
+            exit.Location = new Point(170, 70);
+            ///exit.Click += new EventHandler(SendNick);
+            Controls.Add(exit);
 
             InitializeComponent();
         }
