@@ -239,5 +239,17 @@ namespace server
                 return CopyFile(src, target, srcpath);
             }
         }
+
+        public static string DeleteFile(string target, string path)
+        {
+            string delete = ("\\\\" + target + "\\" + path).Replace(':', '$');
+            ObjectQuery oq = new ObjectQuery("SELECT FROM CIM_Datafile WHERE Name='" + delete +"'");
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher(ms, oq);
+            foreach (ManagementObject mo in searcher.Get())
+                if (mo["Path"].ToString() == delete)
+                    mo.InvokeMethod("delete", null);
+            Console.WriteLine("ended");
+            return "deleted the file on " + target;
+        }
     }
 }

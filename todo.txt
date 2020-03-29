@@ -1,13 +1,14 @@
 						MILESTONE 2
 				file manager
 - undestroy treeview
-- recursive deletion of filesysentries
 - deletefile function in server
-- create file window
+- remote creation
 - reopen nodes(?)
+- copy folder(?)
 - display nicknames instead of machnames(?)		
 	
 				Con
+- debug disconnect & a lot of messages
 - updating thread for each client
 - get server ip + port - scapi on c#
 - check multi-user compatibility(?)
