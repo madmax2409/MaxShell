@@ -40,43 +40,45 @@ namespace server
             byte[] bytes = new byte[4096];
             bool flag = false;
             int bytesRec;
-            while (!flag)
+            try
             {
-                bytesRec = s.Receive(bytes);
-                data = Encoding.Unicode.GetString(bytes, 0, bytesRec);
-                if (data == pass)
-                {
-                    SendPackets("good to go", s);
-                    flag = true;
-                }
-                else
-                    SendPackets("wrong password", s);
-            }
-            bytesRec = s.Receive(bytes);
-            data = Encoding.Unicode.GetString(bytes, 0, bytesRec);
-            char[] sep = { '+' };
-            string[] datas = data.Split(sep);
-            Client.CheckAndAdd(s, datas[0], datas[1]);
-            Console.WriteLine("got a nickname: " + datas[1]);
-            while (true)
-            {
-                try
+                while (!flag)
                 {
                     bytesRec = s.Receive(bytes);
-                    data = Encoding.Unicode.GetString(bytes, 0, bytesRec); 
+                    data = Encoding.Unicode.GetString(bytes, 0, bytesRec);
+                    if (data == pass)
+                    {
+                        SendPackets("good to go", s);
+                        flag = true;
+                    }
+                    else
+                        SendPackets("wrong password", s);
+                }
+                bytesRec = s.Receive(bytes);
+                data = Encoding.Unicode.GetString(bytes, 0, bytesRec);
+                char[] sep = { '+' };
+                string[] datas = data.Split(sep);
+                Client.CheckAndAdd(s, datas[0], datas[1]);
+                Console.WriteLine("got a nickname: " + datas[1]);
+                WmiFuncs.AddPaths(datas[0]);
+                while (true)
+                {
+
+                    bytesRec = s.Receive(bytes);
+                    data = Encoding.Unicode.GetString(bytes, 0, bytesRec);
                     Console.WriteLine("Got a message: " + data);
                     data = Server.CommandOutput(data, s);
                     SendPackets(data, s);
                     if (data.Contains("disconnect"))
                         break; // communication over
                 }
-                catch (SocketException)
-                {
-                    Console.WriteLine("Client has suddenly disconnected");
-                    break;
-                }
+            }
+            catch (SocketException)
+            {
+                Console.WriteLine("Client has suddenly disconnected");
             }
         }
+    
         public static string SetPassword()
         {
             Console.WriteLine("Choose a password, must be at least 4 chars length, and only alpahnumerical");
@@ -89,10 +91,24 @@ namespace server
             }
             return password;
         }
+
+        private static void SecondSock(IPAddress ip)
+        {
+            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11001);  //FreeTcpPort()           
+            Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            listener.Bind(localEndPoint);
+            listener.Listen(3);
+            while (true)
+            {
+                Socket handler = listener.Accept();
+                //Thread t = new Thread(() => KeepInTact(handler, pass));
+                //t.Start();
+            }
+        }
         static void Main(string[] args)
         {
             Server.SetCommands();
-            WmiFuncs.SetPaths();
+            WmiFuncs.AddPaths(Environment.MachineName);
             byte[] bytes = new byte[4096];
             IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
             for (int i = 0; i < ipHostInfo.AddressList.Length; i++)
@@ -102,9 +118,11 @@ namespace server
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);  //FreeTcpPort()           
             Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             listener.Bind(localEndPoint);
-            listener.Listen(3);
             string pass  = SetPassword();
             Console.WriteLine("listening");
+            listener.Listen(3);
+            Thread s2 = new Thread(() => SecondSock(ipAddress));
+            s2.Start();
             while (true)
             {
                 Socket handler = listener.Accept();

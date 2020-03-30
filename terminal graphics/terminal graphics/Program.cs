@@ -37,9 +37,15 @@ namespace terminal_graphics
             }
             
             sender.Send(Encoding.Unicode.GetBytes(Environment.MachineName + "+" + Login_Window.nickname));
-
+            ServMessages(ipAddress);
             if (!Directory.Exists("C:\\dump_folders"))
                 CallFunc("sharefolder on " + Environment.MachineName + " where dir='C:\\dump_folders'");
+        }
+        private static void ServMessages(IPAddress ip)
+        {
+            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.214"), 11001); //int.Parse(File.ReadAllText(GetTheRightPath()))
+            sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            sender.Connect(remoteEP);
         }
         public static string Maintain(string message)
         {

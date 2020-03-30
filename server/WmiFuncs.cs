@@ -13,13 +13,14 @@ namespace server
         public static ManagementScope ms = new ManagementScope();
         public static Dictionary<string, string> paths = new Dictionary<string, string>();
 
-        public static void SetPaths()
+        public static void AddPaths(string target)
         {
             string data = ShowFolders();
             string[] datas = data.Split(new char[] { '\n' });
-            foreach (string item in datas)
-                try { 
-                    paths.Add(item, ("\\\\" + Environment.MachineName + "\\" + item).Replace(':', '$')); 
+            for(int i = 1; i < datas.Length; i++)
+                try {
+                    Console.WriteLine(datas[i]);
+                    paths.Add(datas[i], ("\\\\" + target + "\\" + datas[i]).Replace(':', '$')); 
                     }
                 catch { }
                 

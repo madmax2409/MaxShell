@@ -49,11 +49,25 @@ namespace terminal_graphics
                 {
                     nickname = entry.Text;
                     pas = password.Text;
-                    assure = true;
-                    Close();
+                    byte[] rec = new byte[4096];
+                    socket.Send(Encoding.Unicode.GetBytes(pas));
+                    int bytesrec = socket.Receive(rec);
+                    string data = Encoding.Unicode.GetString(rec, 0, bytesrec);
+                    if (data == "good to go")
+                    {
+                        Program.check = true;
+                        assure = true;
+                        Close();
+                    }
+                    else
+                        MessageBox.Show("Wrong password, please try again");
                 }
         }
-
+        public void Disconnect(object sender, EventArgs e)
+        {
+            socket.Close();
+            Close();
+        }
         public Login_Window(Socket s)
         {
             socket = s;
@@ -97,7 +111,7 @@ namespace terminal_graphics
             exit.Text = "exit";
             exit.Font = new Font("Comic Sans", 10);
             exit.Location = new Point(170, 70);
-            ///exit.Click += new EventHandler(SendNick);
+            exit.Click += new EventHandler(Disconnect);
             Controls.Add(exit);
 
             InitializeComponent();
