@@ -25,7 +25,7 @@ namespace terminal_graphics
                     ipAddress = ipHostInfo.AddressList[i];
 
             //ipAddress = ipHostInfo.AddressList[0];
-            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.214"), 11000); //int.Parse(File.ReadAllText(GetTheRightPath()))
+            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.249"), 11000); //int.Parse(File.ReadAllText(GetTheRightPath()))
             sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             s = sender;
             sender.Connect(remoteEP);
@@ -43,7 +43,7 @@ namespace terminal_graphics
         }
         private static void ServMessages(IPAddress ip)
         {
-            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.214"), 11001); //int.Parse(File.ReadAllText(GetTheRightPath()))
+            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.249"), 11001); //int.Parse(File.ReadAllText(GetTheRightPath()))
             sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sender.Connect(remoteEP);
         }

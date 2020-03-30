@@ -13,7 +13,7 @@
 
 				Con
 - get server ip + port - scapi dotan
-- server shutdown handling(?)
+- server shutdown handling
 - log every func in server on client(?)
 					
 				GUI
