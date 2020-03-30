@@ -21,7 +21,7 @@ namespace server
             for(int i = 0; i < datas.Length; i++)
                 try 
                 {
-                    if (Regex.IsMatch(datas[i], @" ^[a-zA-Z0-9\/:]^*$") && !datas[i].Contains(target))
+                    if (Regex.IsMatch(datas[i], @"^\w:\\[a-zA-Z0-9]*$") && !datas[i].Contains(target)) //C:\testfolder1
                     {
                         Console.WriteLine("check: " + datas[i]);
                         paths.Add(datas[i], ("\\\\" + target + "\\" + datas[i]).Replace(':', '$'));
