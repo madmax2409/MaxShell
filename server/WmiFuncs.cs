@@ -4,6 +4,7 @@ using System.Management;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace server
 {
@@ -17,13 +18,20 @@ namespace server
         {
             string data = ShowFolders();
             string[] datas = data.Split(new char[] { '\n' });
-            for(int i = 1; i < datas.Length; i++)
-                try {
-                    Console.WriteLine(datas[i]);
-                    paths.Add(datas[i], ("\\\\" + target + "\\" + datas[i]).Replace(':', '$')); 
+            for(int i = 0; i < datas.Length; i++)
+                try 
+                {
+                    if (Regex.IsMatch(datas[i], @" ^[a-zA-Z0-9\/:]^*$") && !datas[i].Contains(target))
+                    {
+                        Console.WriteLine("check: " + datas[i]);
+                        paths.Add(datas[i], ("\\\\" + target + "\\" + datas[i]).Replace(':', '$'));
                     }
+                    else
+                        Console.WriteLine(datas[i]);
+                }
                 catch { }
-                
+            foreach (KeyValuePair<string, string> pair in paths)
+                Console.WriteLine("key: " + pair.Key + " value: " + pair.Value);                
         }
         public static void RemoteConnectTheScope(string target)
         {

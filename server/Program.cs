@@ -61,6 +61,7 @@ namespace server
                 Client.CheckAndAdd(s, datas[0], datas[1]);
                 Console.WriteLine("got a nickname: " + datas[1]);
                 WmiFuncs.AddPaths(datas[0]);
+                Console.WriteLine("bruj");
                 while (true)
                 {
 
