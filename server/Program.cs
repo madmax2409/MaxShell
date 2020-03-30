@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace server
 {
@@ -34,11 +35,24 @@ namespace server
             File.WriteAllText(Environment.CurrentDirectory + "\\port.txt", port.ToString());
             return port;
         }
-        private static void KeepInTact(Socket s)
+        private static void KeepInTact(Socket s, string pass)
         {
             byte[] bytes = new byte[4096];
-            //Client handler = new Client();
-            int bytesRec = s.Receive(bytes);
+            bool flag = false;
+            int bytesRec;
+            while (!flag)
+            {
+                bytesRec = s.Receive(bytes);
+                data = Encoding.Unicode.GetString(bytes, 0, bytesRec);
+                if (data == pass)
+                {
+                    SendPackets("good to go", s);
+                    flag = true;
+                }
+                else
+                    SendPackets("wrong password", s);
+            }
+            bytesRec = s.Receive(bytes);
             data = Encoding.Unicode.GetString(bytes, 0, bytesRec);
             char[] sep = { '+' };
             string[] datas = data.Split(sep);
@@ -63,7 +77,18 @@ namespace server
                 }
             }
         }
-
+        public static string SetPassword()
+        {
+            Console.WriteLine("Choose a password, must be at least 4 chars length, and only alpahnumerical");
+            Console.Write("Enter the password: ");
+            string password = " ";
+            while (!Regex.IsMatch(password, "^[a-zA-Z0-9]*$"))
+            {
+                Console.Write("Enter the password: ");
+                password = Console.ReadLine();
+            }
+            return password;
+        }
         static void Main(string[] args)
         {
             Server.SetCommands();
@@ -78,12 +103,13 @@ namespace server
             Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             listener.Bind(localEndPoint);
             listener.Listen(3);
+            string pass  = SetPassword();
             Console.WriteLine("listening");
             while (true)
             {
                 Socket handler = listener.Accept();
                 Console.WriteLine("A client with the ip of " + handler.RemoteEndPoint + " has connected");
-                Thread t = new Thread(() => KeepInTact(handler));
+                Thread t = new Thread(() => KeepInTact(handler, pass));
                 t.Start();
             }
         }

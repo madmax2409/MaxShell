@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Text;
+using System.Net.Sockets;
 
 namespace terminal_graphics
 {
@@ -8,11 +10,13 @@ namespace terminal_graphics
     {
         private static TextBox entry = new TextBox();
         public static string nickname;
+        public static string pas;
         public static bool assure = false;
         private const int CP_DISABLE_CLOSE_BUTTON = 0x200;
         private static Label nick = new Label();
         private static Label pass = new Label();
         private static TextBox password = new TextBox();
+        private static Socket socket;
         protected override CreateParams CreateParams
         {
             get
@@ -22,26 +26,40 @@ namespace terminal_graphics
                 return cp;
             }
         }
-        public void SendNick(object sender, EventArgs e)
+        public void Send(object sender, EventArgs e)
         {
             nickname = entry.Text;
-            Close();
+            pas = password.Text;
+            byte[] rec = new byte[4096];
+            socket.Send(Encoding.Unicode.GetBytes(pas));
+            int bytesrec = socket.Receive(rec);
+            string data = Encoding.Unicode.GetString(rec, 0, bytesrec);
+            if (data == "good to go")
+            {
+                Program.check = true;
+                Close();
+            }
+            else
+                MessageBox.Show("Wrong password, please try again");
         }
-        public void SendNick_2(object sender, KeyEventArgs e)
+        public void Send_2(object sender, KeyEventArgs e)
         {
             if (e.KeyData == Keys.Enter)
                 if (entry.Text != "")
                 {
                     nickname = entry.Text;
+                    pas = password.Text;
                     assure = true;
                     Close();
                 }
         }
 
-        public Login_Window()
+        public Login_Window(Socket s)
         {
+            socket = s;
+
             KeyPreview = true;
-            KeyDown += new KeyEventHandler(SendNick_2);
+            KeyDown += new KeyEventHandler(Send_2);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             MinimizeBox = false;
@@ -72,7 +90,7 @@ namespace terminal_graphics
             choose.Text = "ok";
             choose.Font = new Font("Comic Sans", 10);
             choose.Location = new Point(85, 70);
-            choose.Click += new EventHandler(SendNick);
+            choose.Click += new EventHandler(Send);
             Controls.Add(choose);
 
             Button exit = new Button();

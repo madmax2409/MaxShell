@@ -1,21 +1,19 @@
 						MILESTONE 2 (Remnants)
 - undestroy treeview
 - create & delete funcs in server
-- list of nodes to reopen after refresh
+- nodes to reopen after refresh
 - copy folder(?) - compress...
 - display nicknames instead of machnames(?)		
 						MILESTONE 3
 				intptr
 - debug d drive for listfiles
 - pass socket not through temp param
-- network paths dict addition for every client (now it's only for serv pc)
+- network paths dict addition for every client (now it's only for serv pc) - 5
 - FIX INTPTR BY KEYWORDS (check params between keywords)
 
 				Con
-- updating thread for each client
+- updating thread for each client - 4
 - get server ip + port - scapi on c#
-- password setup and check
 					
 				GUI
-- login fix
 - GRAPHIC 4GL buttons spaces: all main funcs + file manager + sysinfo

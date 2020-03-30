@@ -14,6 +14,8 @@ namespace terminal_graphics
         private static byte[] bytes = new byte[4096];
         private static IPAddress ipAddress;
         public static Form2 form2;
+        public static bool check = false;
+        public static Socket s;
 
         private static void Connection()
         {
@@ -23,9 +25,17 @@ namespace terminal_graphics
                     ipAddress = ipHostInfo.AddressList[i];
 
             //ipAddress = ipHostInfo.AddressList[0];
-            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.249"), 11000); //int.Parse(File.ReadAllText(GetTheRightPath()))
+            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.214"), 11000); //int.Parse(File.ReadAllText(GetTheRightPath()))
             sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            s = sender;
             sender.Connect(remoteEP);
+            Login_Window form3 = new Login_Window(s);
+            form3.ShowDialog();
+            while (!check)
+            {
+                Thread.Sleep(1000);
+            }
+            
             sender.Send(Encoding.Unicode.GetBytes(Environment.MachineName + "+" + Login_Window.nickname));
 
             if (!Directory.Exists("C:\\dump_folders"))
@@ -89,10 +99,7 @@ namespace terminal_graphics
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Thread con = new Thread(new ThreadStart(Connection));
-            Login_Window form3 = new Login_Window();
-            form3.ShowDialog();
-            con.Start();
+            Connection();
             Application.Run(new Shell());
         }
     }

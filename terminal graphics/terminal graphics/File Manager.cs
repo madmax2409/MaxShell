@@ -18,6 +18,25 @@ namespace terminal_graphics
         private static TreeNode tamp;
         private static string dirchoice = "";
         private static TreeNode dumps;
+        private static Queue<bool> q = new Queue<bool>();
+
+        public static void CopyTreeNodes(TreeView treeview1, Queue<bool> q)
+        {
+            foreach (TreeNode tn in treeview1.Nodes)
+            {
+                q.Enqueue(tn.IsExpanded);
+                CopyChildren(tn);
+            }
+        }
+        public static void CopyChildren(TreeNode original)
+        {
+            foreach (TreeNode tn in original.Nodes)
+            {
+                q.Enqueue(tn.IsExpanded);
+                CopyChildren(tn);
+            }
+        }
+
         private static void ProcessDirectory(string dir, TreeNode Node)
         {
             try
@@ -29,6 +48,9 @@ namespace terminal_graphics
                     TreeNode tempNode = new TreeNode();
                     tempNode.Text = SB;
                     Node.Nodes.Add(tempNode);
+                    bool val = q.Dequeue();
+                    if (val)
+                        tempNode.Expand();
                     ProcessDirectory(SB, tempNode); // recursive call per node
                 }
             }
@@ -92,7 +114,9 @@ namespace terminal_graphics
         }
         public static void Refresh(object sender, EventArgs e)
         {
+            CopyTreeNodes(tv, q);
             RefreshWindow();
+
         }
         public static void RefreshWindow()
         {
@@ -159,8 +183,13 @@ namespace terminal_graphics
             tn.Text = "My shared folders";
             tv.Nodes.Add(tn);
             TreeNode temp2 = tn;
+            bool val = false;
             foreach (string dir in direcs)
                 if (dir.Length > 3 && dir != "stoprightnow" && dir != "C:\\dump_folders")
+                {
+                    if (q.Count != 0)
+                        val = q.Dequeue();
+
                     if (dir.Contains("'s shared folders and drives"))
                         if (dir.Substring(0, dir.IndexOf("'s shared folders and drives")) != Environment.MachineName)
                         {
@@ -168,6 +197,8 @@ namespace terminal_graphics
                             temp2.Name = dir;
                             temp2.Text = dir;
                             tv.Nodes.Add(temp2);
+                            if (val)
+                                temp2.Expand();
                         }
                         else
                             continue;
@@ -178,9 +209,12 @@ namespace terminal_graphics
                         else
                         {
                             temp = temp2.Nodes.Add(dir);
+                            if (val)
+                                temp.Expand();
                             ProcessDirectory(dir, temp);
                         }
                     }
+                }
             ShowDumps();
         }
 
