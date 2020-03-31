@@ -8,13 +8,13 @@
 				intptr
 - debug d drive for listfiles
 - pass socket not through temp param 
-- network paths dict addition for every client (now it's only for serv pc) - 5 
 - FIX INTPTR BY KEYWORDS (check params between keywords)
 
 				Con
 - get server ip + port - scapi dotan
-- server shutdown handling
+- server shutdown handling(?)
 - log every func in server on client(?)
 					
 				GUI
-- GRAPHIC 4GL buttons spaces: all main funcs + file manager + sysinfo
+- GRAPHIC 4GL buttons spaces: all main funcs + file manager + sysinfo + clientlist
+- File manager drag & drop

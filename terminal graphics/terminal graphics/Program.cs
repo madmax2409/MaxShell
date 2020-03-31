@@ -11,6 +11,7 @@ namespace terminal_graphics
     static class Program
     {
         private static Socket sender;
+        private static Socket sender2;
         private static byte[] bytes = new byte[4096];
         private static IPAddress ipAddress;
         public static Form2 form2;
@@ -44,8 +45,8 @@ namespace terminal_graphics
         private static void ServMessages(IPAddress ip)
         {
             IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.214"), 11001); //int.Parse(File.ReadAllText(GetTheRightPath()))
-            sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            sender.Connect(remoteEP);
+            sender2 = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            sender2.Connect(remoteEP);
         }
         public static string Maintain(string message)
         {
