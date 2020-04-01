@@ -20,13 +20,7 @@ namespace terminal_graphics
 
         private static void Connection()
         {
-            IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
-            for (int i = 0; i < ipHostInfo.AddressList.Length; i++)
-                if (ipHostInfo.AddressList[i].ToString().StartsWith("172"))
-                    ipAddress = ipHostInfo.AddressList[i];
-
-            //ipAddress = ipHostInfo.AddressList[0];
-            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.214"), 11000); //int.Parse(File.ReadAllText(GetTheRightPath()))
+            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.249"), 11000); //int.Parse(File.ReadAllText(GetTheRightPath()))
             sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             s = sender;
             sender.Connect(remoteEP);
@@ -44,7 +38,7 @@ namespace terminal_graphics
         }
         private static void ServMessages(IPAddress ip)
         {
-            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.214"), 11001); //int.Parse(File.ReadAllText(GetTheRightPath()))
+            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.249"), 11001); //int.Parse(File.ReadAllText(GetTheRightPath()))
             sender2 = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sender2.Connect(remoteEP);
         }

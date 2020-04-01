@@ -1,4 +1,5 @@
 						MILESTONE 2 (Remnants)
+- add delete/create to help
 - undestroy treeview	
 - nodes to reopen after refresh			
 - create & delete funcs in server			
