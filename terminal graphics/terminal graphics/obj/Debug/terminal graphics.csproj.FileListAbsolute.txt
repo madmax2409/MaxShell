@@ -1,0 +1,85 @@
+C:\Users\MAXIM\Desktop\maxshell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.exe.config
+C:\Users\MAXIM\Desktop\maxshell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.exe
+C:\Users\MAXIM\Desktop\maxshell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.pdb
+C:\Users\MAXIM\Desktop\maxshell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csprojAssemblyReference.cache
+C:\Users\MAXIM\Desktop\maxshell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Properties.Resources.resources
+C:\Users\MAXIM\Desktop\maxshell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csproj.GenerateResource.cache
+C:\Users\MAXIM\Desktop\maxshell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.exe
+C:\Users\MAXIM\Desktop\maxshell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.pdb
+G:\maxshell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.exe.config
+G:\maxshell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.exe
+G:\maxshell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.pdb
+G:\maxshell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csprojAssemblyReference.cache
+G:\maxshell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Properties.Resources.resources
+G:\maxshell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csproj.GenerateResource.cache
+G:\maxshell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csproj.CoreCompileInputs.cache
+G:\maxshell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.exe
+G:\maxshell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.pdb
+G:\maxshell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Form1.resources
+F:\maxshell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Form1.resources
+F:\maxshell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Properties.Resources.resources
+F:\maxshell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csproj.GenerateResource.cache
+F:\maxshell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.exe
+F:\maxshell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.pdb
+F:\maxshell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.exe.config
+F:\maxshell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.exe
+F:\maxshell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.pdb
+F:\maxshell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csprojResolveAssemblyReference.cache
+C:\Users\Maxim\Desktop\MaxShell\MaxShell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.exe.config
+C:\Users\Maxim\Desktop\MaxShell\MaxShell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.exe
+C:\Users\Maxim\Desktop\MaxShell\MaxShell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.pdb
+C:\Users\Maxim\Desktop\MaxShell\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csprojAssemblyReference.cache
+C:\Users\Maxim\Desktop\MaxShell\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Form1.resources
+C:\Users\Maxim\Desktop\MaxShell\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Properties.Resources.resources
+C:\Users\Maxim\Desktop\MaxShell\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csproj.GenerateResource.cache
+C:\Users\Maxim\Desktop\MaxShell\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.exe
+C:\Users\Maxim\Desktop\MaxShell\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.pdb
+C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.exe.config
+C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.exe
+C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.pdb
+C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csprojAssemblyReference.cache
+C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Form1.resources
+C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Properties.Resources.resources
+C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csproj.GenerateResource.cache
+C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csproj.CoreCompileInputs.cache
+C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.exe
+C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.pdb
+C:\Users\Maxim\Desktop\MaxShell\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Form2.resources
+C:\Users\u101010\Desktop\‏‏MaxShell\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.exe
+C:\Users\u101010\Desktop\‏‏MaxShell\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.pdb
+C:\Users\Maxim\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Form2.resources
+G:\maxshell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Form2.resources
+C:\Users\u101010\Documents\MaxShell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.exe.config
+C:\Users\u101010\Documents\MaxShell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.exe
+C:\Users\u101010\Documents\MaxShell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.pdb
+C:\Users\u101010\Documents\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csprojAssemblyReference.cache
+C:\Users\u101010\Documents\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Form1.resources
+C:\Users\u101010\Documents\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Form2.resources
+C:\Users\u101010\Documents\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Properties.Resources.resources
+C:\Users\u101010\Documents\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csproj.GenerateResource.cache
+C:\Users\u101010\Documents\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csproj.CoreCompileInputs.cache
+C:\Users\u101010\Documents\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.exe
+C:\Users\u101010\Documents\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.pdb
+G:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.exe.config
+G:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.exe
+G:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.pdb
+G:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csprojAssemblyReference.cache
+G:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Form1.resources
+G:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Form2.resources
+G:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Properties.Resources.resources
+G:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csproj.GenerateResource.cache
+G:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csproj.CoreCompileInputs.cache
+G:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.exe
+G:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.pdb
+F:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.exe.config
+F:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.exe
+F:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\bin\Debug\terminal graphics.pdb
+F:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csprojAssemblyReference.cache
+F:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Form1.resources
+F:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Form2.resources
+F:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Properties.Resources.resources
+F:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csproj.GenerateResource.cache
+F:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.exe
+F:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.pdb
+C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Form2.resources
+C:\Users\Maxim\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Shell.resources

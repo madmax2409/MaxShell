@@ -1,0 +1,21 @@
+						MILESTONE 2 (Remnants)
+- add delete/create to help
+- undestroy treeview	
+- nodes to reopen after refresh			
+- create & delete funcs in server			
+- copy folder(?)
+- display nicknames instead of machnames(?)		
+						MILESTONE 3
+				intptr
+- debug d drive for listfiles
+- pass socket not through temp param 
+- FIX INTPTR BY KEYWORDS (check params between keywords)
+
+				Con
+- get server ip + port - scapi dotan
+- server shutdown handling(?)
+- log every func in server on client(?)
+					
+				GUI
+- GRAPHIC 4GL buttons spaces: all main funcs + file manager + sysinfo + clientlist
+- File manager drag & drop
