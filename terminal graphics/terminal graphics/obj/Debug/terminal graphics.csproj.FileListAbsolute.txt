@@ -83,3 +83,18 @@ F:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal 
 F:\MaxShellcopy\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.pdb
 C:\Users\u101010\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Form2.resources
 C:\Users\Maxim\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal_graphics.Shell.resources
+C:\Users\Maxim\Desktop\MaxShell\terminal graphics\terminal graphics\bin\Debug\IronPython.dll
+C:\Users\Maxim\Desktop\MaxShell\terminal graphics\terminal graphics\bin\Debug\IronPython.Modules.dll
+C:\Users\Maxim\Desktop\MaxShell\terminal graphics\terminal graphics\bin\Debug\IronPython.SQLite.dll
+C:\Users\Maxim\Desktop\MaxShell\terminal graphics\terminal graphics\bin\Debug\IronPython.Wpf.dll
+C:\Users\Maxim\Desktop\MaxShell\terminal graphics\terminal graphics\bin\Debug\Microsoft.Dynamic.dll
+C:\Users\Maxim\Desktop\MaxShell\terminal graphics\terminal graphics\bin\Debug\Microsoft.Scripting.dll
+C:\Users\Maxim\Desktop\MaxShell\terminal graphics\terminal graphics\bin\Debug\Microsoft.Scripting.Metadata.dll
+C:\Users\Maxim\Desktop\MaxShell\terminal graphics\terminal graphics\bin\Debug\IronPython.xml
+C:\Users\Maxim\Desktop\MaxShell\terminal graphics\terminal graphics\bin\Debug\IronPython.Modules.xml
+C:\Users\Maxim\Desktop\MaxShell\terminal graphics\terminal graphics\bin\Debug\IronPython.SQLite.xml
+C:\Users\Maxim\Desktop\MaxShell\terminal graphics\terminal graphics\bin\Debug\IronPython.Wpf.xml
+C:\Users\Maxim\Desktop\MaxShell\terminal graphics\terminal graphics\bin\Debug\Microsoft.Dynamic.xml
+C:\Users\Maxim\Desktop\MaxShell\terminal graphics\terminal graphics\bin\Debug\Microsoft.Scripting.xml
+C:\Users\Maxim\Desktop\MaxShell\terminal graphics\terminal graphics\bin\Debug\Microsoft.Scripting.Metadata.xml
+C:\Users\Maxim\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csproj.CopyComplete
