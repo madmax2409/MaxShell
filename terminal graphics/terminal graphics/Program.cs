@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.IO;
+using System.Diagnostics;
 
 namespace terminal_graphics
 {
@@ -13,14 +14,23 @@ namespace terminal_graphics
         private static Socket sender;
         private static Socket sender2;
         private static byte[] bytes = new byte[4096];
-        private static IPAddress ipAddress;
         public static Form2 form2;
         public static bool check = false;
         public static Socket s;
+        public static int port;
+        public static string ip;
+
+        private static void ReadAdress()
+        {
+            Process.Start(@"C:\MaxShell\Scapy\scapyclient.py");
+            string[] st = File.ReadAllText(@"C:\MaxShell\terminal graphics\terminal graphics\bin\Debug\address.txt").Split(new char[] { '+' });
+            ip = st[0];
+            port = int.Parse(st[1]);
+        }
 
         private static void Connection()
         {
-            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.249"), 11000); //int.Parse(File.ReadAllText(GetTheRightPath()))
+            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(ip), port); //int.Parse(File.ReadAllText(GetTheRightPath()))
             sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             s = sender;
             sender.Connect(remoteEP);
@@ -32,11 +42,11 @@ namespace terminal_graphics
             }
             
             sender.Send(Encoding.Unicode.GetBytes(Environment.MachineName + "+" + Login_Window.nickname));
-            ServMessages(ipAddress);
+            //ServMessages();
             if (!Directory.Exists("C:\\dump_folders"))
                 CallFunc("sharefolder on " + Environment.MachineName + " where dir='C:\\dump_folders'");
         }
-        private static void ServMessages(IPAddress ip)
+        private static void ServMessages()
         {
             IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.249"), 11001); //int.Parse(File.ReadAllText(GetTheRightPath()))
             sender2 = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -44,6 +54,7 @@ namespace terminal_graphics
         }
         public static string Maintain(string message)
         {
+            message = message.ToLower();
             try
             {
                 if (message == "file manager")
@@ -98,6 +109,7 @@ namespace terminal_graphics
 
         static void Main()
         {
+            ReadAdress();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Connection();

@@ -1,11 +1,15 @@
-getip - the server's ip
-freespace - the free space in bytes left in each of the device's drives
-showproc - a list of all currently running processes on the device
-disconnect - disconnect from remote server and stop the application
-killproc - kill the process mentioned in the parameter
-getdir - the current working directory
-startproc - start a process with the specified paramater
-sharefolder - set a folder mentioned in the parameter as a shared UNC path 
-listfiles - list all files in the mentioned directory
-showfolder - list all shared UNC paths on the device
-help - list of avalible commands
+Functions:
+
+getip - the server's ip...............................................................................................................no parameters
+freespace - the free space in bytes left in each of the device's drives........................computer name
+showproc - a list of all currently running processes on the device..............................computer name
+disconnect - disconnect from remote server and stop the application......................no parameters
+killproc - kill the process mentioned in the parameter.....................................................computer name & process name
+getdir - the current working directory....................................................................................no parameters
+startproc - start a process with the specified paramater.................................................computer name & process name
+sharefolder - set a folder mentioned in the parameter as a shared UNC path.......computer name & path
+listfiles - list all files in the mentioned directory..................................................................computer name & path
+showfolder - list all shared UNC paths on the device.......................................................no parameters
+create - creates a file in the location given by the parameters......................................computer name & path
+delete - creates a file in the location given by the parameters......................................computer name & path
+help - list of avalible commands...............................................................................................no parameters

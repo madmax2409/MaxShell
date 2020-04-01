@@ -9,10 +9,10 @@ namespace terminal_graphics
 {
     public partial class Form2 : Form
     {
-        private static Button open = new Button();
-        private static Button refresh = new Button();
-        private static Button delete = new Button();
-        private static Button create = new Button(); // new window
+        private Button open = new Button();
+        private Button refresh = new Button();
+        private Button delete = new Button();
+        private Button create = new Button();
         private static TreeView tv = new TreeView();
         private static string filechoice = "";
         private static TreeNode tamp;

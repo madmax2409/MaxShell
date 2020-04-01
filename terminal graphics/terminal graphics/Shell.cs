@@ -14,6 +14,9 @@ namespace terminal_graphics
         private TextBox output = new TextBox();
         private Stack<string> older = new Stack<string>();
         private Stack<string> newer = new Stack<string>();
+        private Button fileman = new Button();
+        private Button sysinfo = new Button();
+        private Button clist = new Button();
 
         private void BlockingInput(object sender, KeyPressEventArgs e)
         {
@@ -86,6 +89,12 @@ namespace terminal_graphics
                     break;
             }
         }
+
+        public void OpenManager(object sender, EventArgs e)
+        {
+            Program.Maintain("file manager");
+        }
+
         public Shell()
         {
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -107,7 +116,7 @@ namespace terminal_graphics
 
             command.Font = f;
             command.Location = new Point((int)size.Width + 11, 10);
-            command.Size = new Size((this.Width - (int)size.Width - 15) * 5 + 30, 10);
+            command.Size = new Size((this.Width - (int)size.Width - 15) * 5 + 135, 10);
             command.BorderStyle = BorderStyle.FixedSingle;
             command.KeyDown += new KeyEventHandler(OutputProcedure);
             Controls.Add(command);
@@ -117,9 +126,30 @@ namespace terminal_graphics
             output.Multiline = true;
             output.Size = new Size(790, 405);
             output.BorderStyle = BorderStyle.Fixed3D;
-            output.ScrollBars = ScrollBars.Vertical;
+            output.ScrollBars = ScrollBars.Both;
             output.KeyPress += new KeyPressEventHandler(BlockingInput);
             Controls.Add(output);
+
+            fileman.Font = f;
+            fileman.Location = new Point(800, 40);
+            fileman.Text = "File Manager";
+            fileman.Size = new Size(95, 50);
+            fileman.Click += new EventHandler(OpenManager);
+            Controls.Add(fileman);
+
+            sysinfo.Font = f;
+            sysinfo.Location = new Point(800, 100);
+            sysinfo.Text = "System Information";
+            sysinfo.Size = new Size(95, 50);
+            //sysinfo.Click += new EventHandler(SystemInfo);
+            Controls.Add(sysinfo);
+
+            clist.Font = f;
+            clist.Location = new Point(800, 160);
+            clist.Text = "Client List";
+            clist.Size = new Size(95, 50);
+            //clist.Click += new EventHandler(ClientList);
+            Controls.Add(clist);
 
             InitializeComponent();
         }
