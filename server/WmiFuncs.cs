@@ -18,20 +18,15 @@ namespace server
         {
             string data = ShowFolders();
             string[] datas = data.Split(new char[] { '\n' });
-            for(int i = 0; i < datas.Length; i++)
-                try 
+            for (int i = 0; i < datas.Length; i++)
+            {
+                try
                 {
                     if (Regex.IsMatch(datas[i], @"^\w:\\[a-zA-Z0-9]*$") && !datas[i].Contains(target)) //C:\testfolder1
-                    {
-                        Console.WriteLine("check: " + datas[i]);
                         paths.Add(datas[i], ("\\\\" + target + "\\" + datas[i]).Replace(':', '$'));
-                    }
-                    else
-                        Console.WriteLine(datas[i]);
                 }
                 catch { }
-            foreach (KeyValuePair<string, string> pair in paths)
-                Console.WriteLine("key: " + pair.Key + " value: " + pair.Value);                
+            }              
         }
         public static void RemoteConnectTheScope(string target)
         {
@@ -151,7 +146,7 @@ namespace server
                     return "folder successfully set as shared with the net-name " + inParams["Name"];
                 }
             }
-            catch (Exception ex)
+            catch //IO?
             {
                 counter++;
                 return ShareFolder(target, sharefolder);

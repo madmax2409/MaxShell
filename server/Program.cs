@@ -5,6 +5,8 @@ using System.Net.Sockets;
 using System.Threading;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
+
 
 namespace server
 {
@@ -108,6 +110,7 @@ namespace server
         }
         static void Main(string[] args)
         {
+            Process.Start(@"C:\MaxShell\Scapy\scapyserver.py");
             Server.SetCommands();
             WmiFuncs.AddPaths(Environment.MachineName);
             byte[] bytes = new byte[4096];
