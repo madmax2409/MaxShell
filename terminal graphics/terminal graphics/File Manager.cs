@@ -48,15 +48,15 @@ namespace terminal_graphics
                     TreeNode tempNode = new TreeNode();
                     tempNode.Text = SB;
                     Node.Nodes.Add(tempNode);
-                    bool val = q.Dequeue();
-                    if (val)
-                        tempNode.Expand();
+                    //bool val = q.Dequeue();
+                    //if (val)
+                        //tempNode.Expand();
                     ProcessDirectory(SB, tempNode); // recursive call per node
                 }
             }
             catch 
             {
-               
+                
             }
         }
         private static void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
@@ -108,15 +108,15 @@ namespace terminal_graphics
                     int end = dirchoice.IndexOf("'s shared folders and drives");
                     Program.CallFunc("copyfile from " + dirchoice.Substring(0, end) + " where dir='" + filechoice + "'");
                     RefreshWindow();
+                    MessageBox.Show(dumps.LastNode.LastNode.Text);
                     Process.Start(dumps.LastNode.LastNode.Text);
                 }
                   
         }
         public static void Refresh(object sender, EventArgs e)
         {
-            CopyTreeNodes(tv, q);
+            //CopyTreeNodes(tv, q);
             RefreshWindow();
-
         }
         public static void RefreshWindow()
         {
@@ -236,8 +236,48 @@ namespace terminal_graphics
             else
                 Directory.CreateDirectory("C:\\dump_folders");
         }
+        private void open_DragEnter(object sender, DragEventArgs e)
+        {
+            MessageBox.Show("DragEnter!");
+            e.Effect = DragDropEffects.Copy;
+        }
+        private void tv_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = e.AllowedEffect;
+        }
+        private void tv_DragOver(object sender, DragEventArgs e)
+        {
+            // Retrieve the client coordinates of the mouse position.  
+            Point targetPoint = tv.PointToClient(new Point(e.X, e.Y));
+
+            // Select the node at the mouse position.  
+            tv.SelectedNode = tv.GetNodeAt(targetPoint);
+        }
+        private void tv_DragDrop(object sender, DragEventArgs e)
+        {
+            // Retrieve the client coordinates of the drop location.  
+            Point targetPoint = PointToClient(new Point(e.X, e.Y));
+
+            // Retrieve the node that was dragged.  
+            string draggedNode = e.Data.GetData("string", true).ToString();
+        }
+        private void tv_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            // Move the dragged node when the left mouse button is used.  
+            if (e.Button == MouseButtons.Left)
+            {
+                DoDragDrop(e.Item, DragDropEffects.Move);
+            }
+
+            // Copy the dragged node when the right mouse button is used.  
+            else if (e.Button == MouseButtons.Right)
+            {
+                DoDragDrop(e.Item, DragDropEffects.Copy);
+            }
+        }
         public Form2(string dirs)
         {
+            this.SuspendLayout();
             string[] direcs = dirs.Split(new char[] { '\n' });
             BuildTree(direcs);
             
@@ -246,6 +286,12 @@ namespace terminal_graphics
             tv.Size = new Size(400, 400);
             tv.BorderStyle = BorderStyle.FixedSingle;
             tv.AfterSelect += new TreeViewEventHandler(treeView1_AfterSelect);
+            tv.ItemDrag += new ItemDragEventHandler(tv_ItemDrag);
+            tv.DragEnter += new DragEventHandler(tv_DragEnter);
+            tv.DragOver += new DragEventHandler(tv_DragOver);
+            tv.DragDrop += new DragEventHandler(tv_DragDrop);
+            //tv.AllowDrop = true;
+            tv.Dock = DockStyle.Fill;
             Controls.Add(tv);
 
             open.Font = new Font("comic sans", 10);
@@ -259,7 +305,7 @@ namespace terminal_graphics
             refresh.Font = new Font("comic sans", 10);
             refresh.Location = new Point(100, 410);
             refresh.Text = "refresh";
-            refresh.Click += delegate (object sender, EventArgs e) { Refresh(sender, e); };
+            refresh.Click += new EventHandler(Refresh);
             refresh.Size = new Size(70, 30);
             refresh.BackColor = Color.Turquoise;
             Controls.Add(refresh);

@@ -37,7 +37,6 @@ namespace terminal_graphics
             int x = 10, y = 10;
             foreach (string st in data.Split(new char[] { '\n' }))
             {
-                MessageBox.Show(st);
                 Label lb = new Label();
                 lb.Text = st;
                 lb.Font = new Font("comic sans", 10);

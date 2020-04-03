@@ -16,7 +16,5 @@
 - log funcs in server on client(?)
 					
 				GUI
-- debug duplicate file names
-- debug clientlist
 - File manager drag & drop
 - GRAPHIC 4GL buttons spaces: sysinfo
