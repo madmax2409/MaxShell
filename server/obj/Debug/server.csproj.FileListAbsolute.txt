@@ -1,0 +1,14 @@
+C:\Users\maxim\Desktop\MaxShell\server\bin\Debug\server.exe.config
+C:\Users\maxim\Desktop\MaxShell\server\bin\Debug\server.exe
+C:\Users\maxim\Desktop\MaxShell\server\bin\Debug\server.pdb
+C:\Users\maxim\Desktop\MaxShell\server\bin\Debug\Microsoft.Dynamic.dll
+C:\Users\maxim\Desktop\MaxShell\server\bin\Debug\Microsoft.Scripting.dll
+C:\Users\maxim\Desktop\MaxShell\server\bin\Debug\Microsoft.Scripting.Metadata.dll
+C:\Users\maxim\Desktop\MaxShell\server\bin\Debug\Microsoft.Dynamic.xml
+C:\Users\maxim\Desktop\MaxShell\server\bin\Debug\Microsoft.Scripting.xml
+C:\Users\maxim\Desktop\MaxShell\server\bin\Debug\Microsoft.Scripting.Metadata.xml
+C:\Users\maxim\Desktop\MaxShell\server\obj\Debug\server.csprojAssemblyReference.cache
+C:\Users\maxim\Desktop\MaxShell\server\obj\Debug\server.csproj.CoreCompileInputs.cache
+C:\Users\maxim\Desktop\MaxShell\server\obj\Debug\server.csproj.CopyComplete
+C:\Users\maxim\Desktop\MaxShell\server\obj\Debug\server.exe
+C:\Users\maxim\Desktop\MaxShell\server\obj\Debug\server.pdb
