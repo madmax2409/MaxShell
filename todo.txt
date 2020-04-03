@@ -11,11 +11,12 @@
 - FIX INTPTR BY KEYWORDS (check params between keywords)
 
 				Con
-- get server ip & port - scapi dotan
+- get server ip & port - scapy
 - server shutdown handling(?)
 - log funcs in server on client(?)
 					
 				GUI
-- debug file manager
-- GRAPHIC 4GL buttons spaces: all main funcs + file manager + sysinfo + clientlist
+- debug duplicate file names
+- debug clientlist
 - File manager drag & drop
+- GRAPHIC 4GL buttons spaces: sysinfo

@@ -18,7 +18,7 @@ namespace server
             my = cl;
             nick = nickname;
             mach = machname;
-            string[] st = { nick, mach };
+            string[] st = { nick, mach, cl.RemoteEndPoint.ToString() };
             clients.Add(cl, st);
         }
         public Socket GetSocket()
@@ -39,8 +39,8 @@ namespace server
         }
         public static void CheckAndAdd(Socket cl, string mach, string nick)
         {
-            if (mach != Environment.MachineName)
-            {
+            //if (mach != Environment.MachineName)
+            //{
                 bool flag = true;
                 foreach (KeyValuePair<Socket, string[]> pair in clients)
                 {
@@ -54,7 +54,7 @@ namespace server
                     clientqueue.Enqueue(new Client(cl, nick, mach));
 
                 Console.WriteLine("Added a new client: nick: {0}, mach: {1}", nick, mach);
-            }
+            //}
         }
     }
 }

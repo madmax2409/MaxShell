@@ -39,8 +39,7 @@ namespace terminal_graphics
                 string outpt = Program.Maintain(command);
                 if (outpt == "")
                     return;
-                char[] seperate = { '\n' };
-                string[] dirs = outpt.Split(seperate);
+                string[] dirs = outpt.Split(new char[] { '\n' });
                 for (int i = 0; i < dirs.Length; i++)
                 {
                     output.AppendText(dirs[i]);
@@ -95,6 +94,12 @@ namespace terminal_graphics
             Program.Maintain("file manager");
         }
 
+        public void ClientList(object sender, EventArgs e)
+        {
+            string data = Program.CallFunc("clientlist");
+            ClientList cl = new ClientList(data.Substring(0, data.IndexOf("stoprightnow")));
+            cl.Show();
+        }
         public Shell()
         {
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -148,7 +153,7 @@ namespace terminal_graphics
             clist.Location = new Point(800, 160);
             clist.Text = "Client List";
             clist.Size = new Size(95, 50);
-            //clist.Click += new EventHandler(ClientList);
+            clist.Click += new EventHandler(ClientList);
             Controls.Add(clist);
 
             InitializeComponent();

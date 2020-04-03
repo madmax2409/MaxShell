@@ -42,7 +42,7 @@ namespace terminal_graphics
             try
             {
                 string[] SubDir;
-                SubDir = Directory.GetFileSystemEntries(dir);
+                SubDir = Directory.GetFiles(dir);
                 foreach (string SB in SubDir) // exit upon empty 
                 {
                     TreeNode tempNode = new TreeNode();
@@ -54,9 +54,9 @@ namespace terminal_graphics
                     ProcessDirectory(SB, tempNode); // recursive call per node
                 }
             }
-            catch
+            catch 
             {
-
+               
             }
         }
         private static void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
@@ -185,6 +185,7 @@ namespace terminal_graphics
             TreeNode temp2 = tn;
             bool val = false;
             foreach (string dir in direcs)
+            {
                 if (dir.Length > 3 && dir != "stoprightnow" && dir != "C:\\dump_folders")
                 {
                     if (q.Count != 0)
@@ -215,6 +216,7 @@ namespace terminal_graphics
                         }
                     }
                 }
+            }
             ShowDumps();
         }
 

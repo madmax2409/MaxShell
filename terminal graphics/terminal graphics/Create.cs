@@ -20,11 +20,13 @@ namespace terminal_graphics
         private static Button cancel = new Button();
         private static int counter = 0;
 
-        public static void OutCreate(object sender, EventArgs e)
+        public void OutCreate(object sender, EventArgs e)
         {
-            Creation();
+            bool flag = Creation();
+            if (flag)
+                Close();
         }
-        public static void Creation()
+        public static bool Creation()
         {
             try
             {
@@ -34,15 +36,17 @@ namespace terminal_graphics
 
                 File.Create("C:\\dump_folders\\local_dump\\" + file);
                 MessageBox.Show("File Created in local dumps!", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                return true;
             }
             catch (IOException)
             {
                 counter++;
-                Creation();
+                return Creation();
             }
             catch (ArgumentException)
             {
                 MessageBox.Show("Something is wong with your choice, please try again", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
             }
         }
 

@@ -61,9 +61,7 @@ namespace server
                 char[] sep = { '+' };
                 string[] datas = data.Split(sep);
                 Client.CheckAndAdd(s, datas[0], datas[1]);
-                Console.WriteLine("got a nickname: " + datas[1]);
                 WmiFuncs.AddPaths(datas[0]);
-                Console.WriteLine("bruj");
                 while (true)
                 {
 
@@ -110,7 +108,7 @@ namespace server
         }
         static void Main(string[] args)
         {
-            Process.Start(@"C:\MaxShell\Scapy\scapyserver.py");
+            //Process.Start(@"C:\MaxShell\Scapy\scapyserver.py");
             Server.SetCommands();
             WmiFuncs.AddPaths(Environment.MachineName);
             byte[] bytes = new byte[4096];

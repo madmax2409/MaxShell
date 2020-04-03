@@ -30,7 +30,7 @@ namespace terminal_graphics
 
         private static void Connection()
         {
-            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(ip), port); //int.Parse(File.ReadAllText(GetTheRightPath()))
+            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.249"), 11000); //IPAddress.Parse(ip), port
             sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             s = sender;
             sender.Connect(remoteEP);
@@ -48,7 +48,7 @@ namespace terminal_graphics
         }
         private static void ServMessages()
         {
-            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.249"), 11001); //int.Parse(File.ReadAllText(GetTheRightPath()))
+            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.214"), 11001); 
             sender2 = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sender2.Connect(remoteEP);
         }
@@ -62,8 +62,7 @@ namespace terminal_graphics
                     string data = CallFunc("showfolders");
                     data = Form2.AddInsides(data);
                     form2 = new Form2(data);
-                    Thread t = new Thread(() => Application.Run(form2));
-                    t.Start();
+                    form2.Show();
                     return "opened file manager";
                 }
                 else if (message == "disconnect")
@@ -109,7 +108,7 @@ namespace terminal_graphics
 
         static void Main()
         {
-            ReadAdress();
+            //ReadAdress();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Connection();

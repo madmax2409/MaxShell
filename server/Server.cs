@@ -9,7 +9,7 @@ namespace server
     {
         private static Dictionary<string, Func<string[], string>> dict = new Dictionary<string, Func<string[], string>>();
         private static string[] funcs = { "getip", "freespace", "showproc", "disconnect", "killproc", "getdir", "startproc", "sharefolder", "listfiles", "showfolders",
-            "help", "copy", "delete", }; //"createfile" 
+            "help", "copy", "delete", "clientlist" }; //"createfile" 
         private static string[] paramnames = { "name=", "dir=", "pc=" };
         public static Socket pass;
 
@@ -28,7 +28,8 @@ namespace server
                 targets => WmiFuncs.ShowFolders(),
                 targets => File.ReadAllText(Environment.CurrentDirectory + "\\info.txt"),
                 targets =>WmiFuncs.CopyFile(pass, targets[1], targets[2]),
-                targets => WmiFuncs.DeleteFile(targets[1], targets[2]) };
+                targets => WmiFuncs.DeleteFile(targets[1], targets[2]),
+                targets => WmiFuncs.ClientList()};
                 //targets => WmiFuncs.CreateFile()
 
             for (int i = 0; i < funcs.Length; i++)
