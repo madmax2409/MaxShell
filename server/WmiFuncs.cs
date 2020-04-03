@@ -14,6 +14,17 @@ namespace server
         public static ManagementScope ms = new ManagementScope();
         public static Dictionary<string, string> paths = new Dictionary<string, string>();
 
+        public static string ClientList()
+        {
+            string output = "";
+            int counter = 1;
+            foreach (KeyValuePair<Socket, string[]> pair in Client.clients)
+            {
+                output += counter + ". " + pair.Value[0] + ", " + pair.Value[1] + ", " + pair.Value[2];
+                counter++;
+            }
+            return output;
+        }
         public static void AddPaths(string target)
         {
             string data = ShowFolders();

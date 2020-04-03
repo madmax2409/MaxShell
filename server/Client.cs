@@ -18,7 +18,7 @@ namespace server
             my = cl;
             nick = nickname;
             mach = machname;
-            string[] st = { nick, mach };
+            string[] st = { nick, mach, cl.RemoteEndPoint.ToString() };
             clients.Add(cl, st);
         }
         public Socket GetSocket()
