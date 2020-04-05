@@ -18,19 +18,11 @@ namespace terminal_graphics
         public static bool check = false;
         public static Socket s;
         public static int port;
-        public static string ip;
-
-        private static void ReadAdress()
-        {
-            Process.Start(@"C:\MaxShell\Scapy\scapyclient.py");
-            string[] st = File.ReadAllText(@"C:\MaxShell\terminal graphics\terminal graphics\bin\Debug\address.txt").Split(new char[] { '+' });
-            ip = st[0];
-            port = int.Parse(st[1]);
-        }
+        public static IPAddress ip;
 
         private static void Connection()
         {
-            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.249"), 11000); //IPAddress.Parse(ip), port
+            IPEndPoint remoteEP = new IPEndPoint(ip, port); //IPAddress.Parse(ip), port
             sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             s = sender;
             sender.Connect(remoteEP);
@@ -42,16 +34,10 @@ namespace terminal_graphics
             }
             
             sender.Send(Encoding.Unicode.GetBytes(Environment.MachineName + "+" + Login_Window.nickname));
-            //ServMessages();
             if (!Directory.Exists("C:\\dump_folders"))
                 CallFunc("sharefolder on " + Environment.MachineName + " where dir='C:\\dump_folders'");
         }
-        private static void ServMessages()
-        {
-            IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.214"), 11001); 
-            sender2 = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            sender2.Connect(remoteEP);
-        }
+
         public static string Maintain(string message)
         {
             message = message.ToLower();
@@ -108,7 +94,7 @@ namespace terminal_graphics
 
         static void Main()
         {
-            //ReadAdress();
+            GetAddr.PreSock();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Connection();

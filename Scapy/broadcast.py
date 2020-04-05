@@ -22,11 +22,17 @@ output = output.decode('utf-8')
 reg = re.compile(r'((?:\d{1,3}.){3}\d{1,3})\s+((?:[\da-f]{2}-){5}[\da-f]{2})\s+dynamic')
 ext = reg.findall(output)
 
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 port = str(find_free_port())
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+data = 'localhost'+ str(port)
 while True:
-    for s in ext:
-        print (s[0], str(port))
-        data = s[0]+ str(port)
-        sock.sendto((bytes(data, 'utf-8')), (s[0], 11000))
-        time.sleep(2)
+    sock.sendto((bytes(data, 'utf-8')), ('192.168.1.249', 10000))  # s[o]
+    print ('tried sending')
+    time.sleep(1)
+# while True:
+   #  for s in ext:
+        # print (s[0], str(port))
+        # data = s[0]+ str(port)
+        
+        # time.sleep(2)

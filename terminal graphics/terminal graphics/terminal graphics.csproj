@@ -71,6 +71,7 @@
     <Compile Include="Create.Designer.cs">
       <DependentUpon>Create.cs</DependentUpon>
     </Compile>
+    <Compile Include="GetAddr.cs" />
     <Compile Include="Shell.cs">
       <SubType>Form</SubType>
     </Compile>
