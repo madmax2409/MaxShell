@@ -14,6 +14,7 @@ namespace server
     {
         public static string data = null;
         public static IPAddress ipAddress = null;
+        public static int port;
 
         private static void SendPackets(string fullstring, Socket handler)
         {
@@ -28,15 +29,7 @@ namespace server
                 counter -= 4096;
             }
         }
-        private static int FreeTcpPort()
-        {
-            TcpListener l = new TcpListener(IPAddress.Loopback, 0);
-            l.Start();
-            int port = ((IPEndPoint)l.LocalEndpoint).Port;
-            l.Stop();
-            File.WriteAllText(Environment.CurrentDirectory + "\\port.txt", port.ToString());
-            return port;
-        }
+
         private static void KeepInTact(Socket s, string pass)
         {
             byte[] bytes = new byte[4096];
@@ -90,25 +83,14 @@ namespace server
                 Console.Write("Enter the password: ");
                 password = Console.ReadLine();
             }
+            PreCon.SendApproval();
             return password;
         }
 
-        private static void SecondSock(IPAddress ip)
-        {
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11001);  //FreeTcpPort()           
-            Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            listener.Bind(localEndPoint);
-            listener.Listen(3);
-            while (true)
-            {
-                Socket handler = listener.Accept();
-                //Thread t = new Thread(() => KeepInTact(handler, pass));
-                //t.Start();
-            }
-        }
+        
         static void Main(string[] args)
         {
-            //Process.Start(@"C:\MaxShell\Scapy\scapyserver.py");
+            PreCon.PreSock();
             Server.SetCommands();
             WmiFuncs.AddPaths(Environment.MachineName);
             byte[] bytes = new byte[4096];
@@ -117,14 +99,12 @@ namespace server
                 if (ipHostInfo.AddressList[i].ToString().StartsWith("192"))
                     ipAddress = ipHostInfo.AddressList[i];
 
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);  //FreeTcpPort()           
+            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, port);  //FreeTcpPort()           
             Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             listener.Bind(localEndPoint);
             string pass  = SetPassword();
             Console.WriteLine("listening");
             listener.Listen(3);
-            Thread s2 = new Thread(() => SecondSock(ipAddress));
-            s2.Start();
             while (true)
             {
                 Socket handler = listener.Accept();

@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PreCon.cs" />
     <Compile Include="WmiFuncs.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Program.cs" />

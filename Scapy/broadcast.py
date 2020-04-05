@@ -19,14 +19,20 @@ def find_free_port():
 
 output = run_command('arp -a')[0]
 output = output.decode('utf-8')
+print (output)
 reg = re.compile(r'((?:\d{1,3}.){3}\d{1,3})\s+((?:[\da-f]{2}-){5}[\da-f]{2})\s+dynamic')
 ext = reg.findall(output)
 
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 port = str(find_free_port())
 while True:
     for s in ext:
+        run_command('ping' + s[0])
         print (s[0], str(port))
         data = s[0]+ str(port)
-        sock.sendto((bytes(data, 'utf-8')), (s[0], 11000))
-        time.sleep(2)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            sock.sendto((bytes(data, 'utf-8')), (s[0], 10000))
+        except:
+            print ("failed")
+        finally:
+            time.sleep(1)
