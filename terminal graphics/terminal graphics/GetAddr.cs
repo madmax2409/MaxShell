@@ -14,7 +14,7 @@ namespace terminal_graphics
         public static IPAddress ipAddr;
         public static void PreSock()
         {
-            IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
+            IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
             for (int i = 0; i < ipHostInfo.AddressList.Length; i++)
                 if (ipHostInfo.AddressList[i].ToString().StartsWith("192"))
                     ipAddr = ipHostInfo.AddressList[i];

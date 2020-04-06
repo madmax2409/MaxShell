@@ -100,6 +100,12 @@ namespace terminal_graphics
             ClientList cl = new ClientList(data.Substring(0, data.IndexOf("stoprightnow")));
             cl.Show();
         }
+
+        public void SysInfo(object sender, EventArgs e)
+        {
+            SystemInfo si = new SystemInfo();
+            si.Show();
+        }
         public Shell()
         {
             FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -146,7 +152,7 @@ namespace terminal_graphics
             sysinfo.Location = new Point(800, 100);
             sysinfo.Text = "System Information";
             sysinfo.Size = new Size(95, 50);
-            //sysinfo.Click += new EventHandler(SystemInfo);
+            sysinfo.Click += new EventHandler(SysInfo);
             Controls.Add(sysinfo);
 
             clist.Font = f;

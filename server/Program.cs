@@ -112,7 +112,7 @@ namespace server
             Server.SetCommands();
             WmiFuncs.AddPaths(Environment.MachineName);
             byte[] bytes = new byte[4096];
-            IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
+            IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
             for (int i = 0; i < ipHostInfo.AddressList.Length; i++)
                 if (ipHostInfo.AddressList[i].ToString().StartsWith("192"))
                     ipAddress = ipHostInfo.AddressList[i];
@@ -121,7 +121,7 @@ namespace server
             Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             listener.Bind(localEndPoint);
             string pass  = SetPassword();
-            Console.WriteLine("listening");
+            Console.WriteLine("listening on ip: " + ipAddress + " port: " + 11000);
             listener.Listen(3);
             Thread s2 = new Thread(() => SecondSock(ipAddress));
             s2.Start();

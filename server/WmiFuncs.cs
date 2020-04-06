@@ -57,9 +57,9 @@ namespace server
                 ms = new ManagementScope("\\\\" + target + "\\root\\cimv2");
         }
     
-    public static string GetIp()
+        public static string GetIp()
         {
-            IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
+            IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
             IPAddress ipAddress = ipHostInfo.AddressList[0];
             for (int i = 0; i < ipHostInfo.AddressList.Length; i++)
                 if (ipHostInfo.AddressList[i].ToString().StartsWith("192"))
