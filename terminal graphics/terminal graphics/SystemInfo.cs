@@ -18,7 +18,9 @@ namespace terminal_graphics
     public partial class SystemInfo : Form
     {
         private static Dictionary<string, string> dict = new Dictionary<string, string>();
-        private static string[] shorts = { "Windwos Version", "Host Name", "Username", "CPU", "RAM", "ipv4", "ipv6", "MAC", "Subnet Mask", "area" };
+        private static string[] shorts = { "Windwos Version", "Host Name", "Username", "CPU", "RAM", "ipv4", "ipv6", "MAC", "Subnet Mask" };
+        public static Panel sys = new Panel();
+        public static Panel net = new Panel();
 
         public static void BuildDict()
         {
@@ -31,8 +33,7 @@ namespace terminal_graphics
                 GetIpv4(),
                 GetIpv6(),
                 GetMacAddress(),
-                GetSubnetMask(IPAddress.Parse(GetIpv4())),
-                GetLocation()};
+                GetSubnetMask(IPAddress.Parse(GetIpv4()))};
 
             for (int i = 0; i<shorts.Length; i++)
                 dict.Add(shorts[i], methods[i]);
@@ -80,47 +81,86 @@ namespace terminal_graphics
             ComputerInfo ci = new ComputerInfo();
             return ci.TotalPhysicalMemory.ToString();
         }
-        private static string GetLocation()
-        {
-            GeoCoordinateWatcher watcher = new GeoCoordinateWatcher();
-            watcher.TryStart(false, TimeSpan.FromMilliseconds(1000));
-            GeoCoordinate coord = watcher.Position.Location;
-            if (coord.IsUnknown != true)
-                return "Lat: " + coord.Latitude + " Long: " + coord.Longitude;
-            else
-                return "Unknown latitude and longitude";
 
+        public static void SetLabels()
+        {
+            int counter = 1, x = 0, y = 0, mul = 0;
+            Panel panel;
+            foreach (KeyValuePair<string, string> pair in dict)
+            {
+                if (counter <= 5)
+                {
+                    panel = sys;
+                    x = sys.Location.X;
+                    y = sys.Location.Y;
+                    mul = counter;
+                }
+                else
+                {
+                    panel = net;
+                    x = net.Location.X;
+                    y = net.Location.Y;
+                    mul = counter - 5;
+                }
+                Label temp = new Label();
+                temp.Font = new Font("comic sans", 12);
+                temp.Size = new Size(350, 30);
+                temp.Location = new Point(10, mul * 60 - 40);
+                temp.Text = "\u2022 " + pair.Key + " - " + pair.Value;
+                panel.Controls.Add(temp);
+                counter++;
+            }
         }
 
         public SystemInfo()
         {
+            BuildDict(); 
+
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             MinimizeBox = false;
+            BackColor = Color.White;
 
-            Panel sys = new Panel();
-            sys.Location = new Point(20, 50);
-            sys.Size = new Size(350, 380);
+            Image comp = Image.FromFile(@"C:\MaxShell\pics\pc.png");
+            Image nets = Image.FromFile(@"C:\MaxShell\pics\net.png");
+
+            sys.Location = new Point(20, comp.Height + 20);
+            sys.Size = new Size(350, 320);
             sys.BorderStyle = BorderStyle.FixedSingle;
             Controls.Add(sys);
 
-            Panel net = new Panel();
-            net.Location = new Point(400, 50);
-            net.Size = new Size(350, 380);
+            net.Location = new Point(400, comp.Height + 20);
+            net.Size = new Size(350, 320);
             net.BorderStyle = BorderStyle.FixedSingle;
             Controls.Add(net);
 
             Label s = new Label();
-            s.Location = new Point(70, 15);
-            s.Font = new Font("comic sans", 10);
-            s.Text = "System Info";
+            s.Location = new Point(comp.Width + 20, comp.Height / 2 );
+            s.Font = new Font("comic sans", 18);
+            s.Text = "System Info:";
+            s.Size = new Size(200, 200);
             Controls.Add(s);
 
             Label n = new Label();
-            n.Location = new Point(450, 15);
-            n.Font = new Font("comic sans", 10);
-            n.Text = "Network Info";
+            n.Location = new Point(500, comp.Height / 2);
+            n.Font = new Font("comic sans", 18);
+            n.Text = "Network Info:";
+            n.Size = new Size(200, 200);
             Controls.Add(n);
+
+            Label pcpic = new Label();
+            pcpic.Location = new Point(105 - comp.Width, 15);
+            pcpic.Size = new Size(comp.Width, comp.Height);
+            pcpic.Image = comp;
+            Controls.Add(pcpic);
+
+            Label netpic = new Label();
+            netpic.Location = new Point(490 - comp.Width, 15);
+            netpic.Size = new Size(comp.Width, comp.Height);
+            netpic.Image = nets;
+            Controls.Add(netpic);
+
+            SetLabels();
 
             InitializeComponent();
         }

@@ -5,17 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
-<<<<<<< HEAD
-=======
 using System.Diagnostics;
->>>>>>> e5f2bb7fe1488e43fc04e1561c7400d511047e06
 using System.Windows.Forms;
 
 namespace terminal_graphics
 {
     class GetAddr
     {
-<<<<<<< HEAD
         public static IPAddress ipAddr;
         public static void PreSock()
         {
@@ -31,7 +27,7 @@ namespace terminal_graphics
             Socket handler = listener.Accept();
             byte[] bytes = new byte[1024];
             int byteslen = handler.Receive(bytes);
-            string data = Encoding.Unicode.GetString(bytes, 0 , byteslen);
+            string data = Encoding.Unicode.GetString(bytes, 0, byteslen);
             string[] datas = data.Split(new char[] { ' ' });
             Program.ip = IPAddress.Parse(datas[0]);
             Program.port = int.Parse(datas[1]);
@@ -42,8 +38,8 @@ namespace terminal_graphics
                 byteslen = handler.Receive(bytes);
                 data = Encoding.Unicode.GetString(bytes, 0, byteslen);
             }
-            
-=======
+
+        }
         private static void ServMessages()
         {
             Process pr = new Process();
@@ -60,7 +56,6 @@ namespace terminal_graphics
             IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse("192.168.1.214"), 11001);
             Socket sender2 = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sender2.Connect(remoteEP);
->>>>>>> e5f2bb7fe1488e43fc04e1561c7400d511047e06
         }
     }
 }
