@@ -18,7 +18,7 @@ namespace terminal_graphics
         public static bool check = false;
         public static Socket s;
         public static int port = 11000;
-        public static IPAddress ip = IPAddress.Parse("192.168.1.214");
+        public static IPAddress ip;
 
         private static void Connection()
         {
@@ -94,7 +94,7 @@ namespace terminal_graphics
 
         static void Main()
         {
-            //GetAddr.PreSock();
+            GetAddr.PreSock();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Connection();
