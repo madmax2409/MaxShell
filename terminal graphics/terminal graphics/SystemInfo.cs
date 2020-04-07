@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
 using System.Net.NetworkInformation;
-using Microsoft.VisualBasic.Devices;
-using System.Device.Location;
+
 
 namespace terminal_graphics
 {
@@ -25,11 +21,11 @@ namespace terminal_graphics
         public static void BuildDict()
         {
             string[] methods = { 
-                Environment.OSVersion.ToString(),
+                Environment.OSVersion.VersionString,
                 Dns.GetHostName(),
                 Environment.UserName,
-                "CPU",
-                GetRAM(),
+                Program.CallFunc("cpu"),
+                Program.CallFunc("ram"),
                 GetIpv4(),
                 GetIpv6(),
                 GetMacAddress(),
@@ -62,8 +58,17 @@ namespace terminal_graphics
 
         public static string GetMacAddress()
         {
-            return NetworkInterface.GetAllNetworkInterfaces().Where(nic => nic.OperationalStatus == OperationalStatus.Up)
+            string mac = NetworkInterface.GetAllNetworkInterfaces().Where(nic => nic.OperationalStatus == OperationalStatus.Up)
                 .Select(nic => nic.GetPhysicalAddress().ToString()).FirstOrDefault();
+            int len = mac.Length, end = 0;
+            for (int i = 2; i < len; i+=3)
+            {
+                mac = mac.Insert(i, "-");
+                end = i;
+            }
+             mac = mac.Insert(end + 3, "-");
+
+            return mac;
         }
 
         public static string GetSubnetMask(IPAddress address)
@@ -74,12 +79,6 @@ namespace terminal_graphics
                         if (address.Equals(unicastIPAddressInformation.Address))
                             return unicastIPAddressInformation.IPv4Mask.ToString();
             return null;
-        }
-
-        public static string GetRAM()
-        {
-            ComputerInfo ci = new ComputerInfo();
-            return ci.TotalPhysicalMemory.ToString();
         }
 
         public static void SetLabels()
@@ -103,10 +102,10 @@ namespace terminal_graphics
                     mul = counter - 5;
                 }
                 Label temp = new Label();
-                temp.Font = new Font("comic sans", 12);
+                temp.Font = new Font("comic sans", 11);
                 temp.Size = new Size(350, 30);
                 temp.Location = new Point(10, mul * 60 - 40);
-                temp.Text = "\u2022 " + pair.Key + " - " + pair.Value;
+                temp.Text = "\u2022 " + pair.Key + ": " + pair.Value;
                 panel.Controls.Add(temp);
                 counter++;
             }

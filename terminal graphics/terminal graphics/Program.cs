@@ -40,7 +40,6 @@ namespace terminal_graphics
 
         public static string Maintain(string message)
         {
-            message = message.ToLower();
             try
             {
                 if (message == "file manager")

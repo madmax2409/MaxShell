@@ -1,20 +1,19 @@
-						MILESTONE 2 (Remnants)
-- unddispose treeview	
-- nodes to reopen after refresh			
+					MILESTONE 2 (Remnants)
+- undispose treeview
+- nodes to reopen after refresh
 - create & delete funcs in server
-- display nicknames instead of machnames(?)				
+- display nicknames instead of machnames(?)
 - copy folder(?)
-						MILESTONE 3
+					MILESTONE 3
 				intptr
-- debug d drive for listfiles
-- pass socket not through temp param 
+- pass socket not through temp param (?)
 - FIX INTPTR BY KEYWORDS (check params between keywords)
 
 				Con
-- get server ip & port - scapy
+- while true try connection
+- fix not all IP's not showing in arp -a (ping all ip's before setup?)
 - server shutdown handling(?)
-- log funcs in server on client(?)
-					
+- set timeout for trycon(?)
 				GUI
+- fix sysinfo (winver, RAM)
 - File manager drag & drop
-- GRAPHIC 4GL buttons spaces: sysinfo
