@@ -83,14 +83,14 @@ namespace server
                 Console.Write("Enter the password: ");
                 password = Console.ReadLine();
             }
-            //PreCon.SendApproval();
+            PreCon.SendApproval();
             return password;
         }
 
         
         static void Main(string[] args)
         {
-            //PreCon.PreSock();
+            PreCon.PreSock();
             Server.SetCommands();
             WmiFuncs.AddPaths(Environment.MachineName);
             byte[] bytes = new byte[4096];
@@ -99,11 +99,11 @@ namespace server
                 if (ipHostInfo.AddressList[i].ToString().StartsWith("192"))
                     ipAddress = ipHostInfo.AddressList[i];
 
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);  //port         
+            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, port);  //port         
             Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             listener.Bind(localEndPoint);
             string pass  = SetPassword();
-            Console.WriteLine("listening on ip: " + ipAddress + " port: " + 11000);
+            Console.WriteLine("listening on ip: " + ipAddress + " port: " + port);
             listener.Listen(3);
             while (true)
             {

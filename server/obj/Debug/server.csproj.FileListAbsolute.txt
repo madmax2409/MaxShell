@@ -11,3 +11,4 @@ C:\Users\maxim\Desktop\MaxShell\server\obj\Debug\server.csprojAssemblyReference.
 C:\Users\maxim\Desktop\MaxShell\server\obj\Debug\server.csproj.CopyComplete
 C:\Users\maxim\Desktop\MaxShell\server\obj\Debug\server.exe
 C:\Users\maxim\Desktop\MaxShell\server\obj\Debug\server.pdb
+C:\Users\maxim\Desktop\MaxShell\server\obj\Debug\server.csproj.CoreCompileInputs.cache
