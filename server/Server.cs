@@ -8,8 +8,8 @@ namespace server
     class Server
     {
         private static Dictionary<string, Func<string[], string>> dict = new Dictionary<string, Func<string[], string>>();
-        private static string[] funcs = { "getip", "freespace", "showproc", "disconnect", "killproc", "getdir", "startproc", "sharefolder", "listfiles", "showfolders",
-            "help", "copy", "delete", "clientlist" }; //"createfile" 
+        private static string[] funcs = { "get ip", "free space", "process list", "disconnect", "kill", "get directory", "start run", "sharefolder", "listfiles", "showfolders",
+            "help", "copy", "delete", "list clients", "cpu", "ram" }; //"createfile" 
         private static string[] paramnames = { "name=", "dir=", "pc=" };
         public static Socket pass;
 
@@ -29,7 +29,9 @@ namespace server
                 targets => File.ReadAllText(Environment.CurrentDirectory + "\\info.txt"),
                 targets =>WmiFuncs.CopyFile(pass, targets[1], targets[2]),
                 targets => WmiFuncs.DeleteFile(targets[1], targets[2]),
-                targets => WmiFuncs.ClientList()};
+                targets => WmiFuncs.ClientList(),
+                targets => WmiFuncs.CPUName(),
+                targets => WmiFuncs.TotalRAM()};    
                 //targets => WmiFuncs.CreateFile()
 
             for (int i = 0; i < funcs.Length; i++)
@@ -74,7 +76,7 @@ namespace server
             string[] cmd = command.Split(sep);
             Stack<string> param = new Stack<string>();
             bool cmdflag = false;
-            string[] returned = new string[1];
+            string[] returned;
 
             foreach (string possible in funcs)
             {
