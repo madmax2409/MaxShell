@@ -14,6 +14,7 @@ namespace server
     {
         public static IPAddress ipAddress;
         public static string[] op;
+        public static Queue<IPEndPoint> connected = new Queue<IPEndPoint>();
         private static int FreeTcpPort()
         {
             TcpListener l = new TcpListener(IPAddress.Loopback, 0);
@@ -24,22 +25,18 @@ namespace server
         }
         public static void SendApproval()
         {
-            string[] ips;
-            foreach (string address in op)
-                if (Regex.IsMatch(address, @"((?:\d{1,3}.){3}\d{1,3})\s+((?:[\da-f]{2}-){5}[\da-f]{2})\s+dynamic"))
+            while (connected.Count > 0)
+            {
+                IPEndPoint remoteEP = connected.Dequeue();
+                Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                try
                 {
-                    ips = address.Split(new char[] { ' ' });
-                    Console.WriteLine(ips[2]);
-                    IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(ips[2]), 11001);
-                    Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                    try
-                    {
-                        sender.Connect(remoteEP);
-                        byte[] msg = Encoding.Unicode.GetBytes("approved");
-                        sender.Send(msg);
-                    }
-                    catch { }
+                    sender.Connect(remoteEP);
+                    byte[] msg = Encoding.Unicode.GetBytes("approved");
+                    sender.Send(msg);
                 }
+                catch { }
+            }  
         }
 
         public static void PreSock()
@@ -74,6 +71,7 @@ namespace server
                         sender.Connect(remoteEP);
                         byte[] msg = Encoding.Unicode.GetBytes(ipAddress + " " +  port);
                         sender.Send(msg);
+                        connected.Enqueue(remoteEP);
                     }
                     catch { }
                 }

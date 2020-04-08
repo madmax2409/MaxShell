@@ -191,7 +191,7 @@ namespace server
                     }
                 if (str != null)
                     for (int i = 0; i < str.Length; i++)
-                        output += str[i] + "\n";
+                        output += str[i].Substring(str[i].IndexOf(rightpath.Replace(':', '$')) + rightpath.Length + 1) + "\n";
                 return output;
             }
             else
@@ -265,6 +265,30 @@ namespace server
                     mo.InvokeMethod("delete", null);
             Console.WriteLine("ended");
             return "deleted the file on " + target;
+        }
+
+        public static string CPUName()
+        {
+            string output = "";
+            ObjectQuery oq = new ObjectQuery("SELECT * FROM Win32_Processor");
+            ManagementObjectSearcher mos = new ManagementObjectSearcher(ms, oq);
+            foreach (ManagementObject mo in mos.Get())
+            {
+                output += mo["Name"] + "\n";
+            }
+            return output;
+        }
+
+        public static string TotalRAM()
+        {
+            string output = "";
+            ObjectQuery oq = new ObjectQuery("SELECT TotalPhysicalMemory FROM Win32_ComputerSystem");
+            ManagementObjectSearcher mos = new ManagementObjectSearcher(ms, oq);
+            foreach (ManagementObject mo in mos.Get())
+            {
+                output += mo["Name"] + "\n";
+            }
+            return output;
         }
     }
 }
