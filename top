@@ -1,0 +1,170 @@
+[33mcommit 75bf248c80d3419b37d38f6fff678f775b2004a0[m[33m ([m[1;36mHEAD -> [m[1;32mtemp[m[33m, [m[1;31morigin/temp[m[33m)[m
+Author: Maxim Lyakhovitsky <maxim.lyakhovitsky@gmail.com>
+Date:   Fri Mar 13 11:40:20 2020 +0200
+
+    first wave of bug fix
+
+[33mcommit 5dd25b0d0fe8390285d0c9356c276e92b45d96f8[m
+Author: Maxim Lyakhovitsky <maxim.lyakhovitsky@gmail.com>
+Date:   Thu Mar 5 15:34:28 2020 +0200
+
+    half assed intptr
+
+[33mcommit 8db0bc8d9f0785517aa48f48896a573519f1cfad[m
+Author: Maxim Lyakhovitsky <maxim.lyakhovitsky@gmail.com>
+Date:   Sun Mar 1 09:37:38 2020 +0200
+
+    todo
+
+[33mcommit 44e265725455e5d2dfa461b99ba20501b87f8bdb[m
+Author: Maxim Lyakhovitsky <maxim.lyakhovitsky@gmail.com>
+Date:   Sat Feb 29 18:42:19 2020 +0200
+
+    interpreter
+
+[33mcommit afa8f6de50c18665ec28e0502bdf78936ba3acc8[m
+Author: Maxim Lyakhovitsky <maxim.lyakhovitsky@gmail.com>
+Date:   Fri Feb 28 17:04:38 2020 +0200
+
+    duplicate client
+
+[33mcommit 2376196da8d35f94cb338be5191d2d8f6ce0a3c1[m
+Author: Maxim Lyakhovitsky <maxim.lyakhovitsky@gmail.com>
+Date:   Fri Feb 28 16:38:44 2020 +0200
+
+    client close
+
+[33mcommit 5cc58cbd30704a934a8ea330bdf16e5d573f7664[m
+Author: Maxim Lyakhovitsky <maxim.lyakhovitsky@gmail.com>
+Date:   Thu Feb 20 00:11:06 2020 +0200
+
+    dictionary interpreter
+
+[33mcommit 99ed6b8e1cb38f6e25903a4531c2cab15d261dc0[m
+Author: Maxim Lyakhovitsky <maxim.lyakhovitsky@gmail.com>
+Date:   Fri Feb 14 20:13:04 2020 +0200
+
+    memorized prev funcs
+
+[33mcommit f1cf63f66425f8465311bab559165cce83dff0b2[m
+Author: Maxim Lyakhovitsky <maxim.lyakhovitsky@gmail.com>
+Date:   Fri Feb 14 19:39:43 2020 +0200
+
+    switched files from usb
+
+[33mcommit 09ad1dfc654040c2536de39898eaa7bb307e6556[m
+Author: Maxim Lyakhovitsky <maxim.lyakhovitsky@gmail.com>
+Date:   Fri Feb 14 19:36:12 2020 +0200
+
+    copy supposed to work between computers
+
+[33mcommit f68fa73c3d5768786702c53e32a5ab3e007e5dde[m
+Author: Maxim Lyakhovitsky <maxim.lyakhovitsky@gmail.com>
+Date:   Thu Feb 13 21:28:37 2020 +0200
+
+    copy
+
+[33mcommit 0d36c48fdda29a12fde45312fc71c28e47725560[m
+Merge: 104baf8 00c2b2a
+Author: u101010 <u101010@deshalit.local>
+Date:   Thu Feb 13 14:37:28 2020 +0200
+
+    aha
+
+[33mcommit 104baf88dfb1b55a07f863b7757e1dea63a044e7[m
+Author: u101010 <u101010@deshalit.local>
+Date:   Thu Feb 13 14:34:41 2020 +0200
+
+    idk again
+
+[33mcommit 00c2b2a37dc4f7a94ab8ec531def81cf03b2b28b[m
+Author: Maxim Lyakhovitsky <maxim.lyakhovitsky@gmail.com>
+Date:   Sat Feb 8 18:53:25 2020 +0200
+
+    interpreter
+
+[33mcommit 0c429876ea284bdaa4480fd22cf2cb8d93574a72[m
+Author: Maxim Lyakhovitsky <maxim.lyakhovitsky@gmail.com>
+Date:   Thu Feb 6 23:23:40 2020 +0200
+
+    minor fixes
+
+[33mcommit aa458e0159db38aa857e38be6692fc0566c8d05f[m
+Author: Maxim Lyakhovitsky <maxim.lyakhovitsky@gmail.com>
+Date:   Sun Feb 2 23:40:17 2020 +0200
+
+    first file manager
+
+[33mcommit 0c5fbb77d4364872373309fb9469a6d6ad6052d3[m
+Author: Maxim Lyakhovitsky <maxim.lyakhovitsky@gmail.com>
+Date:   Sat Feb 1 18:07:34 2020 +0200
+
+    complete commnication
+
+[33mcommit 86a26c3e2de5ab20046a0e7ab7e8984cc66f8684[m
+Author: Maxim Lyakhovitsky <maxim.lyakhovitsky@gmail.com>
+Date:   Sat Feb 1 17:45:20 2020 +0200
+
+    trying to do repetetive sending
+
+[33mcommit b52552eac9ead451dcc2f65cb6cfd1d5f0f710cb[m
+Merge: fbc00cf a0ae94e
+Author: Maxim Lyakhovitsky <maxim.lyakhovitsky@gmail.com>
+Date:   Fri Jan 31 15:30:52 2020 +0200
+
+    file manager attempt
+
+[33mcommit fbc00cfad2656dd339170489d41fb832d3da2b52[m
+Author: Maxim Lyakhovitsky <maxim.lyakhovitsky@gmail.com>
+Date:   Fri Jan 31 15:29:41 2020 +0200
+
+    file manager start
+
+[33mcommit a0ae94e76c26a9289fafbd93cb8d70a427b18ff6[m
+Merge: 3e58400 4ee25d9
+Author: u101010 <u101010@deshalit.local>
+Date:   Fri Jan 31 09:40:33 2020 +0200
+
+    Merge branch 'temp' of https://github.com/madmax2409/MaxShell into temp
+
+[33mcommit 3e58400627fdf4295d9e4dd5146f4c151a11eebd[m
+Author: u101010 <u101010@deshalit.local>
+Date:   Fri Jan 31 09:40:10 2020 +0200
+
+    file manager window attempt
+
+[33mcommit 4ee25d9ef47015acb9d9cdf549cf0594b019ba7a[m
+Author: Maxim Lyakhovitsky <maxim.lyakhovitsky@gmail.com>
+Date:   Fri Jan 24 18:10:14 2020 +0200
+
+    fixed multi-client
+
+[33mcommit 93f289784f939b99bfc91566747c9d65af79a783[m
+Author: u101010 <u101010@deshalit.local>
+Date:   Fri Jan 24 10:48:00 2020 +0200
+
+    i tried
+
+[33mcommit a7edbf77c0a3adb3aeb47005a83b9c4d391b00e6[m
+Author: Maxim Lyakhovitsky <maxim.lyakhovitsky@gmail.com>
+Date:   Thu Jan 23 21:43:54 2020 +0200
+
+    temp update
+
+[33mcommit 29272157faf613ab968faff4851e1c87f5e4af5b[m
+Author: u101010 <u101010@deshalit.local>
+Date:   Thu Jan 23 15:36:17 2020 +0200
+
+    i hate git
+
+[33mcommit 225f0062268639c07c4c5fcc3fa849a0dcf53f7f[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m
+Author: madmax2409 <57524132+madmax2409@users.noreply.github.com>
+Date:   Thu Dec 5 15:15:40 2019 +0200
+
+    Update README.md
+
+[33mcommit f026bb48e0bd1b199ee0a738a46fe6c46d55f850[m
+Author: madmax2409 <57524132+madmax2409@users.noreply.github.com>
+Date:   Thu Dec 5 15:12:51 2019 +0200
+
+    Initial commit
