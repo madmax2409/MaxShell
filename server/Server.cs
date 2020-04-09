@@ -152,10 +152,10 @@ namespace server
                     {
                         foreach (string cmd in funcs)
                         {
-                            if (cmd == command.Substring(0, end))
+                            if (cmd == command.Substring(0, end+1))
                             {
                                 flag = true;
-                                Console.WriteLine("commmand: " + cmd);
+                                
                                 st.Push(cmd);
                                 break;
                             }
