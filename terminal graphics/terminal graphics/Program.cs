@@ -12,7 +12,6 @@ namespace terminal_graphics
     static class Program
     {
         private static Socket sender;
-        private static Socket sender2;
         private static byte[] bytes = new byte[4096];
         public static Form2 form2;
         public static bool check = false;
@@ -22,7 +21,7 @@ namespace terminal_graphics
 
         private static void Connection()
         {
-            IPEndPoint remoteEP = new IPEndPoint(ip, port); //IPAddress.Parse(ip), port
+            IPEndPoint remoteEP = new IPEndPoint(ip, port); //ip, port
             sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             s = sender;
             sender.Connect(remoteEP);
@@ -40,6 +39,7 @@ namespace terminal_graphics
 
         public static string Maintain(string message)
         {
+            message = RemoveSpaces(message);
             try
             {
                 if (message == "file manager")
@@ -58,6 +58,8 @@ namespace terminal_graphics
                 }
                 else
                 {
+                    message = message.Replace("My Computer", Environment.MachineName);
+
                     byte[] msg = Encoding.Unicode.GetBytes(message);
                     sender.Send(msg);
                     string totaldata = "", data = "";
@@ -83,7 +85,28 @@ namespace terminal_graphics
                 return "";
             }
         }
-
+        private static string RemoveSpaces(string str)
+        {
+            int spacecount = 0;
+            for (int i = 0; i < str.Length; i++) // erase pre and after spaces
+            {
+                if (str[i] == ' ')
+                    spacecount++;
+                else
+                    break;
+            }
+            str = str.Remove(0, spacecount);
+            spacecount = 0;
+            for (int i = str.Length; i >= 0; i++)
+            {
+                if (str[i] == ' ')
+                    spacecount++;
+                else
+                    break;
+            }
+            str = str.Remove(str.Length-spacecount, spacecount);
+            return str;
+        }
         public static string CallFunc(string command)
         {
             sender.Send(Encoding.Unicode.GetBytes(command));
