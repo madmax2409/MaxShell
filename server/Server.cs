@@ -8,9 +8,9 @@ namespace server
     class Server
     {
         private static Dictionary<string, Func<string[], string>> dict = new Dictionary<string, Func<string[], string>>();
-        private static string[] funcs = { "get ip", "free space", "process list", "disconnect", "kill", "get directory", "start run", "sharefolder", "listfiles", "showfolders",
-            "help", "copy", "delete", "list clients", "cpu", "ram" }; //"createfile" 
-        private static string[] paramnames = { "name=", "dir=", "pc=" };
+        private static readonly string[] funcs = { "get ip", "free space", "process list", "disconnect", "kill", 
+            "get directory", "run", "share", "list", "shared folders","help", "copy", "delete", "clients", 
+            "cpu", "ram" }; //"createfile" 
         public static Socket pass;
 
         public static void SetCommands()
@@ -20,15 +20,15 @@ namespace server
                 targets => WmiFuncs.FreeSpace(targets[1]),
                 targets => WmiFuncs.ShowProcess(targets[1]),
                 targets => Disconnect(),
-                targets => WmiFuncs.KillProcess(targets[1], targets[2]),
+                targets => WmiFuncs.KillProcess(targets[2], targets[1]),
                 targets => Directory.GetCurrentDirectory(),
-                targets => WmiFuncs.RemoteProcess(targets[1], targets[2]),
-                targets => WmiFuncs.ShareFolder(targets[1], targets[2]),
-                targets => WmiFuncs.ListFiles(targets[1], targets[2]),
+                targets => WmiFuncs.RemoteProcess(targets[2], targets[1]),
+                targets => WmiFuncs.ShareFolder(targets[2], targets[1]),
+                targets => WmiFuncs.ListFiles(targets[2], targets[1]),
                 targets => WmiFuncs.ShowFolders(),
                 targets => File.ReadAllText(Environment.CurrentDirectory + "\\info.txt"),
-                targets =>WmiFuncs.CopyFile(pass, targets[1], targets[2]),
-                targets => WmiFuncs.DeleteFile(targets[1], targets[2]),
+                targets =>WmiFuncs.CopyFile(pass, targets[2], targets[1]),
+                targets => WmiFuncs.DeleteFile(targets[2], targets[1]),
                 targets => WmiFuncs.ClientList(),
                 targets => WmiFuncs.CPUName(),
                 targets => WmiFuncs.TotalRAM()};    
@@ -54,7 +54,7 @@ namespace server
                         {
                             if (sc != null && sc != pass)
                                 pass = sc;
-                            WmiFuncs.TryCon(pararms[1]);
+                            WmiFuncs.TryCon(pararms[pararms.Length-1]); ;
                             output = pair.Value(pararms);
                         }
                         catch (Exception e)
@@ -67,113 +67,177 @@ namespace server
 
             if (flag)
                 return output + "stoprightnow";
-            return "no such command as --> " + pararms[0] + MostSimilar(pararms[0], funcs) + "stoprightnow";
+            return "no such command as --> " + pararms[0] + MostSimilar(pararms[0]) + "stoprightnow";
         }
         
-        private static string[] Interpreter(string command) //killproc on DESKTOP-21F9ULD where name=terminal graphics.exe
+        private static string[] Interpreter(string command)
         {
-            char[] sep = { ' ' }; 
-            string[] cmd = command.Split(sep);
-            Stack<string> param = new Stack<string>();
-            bool cmdflag = false;
-            string[] returned;
+            string[] keywords = { " from ", " on " };
+            int end, start = 0;
+            string shortened, com, param = " "; 
+            char detect = ' ';
+            bool flag = false;
+            Stack<string> st = new Stack<string>();
 
-            foreach (string possible in funcs)
-            {
-                if (cmd[0] == possible)
+            foreach (string word in keywords) // search for pc name
+                if (command.IndexOf(word) != -1)
                 {
-                    param.Push(cmd[0]);
-                    cmdflag = true;
+                    start = command.IndexOf(word) + word.Length;
+                    shortened = command.Substring(start);
+                    param = shortened.Substring(0);
+                    flag = true;
                     break;
                 }
-            }
 
-            if (cmdflag)
+            if (flag)
             {
-                for (int i = 0; i < cmd.Length; i++)
+                for (int i = 0; i < Client.clientqueue.Count; i++)
                 {
-                    if (cmd[i] == "from" || cmd[i] == "on")
+                    Client c = Client.clientqueue.Dequeue();
+                    if (c.GetMach() == param || c.GetNick() == param)
                     {
-                        PushTheMach(param, cmd[i + 1]);
-                        ++i;
+                        Console.WriteLine("pc " + c.GetMach());
+                        st.Push(c.GetMach());
+                        Client.clientqueue.Enqueue(c);
+                        flag = false;
+                        break;
                     }
-
-                    else foreach (string para in paramnames)
-                            if (cmd[i].Contains(para))
-                            {
-                                string right = cmd[i].Substring(cmd[i].IndexOf("'") + 1);
-                                right = right.Substring(0, right.IndexOf("'"));
-                                param.Push(right);
-                            }
+                    Client.clientqueue.Enqueue(c);
                 }
-
-                if (param.Count > 2)
+                if (flag)
                 {
-                    returned = new string[param.Count];
-                    while (param.Count > 0)
-                        returned[param.Count - 1] = param.Pop();
-                }
-                else
-                {
-                    returned = new string[param.Count+1];
-                    param.Push(Environment.MachineName);
-                    while (param.Count > 0)
-                        returned[param.Count - 1] = param.Pop();
+                    Console.WriteLine("serv1 " + param);
+                    st.Push(Environment.MachineName);
                 }
             }
             else
             {
-                returned = new string[2];
-                returned[0] = cmd[0];
-                returned[1] = Environment.MachineName;
+                Console.WriteLine("serv2 " + param);
+                st.Push(Environment.MachineName);
             }
-            return returned;
-        }
-        
-        private static void PushTheMach(Stack<string> st, string name)
-        {
-            for(int i = 0; i< Client.clientqueue.Count; i++)
+
+            if (command.IndexOf((char)34) != -1) //get additional parameters
             {
-                Client temp = Client.clientqueue.Dequeue();
-                if (temp.GetMach() == name || temp.GetNick() == name)
-                {
-                    st.Push(temp.GetMach());
-                    Client.clientqueue.Enqueue(temp);
-                    return;
-                }
-                Client.clientqueue.Enqueue(temp);
+                start = command.IndexOf((char)34);
+                detect = (char)34;
             }
-            st.Push(name);
+            else if (command.IndexOf((char)39) != -1)
+            {
+                start = command.IndexOf((char)39);
+                detect = (char)39;
+            }
+            if (detect != ' ')
+            {
+                shortened = command.Substring(start + 1);
+                end = shortened.IndexOf(detect);
+                Console.WriteLine("param1 " + shortened.Substring(0, end));
+                param = shortened.Substring(0, end);
+                st.Push(shortened.Substring(0, end));
+                command = command.Replace(detect.ToString(), "");
+            }
+
+            end = 0;
+            foreach (string word in keywords)
+                if (command.IndexOf(word) != -1)
+                    end = command.IndexOf(word) - 1;
+
+            flag = false;
+            if (end != 0)
+            {
+                for (int i = end; i >= 0; i--)
+                {
+                    if (i == 0)
+                        start = i;
+                    else if (command[i] == ' ')
+                    {
+                        foreach (string cmd in funcs)
+                        {
+                            if (cmd == command.Substring(0, end))
+                            {
+                                flag = true;
+                                Console.WriteLine("commmand: " + cmd);
+                                st.Push(cmd);
+                                break;
+                            }
+                        }
+                        if (!flag)
+                        { 
+                            start = i + 1;
+                            Console.WriteLine("param2 " + command.Substring(start, end - start + 1));
+                            if (param != command.Substring(start, end - start + 1))
+                                st.Push(command.Substring(start, end - start + 1));
+                            break;
+                        }
+                    }
+                }
+                param = command.Substring(0, end);
+            }
+            
+            if (!flag)
+            {
+                if (start != 0)
+                {
+                    Console.WriteLine("1: " + start);
+                    com = command.Substring(0, start - 1); //check command name
+                }             
+                else if (param != " ")
+                {
+                    Console.WriteLine("2: " + param);
+                    com = param;
+                }
+                else
+                    com = command;
+
+                foreach (string cmd in funcs)
+                    if (com == cmd)
+                    {
+                        Console.WriteLine("com " + com);
+                        st.Push(com);
+                        flag = true;
+                        break;
+                    }
+                if (!flag)
+                    return new string[] { com };
+            }
+
+            string[] finite = new string[st.Count]; //organize and return
+            int counter = 0;
+            while (st.Count > 0)
+            {
+                finite[counter] = st.Pop();
+                counter++;
+            }
+            return finite;
         }
         private static string Disconnect()
         {
             return "disconnect";
         }
-        private static string MostSimilar(string input, string[] commands)
+        private static string MostSimilar(string input)
         {
             int counter, len, max = 0;
             string sim = "";
 
-            for (int i = 0; i < commands.Length; i++)
-                if (commands[i].IndexOf(input) != -1 && (input.Length - sim.Length > 2 || input.Length - sim.Length < -2))
-                    return ", did you mean " + commands[i] + "?";
+            for (int i = 0; i < funcs.Length; i++)
+                if (funcs[i].IndexOf(input) != -1 && (input.Length - sim.Length > 2 || input.Length - sim.Length < -2))
+                    return ", did you mean " + funcs[i] + "?";
                 
-            for (int i = 0; i < commands.Length; i++)
+            for (int i = 0; i < funcs.Length; i++)
             {
                 counter = 0;
-                if (input.Length < commands[i].Length)
+                if (input.Length < funcs[i].Length)
                     len = input.Length;
                 else
-                    len = commands[i].Length;
+                    len = funcs[i].Length;
 
                 for (int j = 0; j < len; j++)
-                    if (input[j] == commands[i][j])
+                    if (input[j] == funcs[i][j])
                         counter++;
 
                 if (max < counter)
                 {
                     max = counter;
-                    sim = commands[i];
+                    sim = funcs[i];
                 }
             }
 
