@@ -237,6 +237,9 @@ namespace server
                     break;
                 }
 
+            if (target != Environment.MachineName)
+                srcpath = srcpath.Replace(':', '$');
+
             string newdir = @"\\" + source + @"\C$\dump_folders\dump_folder No " + counter + " from " + target; //copyfile from DESKTOP-21F9ULD where dir=C:\testfolder2\uuu.txt
             Directory.CreateDirectory(newdir);
             Console.WriteLine("Created dir on source");
@@ -246,7 +249,10 @@ namespace server
                 if (target == Environment.MachineName)
                     File.Copy(srcpath, newdir + "\\" + Path.GetFileName(srcpath));
                 else
+                {
+                    Console.WriteLine("source: " + source + " target: " + target);
                     File.Copy(@"\\" + target + "\\" + srcpath, newdir + "\\" + Path.GetFileName(srcpath));
+                }
                 return "copied the file";
             }
             catch (IOException)

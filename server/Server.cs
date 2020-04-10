@@ -11,7 +11,7 @@ namespace server
         private static readonly string[] funcs = { "get ip", "free space", "process list", "disconnect", "kill", 
             "get directory", "run", "share", "list", "shared folders","help", "copy", "delete", "clients", 
             "cpu", "ram" }; //"createfile" 
-        public static Socket pass;
+        public static Queue<Socket> pass = new Queue<Socket>();
 
         public static void SetCommands()
         {
@@ -27,7 +27,7 @@ namespace server
                 targets => WmiFuncs.ListFiles(targets[2], targets[1]),
                 targets => WmiFuncs.ShowFolders(),
                 targets => File.ReadAllText(Environment.CurrentDirectory + "\\info.txt"),
-                targets =>WmiFuncs.CopyFile(pass, targets[2], targets[1]),
+                targets =>WmiFuncs.CopyFile(pass.Dequeue(), targets[2], targets[1]),
                 targets => WmiFuncs.DeleteFile(targets[2], targets[1]),
                 targets => WmiFuncs.ClientList(),
                 targets => WmiFuncs.CPUName(),
@@ -52,8 +52,8 @@ namespace server
                         flag = true;
                         try
                         {
-                            if (sc != null && sc != pass)
-                                pass = sc;
+                            if (sc != null)
+                                pass.Enqueue(sc);
                             WmiFuncs.TryCon(pararms[pararms.Length-1]); ;
                             output = pair.Value(pararms);
                         }
@@ -73,11 +73,15 @@ namespace server
         private static string[] Interpreter(string command)
         {
             string[] keywords = { " from ", " on " };
-            int end, start = 0;
+            int end = 0, start = 0;
             string shortened, com, param = " "; 
             char detect = ' ';
-            bool flag = false;
+            bool flag = false, found = false;
             Stack<string> st = new Stack<string>();
+
+            for (int i = 0; i < command.Length; i++) // remove double spaces
+                if (command[i] == ' ' && command[i + 1] == ' ')
+                    command = command.Remove(i + 1, 1);
 
             foreach (string word in keywords) // search for pc name
                 if (command.IndexOf(word) != -1)
@@ -96,7 +100,6 @@ namespace server
                     Client c = Client.clientqueue.Dequeue();
                     if (c.GetMach() == param || c.GetNick() == param)
                     {
-                        Console.WriteLine("pc " + c.GetMach());
                         st.Push(c.GetMach());
                         Client.clientqueue.Enqueue(c);
                         flag = false;
@@ -105,16 +108,10 @@ namespace server
                     Client.clientqueue.Enqueue(c);
                 }
                 if (flag)
-                {
-                    Console.WriteLine("serv1 " + param);
                     st.Push(Environment.MachineName);
-                }
             }
             else
-            {
-                Console.WriteLine("serv2 " + param);
                 st.Push(Environment.MachineName);
-            }
 
             if (command.IndexOf((char)34) != -1) //get additional parameters
             {
@@ -130,68 +127,65 @@ namespace server
             {
                 shortened = command.Substring(start + 1);
                 end = shortened.IndexOf(detect);
-                Console.WriteLine("param1 " + shortened.Substring(0, end));
-                param = shortened.Substring(0, end);
                 st.Push(shortened.Substring(0, end));
-                command = command.Replace(detect.ToString(), "");
+                found = true;
+
+                command = command.Remove(start,end+3);
             }
 
-            end = 0;
             foreach (string word in keywords)
                 if (command.IndexOf(word) != -1)
                     end = command.IndexOf(word) - 1;
 
             flag = false;
-            if (end != 0)
+            start = 0;
+            if (!found)
             {
-                for (int i = end; i >= 0; i--)
+                if (end != 0)
                 {
-                    if (i == 0)
-                        start = i;
-                    else if (command[i] == ' ')
+                    for (int i = end; i >= 0; i--)
                     {
-                        foreach (string cmd in funcs)
+                        if (i == 0)
+                            start = i;
+                        else if (command[i] == ' ')
                         {
-                            if (cmd == command.Substring(0, end+1))
+                            foreach (string cmd in funcs)
                             {
-                                flag = true;
-                                
-                                st.Push(cmd);
+                                if (cmd == command.Substring(0, end + 1))
+                                {
+                                    flag = true;
+
+                                    st.Push(cmd);
+                                    break;
+                                }
+                            }
+                            if (!flag)
+                            {
+                                start = i + 1;
+                                Console.WriteLine("param2 " + command.Substring(start, end - start + 1));
+                                st.Push(command.Substring(start, end - start + 1));
                                 break;
                             }
                         }
-                        if (!flag)
-                        { 
-                            start = i + 1;
-                            Console.WriteLine("param2 " + command.Substring(start, end - start + 1));
-                            if (param != command.Substring(start, end - start + 1))
-                                st.Push(command.Substring(start, end - start + 1));
-                            break;
-                        }
                     }
                 }
-                param = command.Substring(0, end);
             }
+            try { param = command.Substring(0, end + 1); }
+            catch { }
             
+
             if (!flag)
             {
                 if (start != 0)
-                {
-                    Console.WriteLine("1: " + start);
                     com = command.Substring(0, start - 1); //check command name
-                }             
-                else if (param != " ")
-                {
-                    Console.WriteLine("2: " + param);
+                else if (end != 0)
                     com = param;
-                }
                 else
                     com = command;
 
                 foreach (string cmd in funcs)
                     if (com == cmd)
                     {
-                        Console.WriteLine("com " + com);
                         st.Push(com);
                         flag = true;
                         break;
