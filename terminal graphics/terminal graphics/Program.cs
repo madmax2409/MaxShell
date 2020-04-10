@@ -44,7 +44,7 @@ namespace terminal_graphics
             {
                 if (message == "file manager")
                 {
-                    string data = CallFunc("showfolders");
+                    string data = CallFunc("shared folders");
                     data = Form2.AddInsides(data);
                     form2 = new Form2(data);
                     form2.Show();
@@ -97,7 +97,7 @@ namespace terminal_graphics
             }
             str = str.Remove(0, spacecount);
             spacecount = 0;
-            for (int i = str.Length; i >= 0; i++)
+            for (int i = str.Length-1 ; i >= 0; i++)
             {
                 if (str[i] == ' ')
                     spacecount++;

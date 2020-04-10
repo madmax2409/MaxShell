@@ -96,7 +96,7 @@ namespace terminal_graphics
 
         public void ClientList(object sender, EventArgs e)
         {
-            string data = Program.CallFunc("clientlist");
+            string data = Program.CallFunc("clients");
             ClientList cl = new ClientList(data.Substring(0, data.IndexOf("stoprightnow")));
             cl.Show();
         }

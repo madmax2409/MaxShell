@@ -5,17 +5,11 @@
 - display nicknames instead of machnames(?)
 - copy folder(?)
 						MILESTONE 3
-					intptr
-
-- debug spaces (more than 1 & file name)
-- add command variations(?)
 					Con
-- while true try connection
+- fix not all IP's not showing in arp -a (ping all ip's before setup?) - peretz arp who has
 - UDP SOCKETS
-- fix not all IP's not showing in arp -a (ping all ip's before setup?)
-- pass socket not through temp param (?)
 - server shutdown handling(?)
-- set timeout for trycon(?)
 					GUI
 - fix sysinfo (winver, RAM)
 - FILE MANAGER DRAG & DROP
+- LEYAFYEF ET HAGUI!!!!!!

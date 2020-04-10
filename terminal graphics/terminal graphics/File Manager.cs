@@ -87,7 +87,7 @@ namespace terminal_graphics
 
                 else if (mach != "" && mach != Environment.MachineName)
                 {
-                    temp = Program.CallFunc("listfiles on " + mach + " where dir='" + datas[i] + "'");
+                    temp = Program.CallFunc("list " + datas[i] + " on " + mach);
                     if (temp.IndexOf("\\") != -1)
                         data = data.Insert(data.IndexOf(datas[i]) + datas[i].Length, "\n" + temp.Substring(0, temp.IndexOf("stoprightnow")));
                 }
@@ -106,7 +106,7 @@ namespace terminal_graphics
                 else if (filechoice != null && !Directory.Exists(filechoice))
                 {
                     int end = dirchoice.IndexOf("'s shared folders and drives");
-                    Program.CallFunc("copyfile from " + dirchoice.Substring(0, end) + " where dir='" + filechoice + "'");
+                    Program.CallFunc("copy " + filechoice + " from " + dirchoice.Substring(0, end));
                     RefreshWindow();
                     MessageBox.Show(dumps.LastNode.LastNode.Text);
                     Process.Start(dumps.LastNode.LastNode.Text);
@@ -120,7 +120,7 @@ namespace terminal_graphics
         }
         public static void RefreshWindow()
         {
-            string dirs = Program.CallFunc("showfolders");
+            string dirs = Program.CallFunc("shared folders");
             dirs = AddInsides(dirs);
             string[] direcs = dirs.Split(new char[] { '\n' });
             tv.Nodes.Clear();
@@ -144,7 +144,7 @@ namespace terminal_graphics
                     else if (tamp != null && !Directory.Exists(tamp.Text))
                     {
                         int end = dirchoice.IndexOf("'s shared folders and drives");
-                        Program.CallFunc("deletefile from " + dirchoice.Substring(0, end) + " where dir='" + filechoice + "'");
+                        Program.CallFunc("delete " + filechoice + " from " + dirchoice.Substring(0, end));
                     }
                 }
                 else
@@ -162,7 +162,7 @@ namespace terminal_graphics
                     else if (tamp != null && !Directory.Exists(tamp.Text))
                     {
                         int end = dirchoice.IndexOf("'s shared folders and drives");
-                        Program.CallFunc("deletefile from " + dirchoice.Substring(0, end) + " where dir='" + filechoice + "'");
+                        Program.CallFunc("delete " + filechoice + " from " + dirchoice.Substring(0, end));
                     }
                 }
                 RefreshWindow();
