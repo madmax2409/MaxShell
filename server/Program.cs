@@ -84,12 +84,15 @@ namespace server
                 password = Console.ReadLine();
             }
             PreCon.SendApproval();
+            Thread t = new Thread(new ThreadStart(PreCon.AfterStart));
+            t.Start();
             return password;
         }
 
         
         static void Main(string[] args)
         {
+            PreCon.FreeTcpPort();
             PreCon.PreSock();
             Server.SetCommands();
             WmiFuncs.AddPaths(Environment.MachineName);
