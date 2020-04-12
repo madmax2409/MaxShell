@@ -54,6 +54,7 @@ namespace terminal_graphics
         {
             Close();
         }
+
         public Create()
         {
             FormBorderStyle = FormBorderStyle.FixedSingle;

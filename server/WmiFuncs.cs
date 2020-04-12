@@ -39,7 +39,7 @@ namespace server
                 catch { }
             }              
         }
-        public static void RemoteConnectTheScope(string target)
+        public static void RemoteConScope(string target)
         {
             ConnectionOptions co = new ConnectionOptions();
             co.Username = "maxim";
@@ -52,7 +52,7 @@ namespace server
         public static void TryCon(string target)
         {
             if (target != Environment.MachineName)
-                RemoteConnectTheScope(target);
+                RemoteConScope(target);
             else
                 ms = new ManagementScope("\\\\" + target + "\\root\\cimv2");
         }
