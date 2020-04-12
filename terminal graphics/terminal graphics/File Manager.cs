@@ -171,8 +171,9 @@ namespace terminal_graphics
 
         public static void CreateFile(object sender, EventArgs e)
         {
-            Create cr = new Create();
-            cr.ShowDialog();
+            string data = Program.CallFunc("clients");
+            Create cl = new Create(data.Substring(0, data.IndexOf("stoprightnow")));
+            cl.Show();
         }
 
         private static void BuildTree(string[] direcs)
@@ -281,9 +282,9 @@ namespace terminal_graphics
             string[] direcs = dirs.Split(new char[] { '\n' });
             BuildTree(direcs);
             
-            tv.Font = new Font("comic sans", 10);
+            tv.Font = new Font("Segue", 10);
             tv.Location = new Point(0, 0);
-            tv.Size = new Size(400, 400);
+            tv.Size = new Size(402, 400);
             tv.BorderStyle = BorderStyle.FixedSingle;
             tv.AfterSelect += new TreeViewEventHandler(treeView1_AfterSelect);
             tv.ItemDrag += new ItemDragEventHandler(tv_ItemDrag);
@@ -294,7 +295,7 @@ namespace terminal_graphics
             tv.Dock = DockStyle.Fill;
             Controls.Add(tv);
 
-            open.Font = new Font("comic sans", 10);
+            open.Font = new Font("Segue", 10);
             open.Location = new Point(20, 410);
             open.Text = "open";
             open.Click += new EventHandler(OpenFile);
@@ -302,7 +303,7 @@ namespace terminal_graphics
             open.BackColor = Color.Yellow;
             Controls.Add(open);
 
-            refresh.Font = new Font("comic sans", 10);
+            refresh.Font = new Font("Segue", 10);
             refresh.Location = new Point(100, 410);
             refresh.Text = "refresh";
             refresh.Click += new EventHandler(Refresh);
@@ -318,7 +319,7 @@ namespace terminal_graphics
             delete.BackColor = Color.Tomato;
             Controls.Add(delete);
 
-            create.Font = new Font("comic sans", 10);
+            create.Font = new Font("Segue", 10);
             create.Location = new Point(260, 410);
             create.Text = "create";
             create.Click += new EventHandler(CreateFile);

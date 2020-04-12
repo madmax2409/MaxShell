@@ -111,9 +111,11 @@ namespace terminal_graphics
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             MinimizeBox = false;
+            BackColor = Color.LightSkyBlue;
 
-            Font f = new Font("comic sans", 10);
-            direc.Font = f;
+
+            Font f = new Font("Segue", 10);
+            /*direc.Font = f;
             direc.Location = new Point(0, 10);
             string dir = Directory.GetCurrentDirectory();
             char[] seperate = { '\\' };
@@ -124,28 +126,35 @@ namespace terminal_graphics
             SizeF size = direc.CreateGraphics().MeasureString(direc.Text, direc.Font);
             direc.Size = new Size((int)size.Width + 10, (int)size.Height + 2);
             Controls.Add(direc);
-
+            */
             command.Font = f;
-            command.Location = new Point((int)size.Width + 11, 10);
-            command.Size = new Size((this.Width - (int)size.Width - 15) * 5 + 135, 10);
+            command.Location = new Point(5, 10);
+            command.Size = new Size(890, 10);
             command.BorderStyle = BorderStyle.FixedSingle;
             command.KeyDown += new KeyEventHandler(OutputProcedure);
             Controls.Add(command);
 
+            f = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold);
             output.Font = f;
             output.Location = new Point(5, 40);
             output.Multiline = true;
             output.Size = new Size(790, 405);
             output.BorderStyle = BorderStyle.Fixed3D;
             output.ScrollBars = ScrollBars.Both;
+            output.BackColor = Color.Black;
+            output.ForeColor = Color.LightSkyBlue;
             output.KeyPress += new KeyPressEventHandler(BlockingInput);
             Controls.Add(output);
 
+            f = new Font("Segue", 10);
             fileman.Font = f;
             fileman.Location = new Point(800, 40);
             fileman.Text = "File Manager";
             fileman.Size = new Size(95, 50);
             fileman.Click += new EventHandler(OpenManager);
+            fileman.BackColor = Color.White;
+            fileman.FlatStyle = FlatStyle.Flat;
+            fileman.FlatAppearance.BorderColor = Color.Black;
             Controls.Add(fileman);
 
             sysinfo.Font = f;
@@ -153,6 +162,9 @@ namespace terminal_graphics
             sysinfo.Text = "System Information";
             sysinfo.Size = new Size(95, 50);
             sysinfo.Click += new EventHandler(SysInfo);
+            sysinfo.BackColor = Color.White;
+            sysinfo.FlatStyle = FlatStyle.Flat;
+            sysinfo.FlatAppearance.BorderColor = Color.Black;
             Controls.Add(sysinfo);
 
             clist.Font = f;
@@ -160,6 +172,9 @@ namespace terminal_graphics
             clist.Text = "Client List";
             clist.Size = new Size(95, 50);
             clist.Click += new EventHandler(ClientList);
+            clist.BackColor = Color.White;
+            clist.FlatStyle = FlatStyle.Flat;
+            clist.FlatAppearance.BorderColor = Color.Black;
             Controls.Add(clist);
 
             InitializeComponent();

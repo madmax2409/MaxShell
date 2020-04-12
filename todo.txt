@@ -8,8 +8,10 @@
 					Con
 - fix not all IP's not showing in arp -a (ping all ip's before setup?) - peretz arp who has
 - UDP SOCKETS
+- debug empty messages on disconnect
 - server shutdown handling(?)
 					GUI
-- fix sysinfo (winver, RAM)
+- fix sysinfo (winver, RAM, CPU)
 - FILE MANAGER DRAG & DROP
-- LEYAFYEF ET HAGUI!!!!!!
+- GUI for: LOGIN, CLIENTLIST, FILE MANAGER
+- konami code

@@ -118,7 +118,7 @@ namespace terminal_graphics
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             MinimizeBox = false;
-            BackColor = Color.White;
+            BackColor = Color.LightSkyBlue;
 
             Image comp = Image.FromFile(@"C:\MaxShell\pics\pc.png");
             Image nets = Image.FromFile(@"C:\MaxShell\pics\net.png");
@@ -126,11 +126,13 @@ namespace terminal_graphics
             sys.Location = new Point(20, comp.Height + 20);
             sys.Size = new Size(350, 320);
             sys.BorderStyle = BorderStyle.FixedSingle;
+            sys.BackColor = Color.White;
             Controls.Add(sys);
 
             net.Location = new Point(400, comp.Height + 20);
             net.Size = new Size(350, 320);
             net.BorderStyle = BorderStyle.FixedSingle;
+            net.BackColor = Color.White;
             Controls.Add(net);
 
             Label s = new Label();
@@ -151,12 +153,14 @@ namespace terminal_graphics
             pcpic.Location = new Point(105 - comp.Width, 15);
             pcpic.Size = new Size(comp.Width, comp.Height);
             pcpic.Image = comp;
+            //pcpic.BackColor = Color.White;
             Controls.Add(pcpic);
 
             Label netpic = new Label();
             netpic.Location = new Point(490 - comp.Width, 15);
             netpic.Size = new Size(comp.Width, comp.Height);
             netpic.Image = nets;
+            //netpic.BackColor = Color.White;
             Controls.Add(netpic);
 
             SetLabels();

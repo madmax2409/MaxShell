@@ -12,43 +12,37 @@ namespace terminal_graphics
 {
     public partial class ClientList : Form
     {
-        private static TextBox tb = new TextBox();
-        private static string AllignText(string data)
-        {
-            string newdata = " Nick               Mach               IP ";
-            tb.AppendText(newdata + "\n" );
-            tb.AppendText("bruh");
-            //data = data.Replace(" , ", "                 ");
-            string[] dirs = data.Split(new char[] { '\n' });
-            for (int i = 0; i < dirs.Length; i++)
-            {
-                if (dirs[i] != "")
-                {
-                    tb.AppendText(dirs[i]);
-                    MessageBox.Show(dirs[i]);
-                    tb.AppendText(Environment.NewLine);
-                }
-            }
-            return newdata;
-        }
-
         private void CreateLabels(string data)
         {
-            int x = 10, y = 10;
+            int x = 10, y = 25;
             foreach (string st in data.Split(new char[] { '\n' }))
             {
                 Label lb = new Label();
                 lb.Text = st;
-                lb.Font = new Font("comic sans", 10);
+                lb.Font = new Font(FontFamily.GenericSansSerif, 10);
                 lb.Location = new Point(x, y);
                 lb.Size = new Size(250, 200);
-                x += 10;
+                y += 15;
                 Controls.Add(lb);
             }
         }
         public ClientList(string data)
         {
-            CreateLabels(data);
+            Font f = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold);
+            Label top = new Label();
+            top.Location = new Point(5, 5);
+            top.Size = new Size(350, 15);
+            top.Text = "No    Nick       Mach       IP                       ";
+            top.Font = f;
+            Controls.Add(top);
+
+            Label line = new Label();
+            line.Location = new Point(5, 25);
+            line.Text = "____________________________________________________";
+            line.Size = new Size(350, 15);
+            Controls.Add(line);
+
+            //CreateLabels(data);
             InitializeComponent();
         }
     }
