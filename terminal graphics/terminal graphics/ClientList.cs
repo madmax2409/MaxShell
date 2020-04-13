@@ -12,42 +12,54 @@ namespace terminal_graphics
 {
     public partial class ClientList : Form
     {
-        private static TextBox tb = new TextBox();
-        private static string AllignText(string data)
-        {
-            string newdata = " Nick               Mach               IP ";
-            tb.AppendText(newdata + "\n" );
-            tb.AppendText("bruh");
-            //data = data.Replace(" , ", "                 ");
-            string[] dirs = data.Split(new char[] { '\n' });
-            for (int i = 0; i < dirs.Length; i++)
-            {
-                if (dirs[i] != "")
-                {
-                    tb.AppendText(dirs[i]);
-                    MessageBox.Show(dirs[i]);
-                    tb.AppendText(Environment.NewLine);
-                }
-            }
-            return newdata;
-        }
-
         private void CreateLabels(string data)
         {
-            int x = 10, y = 10;
+            int x = 10, y = 50;
+            int[] lengts = {18, 20, 0 };
             foreach (string st in data.Split(new char[] { '\n' }))
             {
                 Label lb = new Label();
-                lb.Text = st;
-                lb.Font = new Font("comic sans", 10);
+                string[] para = st.Split(',');
+                for (int i = 0; i < para.Length; i++)
+                {
+                    if (i == 0)
+                        para[i] = para[i].Insert(para[i].IndexOf('.') + 1, "     ");
+
+                    if (para[i].Length < lengts[i])
+                    {
+                        int dif = lengts[i] - para[i].Length;
+                        string padding = " ";
+                        for (int j = 0; j < dif; j++)
+                            padding += " ";
+                        para[i] += padding;
+                    }
+                }
+                lb.Text = string.Join(" ", para);
+                lb.Font = new Font(FontFamily.GenericSansSerif, 10);
                 lb.Location = new Point(x, y);
-                lb.Size = new Size(250, 200);
-                x += 10;
+                lb.Size = new Size(350, 200);
+                y += 15;
                 Controls.Add(lb);
             }
         }
         public ClientList(string data)
         {
+            BackColor = Color.LightSkyBlue;
+
+            Font f = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold);
+            Label top = new Label();
+            top.Location = new Point(5, 5);
+            top.Size = new Size(350, 15);
+            top.Text = "No    Nick       Mach                IP                       ";
+            top.Font = f;
+            Controls.Add(top);
+
+            Label line = new Label();
+            line.Location = new Point(5, 25);
+            line.Text = "___________________________________________________";
+            line.Size = new Size(350, 15);
+            Controls.Add(line);
+
             CreateLabels(data);
             InitializeComponent();
         }

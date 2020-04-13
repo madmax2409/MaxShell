@@ -71,6 +71,13 @@ namespace terminal_graphics
         public Login_Window(Socket s)
         {
             socket = s;
+            Image img = Image.FromFile(@"C:\MaxShell\pics\logomax.png");
+
+            Label logo = new Label();
+            logo.Location = new Point(5, 2);
+            logo.Size = new Size(250, 100);
+            logo.Image = img;
+            Controls.Add(logo);
 
             KeyPreview = true;
             KeyDown += new KeyEventHandler(Send_2);
@@ -78,39 +85,39 @@ namespace terminal_graphics
             MaximizeBox = false;
             MinimizeBox = false;
 
-            nick.Font = new Font("Comic Sans", 10);
-            nick.Location = new Point(10, 10);
+            nick.Font = new Font("Segue", 10);
+            nick.Location = new Point(10, 105);
             nick.Size = new Size(75, 20);
             nick.Text = "nickname:";
             Controls.Add(nick);
 
-            pass.Font = new Font("Comic Sans", 10);
-            pass.Location = new Point(10, 40);
+            pass.Font = new Font("Segue", 10);
+            pass.Location = new Point(10, 135);
             pass.Size = new Size(75, 20);
             pass.Text = "password:";
             Controls.Add(pass);
 
-            entry.Font = new Font("Comic Sans", 10);
+            entry.Font = new Font("Segue", 10);
             entry.Size = new Size(160, 50);
-            entry.Location = new Point(85, 10);
+            entry.Location = new Point(85, 105);
             Controls.Add(entry);
 
-            password.Font = new Font("Comic Sans", 10);
+            password.Font = new Font("Segue", 10);
             password.Size = new Size(160, 80);
-            password.Location = new Point(85, 40);
+            password.Location = new Point(85, 135);
             Controls.Add(password);
 
             Button choose = new Button();
             choose.Text = "ok";
-            choose.Font = new Font("Comic Sans", 10);
-            choose.Location = new Point(85, 70);
+            choose.Font = new Font("Segue", 10);
+            choose.Location = new Point(85, 165);
             choose.Click += new EventHandler(Send);
             Controls.Add(choose);
 
             Button exit = new Button();
             exit.Text = "exit";
-            exit.Font = new Font("Comic Sans", 10);
-            exit.Location = new Point(170, 70);
+            exit.Font = new Font("Segue", 10);
+            exit.Location = new Point(170, 165);
             exit.Click += new EventHandler(Disconnect);
             Controls.Add(exit);
 

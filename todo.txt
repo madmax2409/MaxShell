@@ -1,15 +1,21 @@
 						MILESTONE 2 (Remnants)
 - undispose treeview
 - nodes to reopen after refresh
-- create & delete funcs in server
-- display nicknames instead of machnames(?)
-- copy folder(?)
+- display nicknames instead of machnames
+- konami code
 						MILESTONE 3
 					Con
-- fix not all IP's not showing in arp -a (ping all ip's before setup?) - peretz arp who has
-- UDP SOCKETS
-- server shutdown handling(?)
+- try except on intptr
+- debug empty messages on disconnect
+- server shutdown notification
+- udp sockets(?)
+- fix not all IP's not showing in arp -a (ping all ip's before setup?)
+
 					GUI
-- fix sysinfo (winver, RAM)
+- button set create
 - FILE MANAGER DRAG & DROP
-- LEYAFYEF ET HAGUI!!!!!!
+- GUI for: FILE MANAGER
+						FINISH LINE!!!!
+- move sysinfo funcs to server
+- move dump_folders into project folder
+- fix code diversions (all is suppposed to look the same and not diff version of the same code)

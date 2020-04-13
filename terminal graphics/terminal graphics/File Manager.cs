@@ -97,13 +97,13 @@ namespace terminal_graphics
 
         private static void OpenFile(object sender, EventArgs e)
         {
-            if (dirchoice != "")
+            if (dirchoice != "" && filechoice != "")
                 if (dirchoice == "My shared folders" || dirchoice == "My Dump Folders")
                 {
-                    if (filechoice != "" && filechoice.IndexOf(Environment.MachineName) == -1 && filechoice != "My Dump Folders") //"My shared Folders!"
+                    if (filechoice != "My Dump Folders") //"My shared Folders!"
                         Process.Start(filechoice);
                 }
-                else if (filechoice != null && !Directory.Exists(filechoice))
+                else if (!Directory.Exists(filechoice))
                 {
                     int end = dirchoice.IndexOf("'s shared folders and drives");
                     Program.CallFunc("copy " + filechoice + " from " + dirchoice.Substring(0, end));
@@ -118,6 +118,7 @@ namespace terminal_graphics
             //CopyTreeNodes(tv, q);
             RefreshWindow();
         }
+
         public static void RefreshWindow()
         {
             string dirs = Program.CallFunc("shared folders");
@@ -128,41 +129,20 @@ namespace terminal_graphics
         }
         public static void DeleteFile(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show("Are you sure you want to delete the file?", "Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            if (result == DialogResult.Yes)
+            if (dirchoice != "" && filechoice != "" && tamp.Nodes.Count == 0)
             {
-                if (!Directory.Exists(filechoice))
+                DialogResult result = MessageBox.Show("Are you sure you want to delete the file?", "Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
                 {
-                    if (dirchoice == "My shared folders")
-                        File.Delete(tamp.Text);
-
-                    else if (dirchoice == "My Dump Folders")
+                    if (dirchoice == "My shared folders" || dirchoice == "My Dump Folders")
                     {
-                        File.Delete(tamp.Text);
-                        Directory.Delete(tamp.Parent.Text);
+                        if (filechoice.IndexOf(Environment.MachineName) == -1 && filechoice != "My Dump Folders") 
+                            Program.CallFunc("delete " + filechoice + " on " + Environment.MachineName);
                     }
-                    else if (tamp != null && !Directory.Exists(tamp.Text))
+                    else if (!Directory.Exists(filechoice))
                     {
-                        int end = dirchoice.IndexOf("'s shared folders and drives");
-                        Program.CallFunc("delete " + filechoice + " from " + dirchoice.Substring(0, end));
-                    }
-                }
-                else
-                {
-                    if (dirchoice == "My shared folders")
-                    {
-                        Directory.Delete(filechoice, true);
-                    }
-
-                    else if (dirchoice == "My Dump Folders")
-                    {
-                        File.Delete(tamp.LastNode.Text);
-                        Directory.Delete(tamp.Text);
-                    }
-                    else if (tamp != null && !Directory.Exists(tamp.Text))
-                    {
-                        int end = dirchoice.IndexOf("'s shared folders and drives");
-                        Program.CallFunc("delete " + filechoice + " from " + dirchoice.Substring(0, end));
+                        Program.CallFunc("delete " + filechoice + " on " + dirchoice.IndexOf("'s shared folders and drives"));
+                        
                     }
                 }
                 RefreshWindow();
@@ -171,8 +151,9 @@ namespace terminal_graphics
 
         public static void CreateFile(object sender, EventArgs e)
         {
-            Create cr = new Create();
-            cr.ShowDialog();
+            string data = Program.CallFunc("clients");
+            Create cl = new Create(data.Substring(0, data.IndexOf("stoprightnow")));
+            cl.Show();
         }
 
         private static void BuildTree(string[] direcs)
@@ -281,9 +262,9 @@ namespace terminal_graphics
             string[] direcs = dirs.Split(new char[] { '\n' });
             BuildTree(direcs);
             
-            tv.Font = new Font("comic sans", 10);
+            tv.Font = new Font("Segue", 10);
             tv.Location = new Point(0, 0);
-            tv.Size = new Size(400, 400);
+            tv.Size = new Size(402, 400);
             tv.BorderStyle = BorderStyle.FixedSingle;
             tv.AfterSelect += new TreeViewEventHandler(treeView1_AfterSelect);
             tv.ItemDrag += new ItemDragEventHandler(tv_ItemDrag);
@@ -294,7 +275,7 @@ namespace terminal_graphics
             tv.Dock = DockStyle.Fill;
             Controls.Add(tv);
 
-            open.Font = new Font("comic sans", 10);
+            open.Font = new Font("Segue", 10);
             open.Location = new Point(20, 410);
             open.Text = "open";
             open.Click += new EventHandler(OpenFile);
@@ -302,7 +283,7 @@ namespace terminal_graphics
             open.BackColor = Color.Yellow;
             Controls.Add(open);
 
-            refresh.Font = new Font("comic sans", 10);
+            refresh.Font = new Font("Segue", 10);
             refresh.Location = new Point(100, 410);
             refresh.Text = "refresh";
             refresh.Click += new EventHandler(Refresh);
@@ -318,7 +299,7 @@ namespace terminal_graphics
             delete.BackColor = Color.Tomato;
             Controls.Add(delete);
 
-            create.Font = new Font("comic sans", 10);
+            create.Font = new Font("Segue", 10);
             create.Location = new Point(260, 410);
             create.Text = "create";
             create.Click += new EventHandler(CreateFile);

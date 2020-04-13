@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(270, 80);
+            this.ClientSize = new System.Drawing.Size(300, 100);
             this.Text = "Create a file";
         }
 

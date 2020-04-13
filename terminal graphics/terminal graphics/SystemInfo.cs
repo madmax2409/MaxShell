@@ -21,11 +21,11 @@ namespace terminal_graphics
         public static void BuildDict()
         {
             string[] methods = { 
-                Environment.OSVersion.VersionString,
+                PrintCom(Program.CallFunc("get windows on " + Environment.MachineName)),
                 Dns.GetHostName(),
                 Environment.UserName,
-                Program.CallFunc("cpu"),
-                Program.CallFunc("ram"),
+                PrintCom(Program.CallFunc("get cpu on " + Environment.MachineName)),
+                PrintCom(Program.CallFunc("get ram on " + Environment.MachineName)),
                 GetIpv4(),
                 GetIpv6(),
                 GetMacAddress(),
@@ -110,6 +110,10 @@ namespace terminal_graphics
                 counter++;
             }
         }
+        public static string PrintCom(string command)
+        {
+            return command.Substring(0, command.IndexOf("stoprightnow"));
+        }
 
         public SystemInfo()
         {
@@ -118,7 +122,7 @@ namespace terminal_graphics
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             MinimizeBox = false;
-            BackColor = Color.White;
+            BackColor = Color.LightSkyBlue;
 
             Image comp = Image.FromFile(@"C:\MaxShell\pics\pc.png");
             Image nets = Image.FromFile(@"C:\MaxShell\pics\net.png");
@@ -126,11 +130,13 @@ namespace terminal_graphics
             sys.Location = new Point(20, comp.Height + 20);
             sys.Size = new Size(350, 320);
             sys.BorderStyle = BorderStyle.FixedSingle;
+            sys.BackColor = Color.White;
             Controls.Add(sys);
 
             net.Location = new Point(400, comp.Height + 20);
             net.Size = new Size(350, 320);
             net.BorderStyle = BorderStyle.FixedSingle;
+            net.BackColor = Color.White;
             Controls.Add(net);
 
             Label s = new Label();

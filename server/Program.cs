@@ -69,7 +69,7 @@ namespace server
             }
             catch (SocketException)
             {
-                Console.WriteLine("Client has suddenly disconnected");
+                Console.WriteLine("Client has disconnected");
             }
         }
     
