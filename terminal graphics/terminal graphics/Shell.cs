@@ -17,6 +17,8 @@ namespace terminal_graphics
         private Button fileman = new Button();
         private Button sysinfo = new Button();
         private Button clist = new Button();
+        string code = "uuddlrlrba";
+        string input = "";
 
         private void BlockingInput(object sender, KeyPressEventArgs e)
         {
@@ -106,13 +108,42 @@ namespace terminal_graphics
             SystemInfo si = new SystemInfo();
             si.Show();
         }
+
+        public void CheckForCheat_1(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyData)
+            {
+                case Keys.Up:
+                    input += 'u';
+                    break;
+                case Keys.Down:
+                    input += 'd';
+                    break;
+                case Keys.Left:
+                    input += 'l';
+                    break;
+                case Keys.Right:
+                    input += 'r';
+                    break;
+            }
+            MessageBox.Show(e.KeyData.ToString());
+        }
+
+        public void CheckForCheat_2(object sender, KeyPressEventArgs e)
+        {
+            input += e.KeyChar;
+            MessageBox.Show(e.KeyChar.ToString());
+            if (input.IndexOf(code) != -1)
+                MessageBox.Show("You are indeed a gamer!");
+        }
         public Shell()
         {
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             MinimizeBox = false;
             BackColor = Color.LightSkyBlue;
-
+            KeyDown += new KeyEventHandler(CheckForCheat_1);
+            KeyPress += new KeyPressEventHandler(CheckForCheat_2);
 
             Font f = new Font("Segue", 10);
             /*direc.Font = f;

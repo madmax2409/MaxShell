@@ -97,13 +97,13 @@ namespace terminal_graphics
 
         private static void OpenFile(object sender, EventArgs e)
         {
-            if (dirchoice != "")
+            if (dirchoice != "" && filechoice != "")
                 if (dirchoice == "My shared folders" || dirchoice == "My Dump Folders")
                 {
-                    if (filechoice != "" && filechoice.IndexOf(Environment.MachineName) == -1 && filechoice != "My Dump Folders") //"My shared Folders!"
+                    if (filechoice != "My Dump Folders") //"My shared Folders!"
                         Process.Start(filechoice);
                 }
-                else if (filechoice != null && !Directory.Exists(filechoice))
+                else if (!Directory.Exists(filechoice))
                 {
                     int end = dirchoice.IndexOf("'s shared folders and drives");
                     Program.CallFunc("copy " + filechoice + " from " + dirchoice.Substring(0, end));
@@ -118,6 +118,7 @@ namespace terminal_graphics
             //CopyTreeNodes(tv, q);
             RefreshWindow();
         }
+
         public static void RefreshWindow()
         {
             string dirs = Program.CallFunc("shared folders");
@@ -128,41 +129,20 @@ namespace terminal_graphics
         }
         public static void DeleteFile(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show("Are you sure you want to delete the file?", "Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            if (result == DialogResult.Yes)
+            if (dirchoice != "" && filechoice != "" && tamp.Nodes.Count == 0)
             {
-                if (!Directory.Exists(filechoice))
+                DialogResult result = MessageBox.Show("Are you sure you want to delete the file?", "Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
                 {
-                    if (dirchoice == "My shared folders")
-                        File.Delete(tamp.Text);
-
-                    else if (dirchoice == "My Dump Folders")
+                    if (dirchoice == "My shared folders" || dirchoice == "My Dump Folders")
                     {
-                        File.Delete(tamp.Text);
-                        Directory.Delete(tamp.Parent.Text);
+                        if (filechoice.IndexOf(Environment.MachineName) == -1 && filechoice != "My Dump Folders") 
+                            Program.CallFunc("delete " + filechoice + " on " + Environment.MachineName);
                     }
-                    else if (tamp != null && !Directory.Exists(tamp.Text))
+                    else if (!Directory.Exists(filechoice))
                     {
-                        int end = dirchoice.IndexOf("'s shared folders and drives");
-                        Program.CallFunc("delete " + filechoice + " from " + dirchoice.Substring(0, end));
-                    }
-                }
-                else
-                {
-                    if (dirchoice == "My shared folders")
-                    {
-                        Directory.Delete(filechoice, true);
-                    }
-
-                    else if (dirchoice == "My Dump Folders")
-                    {
-                        File.Delete(tamp.LastNode.Text);
-                        Directory.Delete(tamp.Text);
-                    }
-                    else if (tamp != null && !Directory.Exists(tamp.Text))
-                    {
-                        int end = dirchoice.IndexOf("'s shared folders and drives");
-                        Program.CallFunc("delete " + filechoice + " from " + dirchoice.Substring(0, end));
+                        Program.CallFunc("delete " + filechoice + " on " + dirchoice.IndexOf("'s shared folders and drives"));
+                        
                     }
                 }
                 RefreshWindow();

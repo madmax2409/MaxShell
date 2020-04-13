@@ -21,11 +21,11 @@ namespace terminal_graphics
         public static void BuildDict()
         {
             string[] methods = { 
-                Environment.OSVersion.VersionString,
+                PrintCom(Program.CallFunc("get windows on " + Environment.MachineName)),
                 Dns.GetHostName(),
                 Environment.UserName,
-                Program.CallFunc("cpu"),
-                Program.CallFunc("ram"),
+                PrintCom(Program.CallFunc("get cpu on " + Environment.MachineName)),
+                PrintCom(Program.CallFunc("get ram on " + Environment.MachineName)),
                 GetIpv4(),
                 GetIpv6(),
                 GetMacAddress(),
@@ -110,6 +110,10 @@ namespace terminal_graphics
                 counter++;
             }
         }
+        public static string PrintCom(string command)
+        {
+            return command.Substring(0, command.IndexOf("stoprightnow"));
+        }
 
         public SystemInfo()
         {
@@ -153,14 +157,12 @@ namespace terminal_graphics
             pcpic.Location = new Point(105 - comp.Width, 15);
             pcpic.Size = new Size(comp.Width, comp.Height);
             pcpic.Image = comp;
-            //pcpic.BackColor = Color.White;
             Controls.Add(pcpic);
 
             Label netpic = new Label();
             netpic.Location = new Point(490 - comp.Width, 15);
             netpic.Size = new Size(comp.Width, comp.Height);
             netpic.Image = nets;
-            //netpic.BackColor = Color.White;
             Controls.Add(netpic);
 
             SetLabels();
