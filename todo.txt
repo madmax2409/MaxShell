@@ -2,15 +2,14 @@
 - nodes to reopen after refresh
 - display nicknames instead of machnames
 - konami code
-- file manager empty folder still showing - 2
+- don't show empty dump folders
 						MILESTONE 3
 					Con
-- debug empty messages on disconnect - 3
+- debug empty messages on disconnect
 - server shutdown notification(?)
 - udp sockets(?)
 					GUI
 - FILE MANAGER DRAG & DROP
-- GUI for: FILE MANAGER - 1
 - pass filechoice to create
 						FINISH LINE!!!!
 - put all project comps in one folder

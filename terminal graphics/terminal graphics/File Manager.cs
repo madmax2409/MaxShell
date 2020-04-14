@@ -156,6 +156,7 @@ namespace terminal_graphics
             string data = Program.CallFunc("clients");
             Create cl = new Create(data.Substring(0, data.IndexOf("stoprightnow")));
             cl.Show();
+            RefreshWindow();
         }
 
         private static void BuildTree(string[] direcs)
@@ -274,7 +275,7 @@ namespace terminal_graphics
             tv.DragEnter += new DragEventHandler(tv_DragEnter);
             tv.DragOver += new DragEventHandler(tv_DragOver);
             tv.DragDrop += new DragEventHandler(tv_DragDrop);
-            //tv.AllowDrop = true;
+            tv.AllowDrop = true;
             tv.Dock = DockStyle.Fill;
             Controls.Add(tv);
 

@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.IO;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace terminal_graphics
 {
@@ -114,8 +115,10 @@ namespace terminal_graphics
             return Encoding.Unicode.GetString(bytes, 0, bytesRec);
         }
 
+        [STAThread]
         static void Main()
         {
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
             GetAddr.PreSock();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

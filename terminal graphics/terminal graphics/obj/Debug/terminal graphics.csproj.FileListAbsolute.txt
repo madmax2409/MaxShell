@@ -91,3 +91,4 @@ C:\Users\Maxim\Desktop\MaxShell\terminal graphics\terminal graphics\bin\Debug\Mi
 C:\Users\Maxim\Desktop\MaxShell\terminal graphics\terminal graphics\bin\Debug\Microsoft.Scripting.Metadata.xml
 C:\Users\Maxim\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csproj.CopyComplete
 C:\Users\Maxim\Desktop\maxshell\terminal graphics\terminal graphics\bin\Debug\Control.Draggable.dll
+C:\Users\Maxim\Desktop\MaxShell\terminal graphics\terminal graphics\obj\Debug\terminal graphics.csproj.CoreCompileInputs.cache
