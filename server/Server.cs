@@ -65,13 +65,12 @@ namespace server
                     }
                 }
             }
-
             if (flag)
                 return output + "stoprightnow";
-            else if (pararms[0].IndexOf(' ') == -1)
+            else if (pararms[0] != "command failed")
                 return "no such command as --> " + pararms[0] + MostSimilar(pararms[0]) + "stoprightnow";
             else
-                return "couldn't execute your command, please check your parameters";
+                return "couldn't execute your command, please check your parametersstoprightnow";
         }
         
         private static string[] Interpreter(string command)
@@ -179,7 +178,6 @@ namespace server
                 try { param = command.Substring(0, end + 1); }
                 catch { }
 
-
                 if (!flag)
                 {
                     if (start != 0)
@@ -209,7 +207,7 @@ namespace server
                 }
                 return finite;
             } 
-            catch { return new string[] { command }; }
+            catch { return new string[] { "command failed" }; }
         }
         private static string Disconnect()
         {
