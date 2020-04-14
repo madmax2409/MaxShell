@@ -167,7 +167,6 @@ namespace server
                                 if (!flag)
                                 {
                                     start = i + 1;
-                                    Console.WriteLine("param2 " + command.Substring(start, end - start + 1));
                                     st.Push(command.Substring(start, end - start + 1));
                                     break;
                                 }

@@ -60,7 +60,7 @@ namespace server
 
                     bytesRec = s.Receive(bytes);
                     data = Encoding.Unicode.GetString(bytes, 0, bytesRec);
-                    Console.WriteLine("Got a message: " + data);
+                    //Console.WriteLine("Got a message: " + data);
                     data = Server.CommandOutput(data, s);
                     SendPackets(data, s);
                     if (data.Contains("disconnect"))
