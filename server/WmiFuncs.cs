@@ -21,9 +21,10 @@ namespace server
             foreach (KeyValuePair<Socket, string[]> pair in Client.clients)
             {
                 output += counter + ". " + pair.Value[0] + ", " + pair.Value[1] + ", " + 
-                    pair.Value[2].Substring(0, pair.Value[2].IndexOf(':'));
+                    pair.Value[2].Substring(0, pair.Value[2].IndexOf(':')) + "\n";
                 counter++;
             }
+            output += counter + ". " + "None, " + Environment.MachineName + ", " + GetIp() + " (sever)"; 
             return output;
         }
         public static void AddPaths(string target)
@@ -136,7 +137,6 @@ namespace server
             if (!Directory.Exists("\\\\" + target + "\\" + rightpath))
             {
                 Directory.CreateDirectory("\\\\" + target + "\\" + rightpath);
-                Console.WriteLine("Created");
             }
             try
             {
@@ -148,7 +148,6 @@ namespace server
                 inParams["Path"] = sharefolder;
                 inParams["Type"] = 0x0;
                 outParams = managementClass.InvokeMethod("Create", inParams, null);
-                Console.WriteLine("rightpath: " + rightpath.Substring(3) + " sharefolder: " + sharefolder);
                 if ((uint)outParams.Properties["ReturnValue"].Value != 0)
                     return "error no: " + (uint)outParams.Properties["ReturnValue"].Value;
                 else
@@ -183,7 +182,6 @@ namespace server
             {
                 string[] str = null;
                 string rightpath = m["Path"].ToString();
-                Console.WriteLine("rightpath: " + rightpath);
                 foreach (KeyValuePair<string, string> pair in paths)
                     if (rightpath == pair.Key)
                     {
@@ -243,17 +241,14 @@ namespace server
 
             string newdir = "\\\\" + source + "\\C$\\dump_folders\\dump_folder No " + counter + " from " + target; //copyfile from DESKTOP-21F9ULD where dir=C:\testfolder2\uuu.txt
             Directory.CreateDirectory(newdir);
-            Console.WriteLine("Created dir on source");
             ++counter;
             try
             {
                 if (target == Environment.MachineName)
                     File.Copy(srcpath, newdir + "\\" + Path.GetFileName(srcpath));
                 else
-                {
-                    Console.WriteLine("source: " + source + " target: " + target);
                     File.Copy(@"\\" + target + "\\" + srcpath, newdir + "\\" + Path.GetFileName(srcpath));
-                }
+
                 return "copied the file";
             }
             catch (IOException)
@@ -264,7 +259,12 @@ namespace server
 
         public static string CreateFile(string target, string filename)
         {
-            string newdir = "\\\\" + target + @"\C$\dump_folders\dump_folder No " + counter; 
+            string newdir;
+
+            if (target != Environment.MachineName)
+                newdir = "\\\\" + target + "\\C$\\dump_folders\\dump_folder No " + counter; 
+            else
+                newdir = "C:\\dump_folders\\dump_folder No " + counter;
             Directory.CreateDirectory(newdir);
             counter++;
             File.Create(newdir + "\\" + filename);
@@ -274,7 +274,6 @@ namespace server
         public static string DeleteFile(string target, string path)
         {
             path = path.Replace(':', '$');
-            Console.WriteLine(path);
             File.Delete("\\\\" + target + "\\" + path.Replace(':', '$'));
             return "deleted the file on " + target;
         }
