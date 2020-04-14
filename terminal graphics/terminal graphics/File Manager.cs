@@ -13,10 +13,10 @@ namespace terminal_graphics
         private Button refresh = new Button();
         private Button delete = new Button();
         private Button create = new Button();
-        private static TreeView tv = new TreeView();
-        private static string filechoice = "";
+        private static TreeView tv;
+        public static string filechoice = "";
+        public static string dirchoice = "";
         private static TreeNode tamp;
-        private static string dirchoice = "";
         private static TreeNode dumps;
         private static Queue<bool> q = new Queue<bool>();
 
@@ -98,7 +98,7 @@ namespace terminal_graphics
         private static void OpenFile(object sender, EventArgs e)
         {
             if (dirchoice != "" && filechoice != "")
-                if (dirchoice == "My shared folders" || dirchoice == "My Dump Folders")
+                if (dirchoice == "My Shared Folders" || dirchoice == "My Dump Folders")
                 {
                     if (filechoice != "My Dump Folders") //"My shared Folders!"
                         Process.Start(filechoice);
@@ -129,23 +129,25 @@ namespace terminal_graphics
         }
         public static void DeleteFile(object sender, EventArgs e)
         {
-            if (dirchoice != "" && filechoice != "" && tamp.Nodes.Count == 0)
+            if (dirchoice != "" && filechoice != "")
             {
                 DialogResult result = MessageBox.Show("Are you sure you want to delete the file?", "Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (result == DialogResult.Yes)
                 {
-                    if (dirchoice == "My shared folders" || dirchoice == "My Dump Folders")
-                    {
-                        if (filechoice.IndexOf(Environment.MachineName) == -1 && filechoice != "My Dump Folders") 
-                            Program.CallFunc("delete " + filechoice + " on " + Environment.MachineName);
-                    }
-                    else if (!Directory.Exists(filechoice))
-                    {
-                        Program.CallFunc("delete " + filechoice + " on " + dirchoice.IndexOf("'s shared folders and drives"));
-                        
-                    }
+                    if ((dirchoice == "My Shared Folders" || dirchoice == "My Dump Folders") && (filechoice != "My Shared Folders" && filechoice != "My Dump Folders"))
+                        File.Delete(filechoice);
+
+                    else 
+                        Program.CallFunc("delete " + filechoice + " on " + dirchoice.Substring(0, dirchoice.IndexOf("'s shared folders and drives")));
+
+                    if (dirchoice == "My Dump Folders")
+                        foreach (TreeNode node in dumps.Nodes)
+                            if (node != null)
+                                if (node.Nodes.Count == 0)
+                                    Directory.Delete(node.Text);
+
+                    RefreshWindow();
                 }
-                RefreshWindow();
             }
         }
 
@@ -161,7 +163,7 @@ namespace terminal_graphics
             TreeNode tn = new TreeNode();
             TreeNode temp = null;
             tn.Name = "sourcenode";
-            tn.Text = "My shared folders";
+            tn.Text = "My Shared Folders";
             tv.Nodes.Add(tn);
             TreeNode temp2 = tn;
             bool val = false;
@@ -258,13 +260,14 @@ namespace terminal_graphics
         }
         public Form2(string dirs)
         {
-            this.SuspendLayout();
+            tv = new TreeView();
+            SuspendLayout();
             string[] direcs = dirs.Split(new char[] { '\n' });
             BuildTree(direcs);
             
             tv.Font = new Font("Segue", 10);
             tv.Location = new Point(0, 0);
-            tv.Size = new Size(402, 400);
+            tv.Size = new Size(402, 380);
             tv.BorderStyle = BorderStyle.FixedSingle;
             tv.AfterSelect += new TreeViewEventHandler(treeView1_AfterSelect);
             tv.ItemDrag += new ItemDragEventHandler(tv_ItemDrag);
@@ -275,37 +278,46 @@ namespace terminal_graphics
             tv.Dock = DockStyle.Fill;
             Controls.Add(tv);
 
-            open.Font = new Font("Segue", 10);
-            open.Location = new Point(20, 410);
+            Font f = new Font("Segue", 12);
+            open.Font = f;
+            open.Location = new Point(0, 380);
             open.Text = "open";
             open.Click += new EventHandler(OpenFile);
-            open.Size = new Size(70, 30);
-            open.BackColor = Color.Yellow;
+            open.Size = new Size(100, 70);
+            open.BackColor = Color.Khaki;
+            open.FlatStyle = FlatStyle.Flat;
+            open.FlatAppearance.BorderColor = Color.Khaki;
             Controls.Add(open);
 
-            refresh.Font = new Font("Segue", 10);
-            refresh.Location = new Point(100, 410);
+            refresh.Font = f;
+            refresh.Location = new Point(100, 380);
             refresh.Text = "refresh";
             refresh.Click += new EventHandler(Refresh);
-            refresh.Size = new Size(70, 30);
-            refresh.BackColor = Color.Turquoise;
+            refresh.Size = new Size(100, 70);
+            refresh.BackColor = Color.DeepSkyBlue;
+            refresh.FlatStyle = FlatStyle.Flat;
+            refresh.FlatAppearance.BorderColor = Color.DeepSkyBlue;
             Controls.Add(refresh);
 
-            delete.Font = new Font("comic sans", 10);
-            delete.Location = new Point(180, 410);
-            delete.Text = "delete";
-            delete.Click += new EventHandler(DeleteFile);
-            delete.Size = new Size(70, 30);
-            delete.BackColor = Color.Tomato;
-            Controls.Add(delete);
-
-            create.Font = new Font("Segue", 10);
-            create.Location = new Point(260, 410);
+            create.Font = f;
+            create.Location = new Point(200, 380);
             create.Text = "create";
             create.Click += new EventHandler(CreateFile);
-            create.Size = new Size(70, 30);
-            create.BackColor = Color.SpringGreen;
+            create.Size = new Size(100, 70);
+            create.BackColor = Color.MediumSeaGreen;
+            create.FlatStyle = FlatStyle.Flat;
+            create.FlatAppearance.BorderColor = Color.MediumSeaGreen;
             Controls.Add(create);
+
+            delete.Font = f;
+            delete.Location = new Point(300, 380);
+            delete.Text = "delete";
+            delete.Click += new EventHandler(DeleteFile);
+            delete.Size = new Size(100, 70);
+            delete.BackColor = Color.Tomato;
+            delete.FlatStyle = FlatStyle.Flat;
+            delete.FlatAppearance.BorderColor = Color.Tomato;
+            Controls.Add(delete);
 
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;

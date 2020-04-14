@@ -20,13 +20,18 @@ namespace terminal_graphics
             {
                 Label lb = new Label();
                 string[] para = st.Split(',');
+                MessageBox.Show(st);
                 for (int i = 0; i < para.Length; i++)
                 {
                     if (i == 0)
+                    {
+                        MessageBox.Show(para[i]);
                         para[i] = para[i].Insert(para[i].IndexOf('.') + 1, "     ");
+                    }
 
                     if (para[i].Length < lengts[i])
                     {
+                        MessageBox.Show(para[i]);
                         int dif = lengts[i] - para[i].Length;
                         string padding = " ";
                         for (int j = 0; j < dif; j++)
@@ -37,8 +42,8 @@ namespace terminal_graphics
                 lb.Text = string.Join(" ", para);
                 lb.Font = new Font(FontFamily.GenericSansSerif, 10);
                 lb.Location = new Point(x, y);
-                lb.Size = new Size(350, 200);
-                y += 15;
+                lb.Size = new Size(400, 20);
+                y += 25;
                 Controls.Add(lb);
             }
         }

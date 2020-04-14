@@ -24,29 +24,28 @@ namespace terminal_graphics
 
         public void OutCreate(object sender, EventArgs e)
         {
+
             bool flag = Creation();
             if (flag)
                 Close();
         }
         public static bool Creation()
         {
-            try
-            {
-                string file = filename.Text + "." + exts.SelectedItem;
-                if (!Directory.Exists("C:\\dump_folders\\local_dump"))
-                    Directory.CreateDirectory("C:\\dump_folders\\local_dump");
+            string result = "";
+            string file = filename.Text + "." + exts.SelectedItem;
 
-                File.Create("C:\\dump_folders\\local_dump\\" + file);
-                MessageBox.Show("File Created in local dumps!", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            string choice = machs.SelectedItem.ToString();
+            string start = choice.Substring(choice.IndexOf(", ") + 2);
+            string mach = start.Substring(0, start.IndexOf(','));
+            result = Program.CallFunc("create " + file + " on " + mach);
+
+            if (result.IndexOf("created the file") != -1)
+            {
+                MessageBox.Show("Created the file!", "Sucess");
                 return true;
             }
-            catch (IOException)
-            {
-                counter++;
-                return Creation();
-            }
-            catch (ArgumentException)
-            {
+            else
+            { 
                 MessageBox.Show("Something is wong with your choice, please try again", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
@@ -56,6 +55,7 @@ namespace terminal_graphics
         {
             Close();
         }
+
         public Create(string data)
         {
             Font f = new Font("Segue", 10);

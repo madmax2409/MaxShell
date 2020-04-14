@@ -1,21 +1,16 @@
 						MILESTONE 2 (Remnants)
-- undispose treeview
 - nodes to reopen after refresh
 - display nicknames instead of machnames
 - konami code
+- file manager empty folder still showing - 2
 						MILESTONE 3
 					Con
-- try except on intptr
-- debug empty messages on disconnect
-- server shutdown notification
+- debug empty messages on disconnect - 3
+- server shutdown notification(?)
 - udp sockets(?)
-- fix not all IP's not showing in arp -a (ping all ip's before setup?)
-
 					GUI
-- button set create
 - FILE MANAGER DRAG & DROP
-- GUI for: FILE MANAGER
+- GUI for: FILE MANAGER - 1
+- pass filechoice to create
 						FINISH LINE!!!!
-- move sysinfo funcs to server
-- move dump_folders into project folder
-- fix code diversions (all is suppposed to look the same and not diff version of the same code)
+- put all project comps in one folder

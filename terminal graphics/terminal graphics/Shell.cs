@@ -146,18 +146,7 @@ namespace terminal_graphics
             KeyPress += new KeyPressEventHandler(CheckForCheat_2);
 
             Font f = new Font("Segue", 10);
-            /*direc.Font = f;
-            direc.Location = new Point(0, 10);
-            string dir = Directory.GetCurrentDirectory();
-            char[] seperate = { '\\' };
-            string[] dirs = dir.Split(seperate);
-            if (dirs.Length > 3)
-                dir = dirs[0] + @"\" + dirs[1] + @"\" + dirs[2] + @"\...\" + dirs[dirs.Length - 1] + ">";
-            direc.Text = dir;
-            SizeF size = direc.CreateGraphics().MeasureString(direc.Text, direc.Font);
-            direc.Size = new Size((int)size.Width + 10, (int)size.Height + 2);
-            Controls.Add(direc);
-            */
+
             command.Font = f;
             command.Location = new Point(5, 10);
             command.Size = new Size(890, 10);
