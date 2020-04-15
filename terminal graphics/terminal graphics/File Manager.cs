@@ -16,42 +16,21 @@ namespace terminal_graphics
         private static TreeView tv;
         public static string filechoice = "";
         public static string dirchoice = "";
-        private static TreeNode tamp;
         private static TreeNode dumps;
         private static Queue<bool> q = new Queue<bool>();
 
-        public static void CopyTreeNodes(TreeView treeview1, Queue<bool> q)
-        {
-            foreach (TreeNode tn in treeview1.Nodes)
-            {
-                q.Enqueue(tn.IsExpanded);
-                CopyChildren(tn);
-            }
-        }
-        public static void CopyChildren(TreeNode original)
-        {
-            foreach (TreeNode tn in original.Nodes)
-            {
-                q.Enqueue(tn.IsExpanded);
-                CopyChildren(tn);
-            }
-        }
-
-        private static void ProcessDirectory(string dir, TreeNode Node)
+        private static void ProcessDirectory(string dir, TreeNode Node) // recursive addition of nodes
         {
             try
             {
                 string[] SubDir;
                 SubDir = Directory.GetFiles(dir);
-                foreach (string SB in SubDir) // exit upon empty 
+                foreach (string SB in SubDir)
                 {
                     TreeNode tempNode = new TreeNode();
                     tempNode.Text = SB;
                     Node.Nodes.Add(tempNode);
-                    //bool val = q.Dequeue();
-                    //if (val)
-                        //tempNode.Expand();
-                    ProcessDirectory(SB, tempNode); // recursive call per node
+                    ProcessDirectory(SB, tempNode);
                 }
             }
             catch 
@@ -59,7 +38,7 @@ namespace terminal_graphics
                 
             }
         }
-        private static void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
+        private static void tv_AfterSelect(object sender, TreeViewEventArgs e) //set parameters on each time a treenode is selceted
         {
             TreeNode temp = e.Node;
             try
@@ -72,24 +51,27 @@ namespace terminal_graphics
             }
             catch (NullReferenceException)
             {
-                tamp = e.Node;
                 filechoice = e.Node.Text;
             }
         }
-        public static string AddInsides(string data)
+        public static string AddInsides(string data) //add insides of remote folders
         {
             string temp, mach = "";
             string[] datas = data.Split(new char[] { '\n' });
             for(int i = 0; i<datas.Length;i++)
             {
-                if (datas[i].IndexOf(Environment.MachineName) == -1 && datas[i].IndexOf("'s shared folders and drives") != -1)
+                //check if the folder is remote and retrieve the machine name of the computer
+                if (datas[i].IndexOf(Environment.MachineName) == -1 && datas[i].IndexOf("'s shared folders and drives") != -1) 
                     mach = datas[i].Substring(0, datas[i].IndexOf("'s shared folders and drives"));
 
-                else if (mach != "" && mach != Environment.MachineName)
+                else if (mach != "" && mach != Environment.MachineName) //if a machine name is deteced, a request to list the files in the folder is sent
                 {
                     temp = Program.CallFunc("list " + datas[i] + " on " + mach);
-                    if (temp.IndexOf("\\") != -1)
-                        data = data.Insert(data.IndexOf(datas[i]) + datas[i].Length, "\n" + temp.Substring(0, temp.IndexOf("stoprightnow")));
+                    if (temp != "stoprightnow")
+                    {   //all the additional files are added before the initiation of the treeview
+                        //string direcs[] = data.Split(new char[] )
+                        data = data.Insert(data.IndexOf(datas[i]) + datas[i].Length, "\nfile: " + datas[i] + "\\" + temp.Substring(0, temp.IndexOf("stoprightnow")));
+                    }
                 }
             }
             return data;
@@ -98,34 +80,30 @@ namespace terminal_graphics
         private static void OpenFile(object sender, EventArgs e)
         {
             if (dirchoice != "" && filechoice != "")
-                if (dirchoice == "My Shared Folders" || dirchoice == "My Dump Folders")
+                if ((dirchoice == "My Shared Folders" || dirchoice == "My Dump Folders") && (filechoice != "My Dump Folders" && filechoice != "My Shared Folders"))
+                        Process.Start(filechoice); //in case it's local, we open it right away
+
+                else if (dirchoice != "My Shared Folders" && dirchoice != "My Dump Folders")
                 {
-                    if (filechoice != "My Dump Folders") //"My shared Folders!"
-                        Process.Start(filechoice);
-                }
-                else if (!Directory.Exists(filechoice))
-                {
-                    int end = dirchoice.IndexOf("'s shared folders and drives");
-                    Program.CallFunc("copy " + filechoice + " from " + dirchoice.Substring(0, end));
+                    int end = dirchoice.IndexOf("'s shared folders and drives"); 
+                    Program.CallFunc("copy " + filechoice + " from " + dirchoice.Substring(0, end)); //to copy remote folder, first we reques to copy the file
                     RefreshWindow();
-                    MessageBox.Show(dumps.LastNode.LastNode.Text);
-                    Process.Start(dumps.LastNode.LastNode.Text);
+                    Process.Start(dumps.LastNode.LastNode.Text); //and then start the process in the last node, the last copied one
                 }
                   
         }
         public static void Refresh(object sender, EventArgs e)
         {
-            //CopyTreeNodes(tv, q);
             RefreshWindow();
         }
 
         public static void RefreshWindow()
         {
-            string dirs = Program.CallFunc("shared folders");
+            string dirs = Program.CallFunc("shared folders"); //request the data to update changes
             dirs = AddInsides(dirs);
             string[] direcs = dirs.Split(new char[] { '\n' });
             tv.Nodes.Clear();
-            BuildTree(direcs);
+            BuildTree(direcs); //and rebuild the tree
         }
         public static void DeleteFile(object sender, EventArgs e)
         {
@@ -134,17 +112,29 @@ namespace terminal_graphics
                 DialogResult result = MessageBox.Show("Are you sure you want to delete the file?", "Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (result == DialogResult.Yes)
                 {
-                    if ((dirchoice == "My Shared Folders" || dirchoice == "My Dump Folders") && (filechoice != "My Shared Folders" && filechoice != "My Dump Folders"))
-                        File.Delete(filechoice);
+                    if (!Directory.Exists(filechoice))
+                    {
+                        //if the file is local we can delete it right away, if not - we request the deletion from the server
+                        if ((dirchoice == "My Shared Folders" || dirchoice == "My Dump Folders") && (filechoice != "My Shared Folders" && filechoice != "My Dump Folders"))
+                            File.Delete(filechoice);
 
-                    else 
-                        Program.CallFunc("delete " + filechoice + " on " + dirchoice.Substring(0, dirchoice.IndexOf("'s shared folders and drives")));
+                        else
+                            Program.CallFunc("delete " + filechoice + " on " + dirchoice.Substring(0, dirchoice.IndexOf("'s shared folders and drives")));
 
-                    if (dirchoice == "My Dump Folders")
-                        foreach (TreeNode node in dumps.Nodes)
-                            if (node != null)
-                                if (node.Nodes.Count == 0)
-                                    Directory.Delete(node.Text);
+                        if (dirchoice == "My Dump Folders") //delete empty dump folders
+                            foreach (TreeNode node in dumps.Nodes)
+                                if (node != null)
+                                    if (node.Nodes.Count == 0)
+                                        Directory.Delete(node.Text);
+                    }
+                    else
+                    {
+                        if ((dirchoice == "My Shared Folders" || dirchoice == "My Dump Folders") && (filechoice != "My Shared Folders" && filechoice != "My Dump Folders"))
+                            Directory.Delete(filechoice, true);
+
+                        else
+                            MessageBox.Show("Recursive Deletion to be added");
+                    }
 
                     RefreshWindow();
                 }
@@ -156,57 +146,63 @@ namespace terminal_graphics
             string data = Program.CallFunc("clients");
             Create cl = new Create(data.Substring(0, data.IndexOf("stoprightnow")));
             cl.Show();
-            RefreshWindow();
         }
 
         private static void BuildTree(string[] direcs)
         {
+            for (int i = 0; i < direcs.Length; i++)
+                MessageBox.Show(direcs[i]);
+
             TreeNode tn = new TreeNode();
             TreeNode temp = null;
             tn.Name = "sourcenode";
             tn.Text = "My Shared Folders";
             tv.Nodes.Add(tn);
             TreeNode temp2 = tn;
-            bool val = false;
-            foreach (string dir in direcs)
+            for (int i =0; i <direcs.Length;i++)
             {
-                if (dir.Length > 3 && dir != "stoprightnow" && dir != "C:\\dump_folders")
+                if (direcs[i].Length > 3 && direcs[i] != "stoprightnow" && direcs[i] != "C:\\dump_folders") //build the tree in order of: first local shared, then all other clients
                 {
-                    if (q.Count != 0)
-                        val = q.Dequeue();
-
-                    if (dir.Contains("'s shared folders and drives"))
-                        if (dir.Substring(0, dir.IndexOf("'s shared folders and drives")) != Environment.MachineName)
+                    if (direcs[i].Contains("'s shared folders and drives"))  //check if it's a new client
+                        if (direcs[i].Substring(0, direcs[i].IndexOf("'s shared folders and drives")) != Environment.MachineName)
                         {
                             temp2 = new TreeNode();
-                            temp2.Name = dir;
-                            temp2.Text = dir;
+                            temp2.Name = direcs[i];
+                            temp2.Text = direcs[i];
                             tv.Nodes.Add(temp2);
-                            if (val)
-                                temp2.Expand();
                         }
                         else
                             continue;
                     else
                     {
-                        if (dir[0] == '\\')
-                            temp.Nodes.Add(dir);
+                        string path; //determine wheter the string is a folder or a file
+                        if (direcs[i].Contains("file: "))
+                            path = direcs[i].Substring(direcs[i].IndexOf("file: ") + 6);
                         else
+                            path = direcs[i];
+
+                        if (Directory.Exists(path) || File.Exists(path)) //check if the folder/file are local
+                        { 
+                            temp = temp2.Nodes.Add(direcs[i]); //recurisve build if local
+                            ProcessDirectory(direcs[i], temp);
+                        }
+                        else if (!direcs[i].Contains("stoprightnow")) //if remote, all the files are next in the array
                         {
-                            temp = temp2.Nodes.Add(dir);
-                            if (val)
-                                temp.Expand();
-                            ProcessDirectory(dir, temp);
+                            if (direcs[i].Contains("file: ")) //add to the last saved node if it's a file
+                                temp.Nodes.Add(path);
+
+                            else
+                                temp = temp2.Nodes.Add(direcs[i]); //create a new node if it's a folder
                         }
                     }
                 }
             }
-            ShowDumps();
+            ShowDumps(); //add the dump folders at the end
         }
 
         public static void ShowDumps()
         {
-            if (Directory.Exists("C:\\dump_folders"))
+            if (Directory.Exists("C:\\dump_folders")) //create the dump folders directory if it's not in place and add all the dumps to the tree
             {
                 dumps = new TreeNode("My Dump Folders");
                 tv.Nodes.Add(dumps);
@@ -220,49 +216,10 @@ namespace terminal_graphics
             else
                 Directory.CreateDirectory("C:\\dump_folders");
         }
-        private void open_DragEnter(object sender, DragEventArgs e)
-        {
-            MessageBox.Show("DragEnter!");
-            e.Effect = DragDropEffects.Copy;
-        }
-        private void tv_DragEnter(object sender, DragEventArgs e)
-        {
-            e.Effect = e.AllowedEffect;
-        }
-        private void tv_DragOver(object sender, DragEventArgs e)
-        {
-            // Retrieve the client coordinates of the mouse position.  
-            Point targetPoint = tv.PointToClient(new Point(e.X, e.Y));
 
-            // Select the node at the mouse position.  
-            tv.SelectedNode = tv.GetNodeAt(targetPoint);
-        }
-        private void tv_DragDrop(object sender, DragEventArgs e)
-        {
-            // Retrieve the client coordinates of the drop location.  
-            Point targetPoint = PointToClient(new Point(e.X, e.Y));
-
-            // Retrieve the node that was dragged.  
-            string draggedNode = e.Data.GetData("string", true).ToString();
-        }
-        private void tv_ItemDrag(object sender, ItemDragEventArgs e)
-        {
-            // Move the dragged node when the left mouse button is used.  
-            if (e.Button == MouseButtons.Left)
-            {
-                DoDragDrop(e.Item, DragDropEffects.Move);
-            }
-
-            // Copy the dragged node when the right mouse button is used.  
-            else if (e.Button == MouseButtons.Right)
-            {
-                DoDragDrop(e.Item, DragDropEffects.Copy);
-            }
-        }
         public Form2(string dirs)
         {
             tv = new TreeView();
-            SuspendLayout();
             string[] direcs = dirs.Split(new char[] { '\n' });
             BuildTree(direcs);
             
@@ -270,13 +227,7 @@ namespace terminal_graphics
             tv.Location = new Point(0, 0);
             tv.Size = new Size(402, 380);
             tv.BorderStyle = BorderStyle.FixedSingle;
-            tv.AfterSelect += new TreeViewEventHandler(treeView1_AfterSelect);
-            tv.ItemDrag += new ItemDragEventHandler(tv_ItemDrag);
-            tv.DragEnter += new DragEventHandler(tv_DragEnter);
-            tv.DragOver += new DragEventHandler(tv_DragOver);
-            tv.DragDrop += new DragEventHandler(tv_DragDrop);
-            tv.AllowDrop = true;
-            tv.Dock = DockStyle.Fill;
+            tv.AfterSelect += new TreeViewEventHandler(tv_AfterSelect);
             Controls.Add(tv);
 
             Font f = new Font("Segue", 12);

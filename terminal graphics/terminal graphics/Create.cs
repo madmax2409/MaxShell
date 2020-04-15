@@ -19,25 +19,21 @@ namespace terminal_graphics
         private static ComboBox machs = new ComboBox();
         private static Button ok = new Button();
         private static Button cancel = new Button();
-        private static int counter = 0;
         public static string[] pcnames;
 
         public void OutCreate(object sender, EventArgs e)
         {
-
             bool flag = Creation();
             if (flag)
                 Close();
         }
         public static bool Creation()
         {
-            string result = "";
-            string file = filename.Text + "." + exts.SelectedItem;
-
-            string choice = machs.SelectedItem.ToString();
+            string file = filename.Text + "." + exts.SelectedItem; //get the file name and chosen extension from the textbox and combobox of the window
+            string choice = machs.SelectedItem.ToString();         //get the chosen target from the combobox of connected computers
             string start = choice.Substring(choice.IndexOf(", ") + 2);
-            string mach = start.Substring(0, start.IndexOf(','));
-            result = Program.CallFunc("create " + file + " on " + mach);
+            string mach = start.Substring(0, start.IndexOf(',')); //get the machine name from the client list
+            string result = Program.CallFunc("create " + file + " on " + mach); //send the creation request
 
             if (result.IndexOf("created the file") != -1)
             {

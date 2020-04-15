@@ -18,7 +18,7 @@ namespace terminal_graphics
         public static Panel sys = new Panel();
         public static Panel net = new Panel();
 
-        public static void BuildDict()
+        public static void BuildDict() //build the dictionary of the labels and outputs
         {
             string[] methods = { 
                 PrintCom(Program.CallFunc("get windows on " + Environment.MachineName)),
@@ -81,13 +81,13 @@ namespace terminal_graphics
             return null;
         }
 
-        public static void SetLabels()
+        public static void SetLabels() //build the labels
         {
             int counter = 1, x = 0, y = 0, mul = 0;
             Panel panel;
             foreach (KeyValuePair<string, string> pair in dict)
             {
-                if (counter <= 5)
+                if (counter <= 5) //divide the list by system and network info
                 {
                     panel = sys;
                     x = sys.Location.X;
@@ -105,12 +105,12 @@ namespace terminal_graphics
                 temp.Font = new Font("comic sans", 11);
                 temp.Size = new Size(350, 30);
                 temp.Location = new Point(10, mul * 60 - 40);
-                temp.Text = "\u2022 " + pair.Key + ": " + pair.Value;
+                temp.Text = "\u2022 " + pair.Key + ": " + pair.Value; //build the label and add to the window
                 panel.Controls.Add(temp);
                 counter++;
             }
         }
-        public static string PrintCom(string command)
+        public static string PrintCom(string command) 
         {
             return command.Substring(0, command.IndexOf("stoprightnow"));
         }
@@ -141,14 +141,14 @@ namespace terminal_graphics
 
             Label s = new Label();
             s.Location = new Point(comp.Width + 20, comp.Height / 2 );
-            s.Font = new Font("comic sans", 18);
+            s.Font = new Font("Segue", 18);
             s.Text = "System Info:";
             s.Size = new Size(200, 200);
             Controls.Add(s);
 
             Label n = new Label();
             n.Location = new Point(500, comp.Height / 2);
-            n.Font = new Font("comic sans", 18);
+            n.Font = new Font("Segue", 18);
             n.Text = "Network Info:";
             n.Size = new Size(200, 200);
             Controls.Add(n);

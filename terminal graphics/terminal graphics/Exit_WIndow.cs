@@ -26,7 +26,7 @@ namespace terminal_graphics
             Load += new EventHandler(Window_Loaded);
 
             Label l = new Label();
-            l.Font = new Font("Comic Sans", 10);
+            l.Font = new Font("Segue", 10);
             l.Location = new Point(30, 10);
             l.Text = "Exiting...";
             Controls.Add(l);

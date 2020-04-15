@@ -12,26 +12,21 @@ namespace terminal_graphics
 {
     public partial class ClientList : Form
     {
-        private void CreateLabels(string data)
+        private void CreateLabels(string data) //create lables for each of the connected pc's (including the server)
         {
             int x = 10, y = 50;
-            int[] lengts = {18, 20, 0 };
-            foreach (string st in data.Split(new char[] { '\n' }))
+            int[] lengts = {20, 17, 0 };
+            foreach (string st in data.Split(new char[] { '\n' })) //each line represents a client
             {
                 Label lb = new Label();
-                string[] para = st.Split(',');
-                MessageBox.Show(st);
+                string[] para = st.Split(','); //divide each line by ',' to add padding inbetween for oraginized table
                 for (int i = 0; i < para.Length; i++)
                 {
                     if (i == 0)
-                    {
-                        MessageBox.Show(para[i]);
-                        para[i] = para[i].Insert(para[i].IndexOf('.') + 1, "     ");
-                    }
+                        para[i] = para[i].Insert(para[i].IndexOf('.') + 1, "     "); 
 
                     if (para[i].Length < lengts[i])
                     {
-                        MessageBox.Show(para[i]);
                         int dif = lengts[i] - para[i].Length;
                         string padding = " ";
                         for (int j = 0; j < dif; j++)
@@ -39,7 +34,7 @@ namespace terminal_graphics
                         para[i] += padding;
                     }
                 }
-                lb.Text = string.Join(" ", para);
+                lb.Text = string.Join(" ", para); //create label and set location for next possible label
                 lb.Font = new Font(FontFamily.GenericSansSerif, 10);
                 lb.Location = new Point(x, y);
                 lb.Size = new Size(400, 20);
@@ -50,7 +45,6 @@ namespace terminal_graphics
         public ClientList(string data)
         {
             BackColor = Color.LightSkyBlue;
-
             Font f = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold);
             Label top = new Label();
             top.Location = new Point(5, 5);

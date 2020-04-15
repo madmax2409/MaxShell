@@ -9,7 +9,6 @@ namespace terminal_graphics
 {
     public partial class Shell : Form
     {
-        private Label direc = new Label();
         private TextBox command = new TextBox();
         private TextBox output = new TextBox();
         private Stack<string> older = new Stack<string>();
@@ -17,31 +16,31 @@ namespace terminal_graphics
         private Button fileman = new Button();
         private Button sysinfo = new Button();
         private Button clist = new Button();
-        string code = "uuddlrlrba";
-        string input = "";
 
         private void BlockingInput(object sender, KeyPressEventArgs e)
         {
             e.Handled = true;
         }
 
-        private void OutputProcedure(object sender, KeyEventArgs e)
+        private void OutputProcedure(object sender, KeyEventArgs e) 
         {
-            TextBox cmd = (TextBox)sender;
+            TextBox cmd = (TextBox)sender; //get the command from the entry
             if (e.KeyData == Keys.Enter)
             {
-                while (newer.Count > 0)
+                while (newer.Count > 0) //save command to history
                     older.Push(newer.Pop());
 
-                if (cmd.Text == "")
+                if (cmd.Text == "") 
                     return;
 
                 string command = cmd.Text;
                 older.Push(command);
-                string outpt = Program.Maintain(command);
+                string outpt = Program.Maintain(command); //send the messsage from the entry to the server
+
                 if (outpt == "")
                     return;
-                string[] dirs = outpt.Split(new char[] { '\n' });
+
+                string[] dirs = outpt.Split(new char[] { '\n' }); 
                 for (int i = 0; i < dirs.Length; i++)
                 {
                     output.AppendText(dirs[i]);
@@ -51,7 +50,7 @@ namespace terminal_graphics
                 cmd.Text = "";
             }
 
-            else if (e.KeyData == Keys.Up)
+            else if (e.KeyData == Keys.Up) //going up and down in command history
             {
                 if (older.Count > 0)
                 {
@@ -108,42 +107,12 @@ namespace terminal_graphics
             SystemInfo si = new SystemInfo();
             si.Show();
         }
-
-        public void CheckForCheat_1(object sender, KeyEventArgs e)
-        {
-            switch (e.KeyData)
-            {
-                case Keys.Up:
-                    input += 'u';
-                    break;
-                case Keys.Down:
-                    input += 'd';
-                    break;
-                case Keys.Left:
-                    input += 'l';
-                    break;
-                case Keys.Right:
-                    input += 'r';
-                    break;
-            }
-            MessageBox.Show(e.KeyData.ToString());
-        }
-
-        public void CheckForCheat_2(object sender, KeyPressEventArgs e)
-        {
-            input += e.KeyChar;
-            MessageBox.Show(e.KeyChar.ToString());
-            if (input.IndexOf(code) != -1)
-                MessageBox.Show("You are indeed a gamer!");
-        }
         public Shell()
         {
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             MinimizeBox = false;
             BackColor = Color.LightSkyBlue;
-            KeyDown += new KeyEventHandler(CheckForCheat_1);
-            KeyPress += new KeyPressEventHandler(CheckForCheat_2);
 
             Font f = new Font("Segue", 10);
 

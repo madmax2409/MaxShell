@@ -26,14 +26,14 @@ namespace terminal_graphics
                 return cp;
             }
         }
-        public void Send(object sender, EventArgs e)
+        public void Send(object sender, EventArgs e) //fucntion for ok button
         {
-            nickname = entry.Text;
+            nickname = entry.Text; //check for input and send an attempt of login
             pas = password.Text;
             byte[] rec = new byte[4096];
             socket.Send(Encoding.Unicode.GetBytes(pas));
             int bytesrec = socket.Receive(rec);
-            string data = Encoding.Unicode.GetString(rec, 0, bytesrec);
+            string data = Encoding.Unicode.GetString(rec, 0, bytesrec); //going on if we are correct and retry if we are wrong
             if (data == "good to go")
             {
                 Program.check = true;
@@ -42,7 +42,7 @@ namespace terminal_graphics
             else
                 MessageBox.Show("Wrong password, please try again");
         }
-        public void Send_2(object sender, KeyEventArgs e)
+        public void Send_2(object sender, KeyEventArgs e) //same as before but for the keyboard "enter button"
         {
             if (e.KeyData == Keys.Enter)
                 if (entry.Text != "")
@@ -63,7 +63,7 @@ namespace terminal_graphics
                         MessageBox.Show("Wrong password, please try again");
                 }
         }
-        public void Disconnect(object sender, EventArgs e)
+        public void Disconnect(object sender, EventArgs e) 
         {
             socket.Close();
             Close();
