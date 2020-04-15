@@ -1,15 +1,15 @@
 Functions:
 
 get ip - the server's ip....................................................................................................................no parameters
-free space - the free space in bytes left in each of the device's drives.........................computer name
+free space - the free space in bytes left in each of the device's drives..........................computer name
 process list - a list of all currently running processes on the device..............................computer name
 disconnect - disconnect from remote server and stop the application.........................no parameters
-kill - kill the process mentioned in the parameter.................................................................computer name & process name
-get directory - the current working directory..........................................................................no parameters
+kill - kill the process mentioned in the parameter...............................................................computer name & process name
+get directory - the current working directory........................................................................no parameters
 run - start a process with the specified paramater...............................................................computer name & process name
 share - set a folder mentioned in the parameter as a shared UNC path......................computer name & path
-list - list all files in the mentioned directory.............................................................................computer name & path
-shared folders - list all shared UNC paths on the device................................................... no parameters
-create - creates a file in the location given by the parameters..........................................computer name & path
-delete - creates a file in the location given by the parameters..........................................computer name & path
-help - list of avalible commands...................................................................................................no parameters
+list - list all files in the mentioned directory...........................................................................computer name & path
+shared folders - list all shared UNC paths on the device...................................................no parameters
+create - creates a file in the location given by the parameters.........................................computer name & path
+delete - creates a file in the location given by the parameters.........................................computer name & path
+help - list of avalible commands.................................................................................................no parameters

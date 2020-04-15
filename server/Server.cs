@@ -10,7 +10,7 @@ namespace server
         private static Dictionary<string, Func<string[], string>> dict = new Dictionary<string, Func<string[], string>>();
         private static readonly string[] funcs = { "get ip", "free space", "list processes", "disconnect", "kill", 
             "get directory", "run", "share", "list", "shared folders","help", "copy", "create","delete", "clients", 
-            "get cpu", "get ram", "get windows" }; //"delete" 
+            "get cpu", "get ram", "get windows" }; 
         public static Queue<Socket> pass = new Queue<Socket>();
 
         public static void SetCommands()
@@ -40,7 +40,7 @@ namespace server
         }
 
         public static string CommandOutput(string command, Socket sc)
-        { 
+        {
             string output = "";
             bool flag = false;
             string[] pararms = Interpreter(command);
@@ -159,7 +159,6 @@ namespace server
                                     if (cmd == command.Substring(0, end + 1))
                                     {
                                         flag = true;
-
                                         st.Push(cmd);
                                         break;
                                     }

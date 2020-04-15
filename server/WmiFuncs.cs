@@ -260,22 +260,28 @@ namespace server
         public static string CreateFile(string target, string filename)
         {
             string newdir;
-
-            if (target != Environment.MachineName)
-                newdir = "\\\\" + target + "\\C$\\dump_folders\\dump_folder No " + counter; 
-            else
-                newdir = "C:\\dump_folders\\dump_folder No " + counter;
-            Directory.CreateDirectory(newdir);
-            counter++;
+            while (true)
+            {
+                try
+                {
+                    if (target != Environment.MachineName)
+                        newdir = "\\\\" + target + "\\C$\\dump_folders\\dump_folder No " + counter;
+                    else
+                        newdir = "C:\\dump_folders\\dump_folder No " + counter;
+                    Directory.CreateDirectory(newdir);
+                    break;
+                }
+                catch { counter++; }
+            }
             File.Create(newdir + "\\" + filename);
-            return "created the file on " + target;
+            return "created " + filename + " on " + target;
         }
 
         public static string DeleteFile(string target, string path)
         {
             path = path.Replace(':', '$');
             File.Delete("\\\\" + target + "\\" + path.Replace(':', '$'));
-            return "deleted the file on " + target;
+            return "deleted " + path + " on " + target;
         }
 
         public static string CPUName()
