@@ -1,16 +1,23 @@
-						MILESTONE 2 (Remnants)
-- nodes to reopen after refresh
-- display nicknames instead of machnames
-- konami code
-- file manager empty folder still showing - 2
-						MILESTONE 3
-					Con
-- debug empty messages on disconnect - 3
-- server shutdown notification(?)
-- udp sockets(?)
-					GUI
-- FILE MANAGER DRAG & DROP
-- GUI for: FILE MANAGER - 1
-- pass filechoice to create
-						FINISH LINE!!!!
-- put all project comps in one folder
+					MILESTONE 3
+- send command button
+- funcs for: run, kill, path, create, delete
+- new window for multi param funcs (run, kill, create ,de;lete)
+
+					BUGS
+- don't show empty dump folders
+- reopen create window
+					TEST CASES
+			easy
+			medium
+- folders on different pc's with the same name + (bonus bug on remote folder)
+- recurisive deletion of folder
+			hard
+- show folders inisde folders remote (Recursive on remote)
+
+					MR FINISH LINE!!!!
+- project book (yom shabat)
+- QA
+- fix help file
+- put all project components in one folder (dump_folder)
+- documentation 
+- check code for esthetical fixes and remove garbage

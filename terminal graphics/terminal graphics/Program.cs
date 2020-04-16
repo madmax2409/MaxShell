@@ -6,20 +6,23 @@ using System.Net.Sockets;
 using System.Text;
 using System.IO;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace terminal_graphics
 {
     static class Program
     {
+        public static IPAddress ip;
         private static Socket sender;
-        private static byte[] bytes = new byte[4096];
-        public static Form2 form2;
-        public static bool check = false;
         public static Socket s;
         public static int port = 11000;
-        public static IPAddress ip;
+        private static readonly byte[] bytes = new byte[4096];
+        public static bool check = false;
+        public static Form2 form2;
 
-        private static void Connection()
+
+
+        private static void Connection() //recieve the address of the server and begin connection
         {
             IPEndPoint remoteEP = new IPEndPoint(ip, port); //ip, port
             sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -33,20 +36,20 @@ namespace terminal_graphics
             }
             
             sender.Send(Encoding.Unicode.GetBytes(Environment.MachineName + "+" + Login_Window.nickname));
-            if (!Directory.Exists("C:\\dump_folders"))
+            if (!Directory.Exists("C:\\dump_folders")) //if we already have a dump, we share to enable the reading of it by the file manager
                 CallFunc("sharefolder on " + Environment.MachineName + " where dir='C:\\dump_folders'");
         }
 
         public static string Maintain(string message)
         {
-            message = RemoveSpaces(message);
+            message = RemoveSpaces(message); //remove extras spaces from the command
             try
             {
-                if (message == "file manager")
+                if (message == "file manager") //check for keywords that represnt special commands
                 {
-                    string data = CallFunc("shared folders");
-                    data = Form2.AddInsides(data);
-                    form2 = new Form2(data);
+                    string data = CallFunc("shared folders"); //recieve the data to build the treeview 
+                    data = Form2.AddInsides(data);  
+                    form2 = new Form2(data); //and start the building
                     form2.Show();
                     return "opened file manager";
                 }
@@ -58,15 +61,16 @@ namespace terminal_graphics
                 }
                 else
                 {
-                    message = message.Replace("My Computer", Environment.MachineName);
+                    message = message.Replace("My Computer", Environment.MachineName); 
 
                     byte[] msg = Encoding.Unicode.GetBytes(message);
                     sender.Send(msg);
                     string totaldata = "", data = "";
                     do
                     {
+                        //if a message is longer than 4096 bytes, we rebuild it till the stop sign and then send for display
                         int bytesRec = sender.Receive(bytes);
-                        data = Encoding.Unicode.GetString(bytes, 0, bytesRec);
+                        data = Encoding.Unicode.GetString(bytes, 0, bytesRec); 
                         totaldata += data;
                     }
                     while (!data.Contains("stoprightnow"));
@@ -75,20 +79,21 @@ namespace terminal_graphics
                         sender.Shutdown(SocketShutdown.Both);
                         sender.Close(); // destroy the socket
                     }
-                    return totaldata.Remove(totaldata.IndexOf("stoprightnow"), 12);
+                    return totaldata;
                 }
             }
             catch (SocketException)
             {
-                MessageBox.Show("The Server is down, closing...", "Sorry!");
+                MessageBox.Show("The Server is down, closing...", "Sorry!"); //if the socket is destroyet, it's safe to assume the server is down
                 Application.Exit();
                 return "";
             }
         }
+
         private static string RemoveSpaces(string str)
         {
             int spacecount = 0;
-            for (int i = 0; i < str.Length; i++) // erase pre and after spaces
+            for (int i = 0; i < str.Length; i++) // erase spaces before and after the command
             {
                 if (str[i] == ' ')
                     spacecount++;
@@ -107,6 +112,7 @@ namespace terminal_graphics
             str = str.Remove(str.Length-spacecount, spacecount);
             return str;
         }
+
         public static string CallFunc(string command)
         {
             sender.Send(Encoding.Unicode.GetBytes(command));
@@ -114,8 +120,10 @@ namespace terminal_graphics
             return Encoding.Unicode.GetString(bytes, 0, bytesRec);
         }
 
+        [STAThread]
         static void Main()
         {
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
             GetAddr.PreSock();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
