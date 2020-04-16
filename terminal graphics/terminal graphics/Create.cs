@@ -14,40 +14,40 @@ namespace terminal_graphics
 {
     public partial class Create : Form
     {
-        private static TextBox filename = new TextBox();
-        private static ComboBox exts = new ComboBox();
-        private static ComboBox machs = new ComboBox();
-        private static Button ok = new Button();
-        private static Button cancel = new Button();
-        public static string[] pcnames;
+        private static readonly TextBox filename = new TextBox();
+        private static readonly ComboBox exts = new ComboBox();
+        private static readonly ComboBox machs = new ComboBox();
+        private static readonly Button ok = new Button();
+        private static readonly Button cancel = new Button();
+        private static string[] pcnames;
 
-        public void OutCreate(object sender, EventArgs e)
+        private void OutCreate(object sender, EventArgs e)
         {
             bool flag = Creation();
             if (flag)
                 Close();
         }
-        public static bool Creation()
+        private static bool Creation()
         {
             string file = filename.Text + "." + exts.SelectedItem; //get the file name and chosen extension from the textbox and combobox of the window
             string choice = machs.SelectedItem.ToString();         //get the chosen target from the combobox of connected computers
             string start = choice.Substring(choice.IndexOf(", ") + 2);
             string mach = start.Substring(0, start.IndexOf(',')); //get the machine name from the client list
-            string result = Program.CallFunc("create " + file + " on " + mach); //send the creation request
+            string result = Program.CallFunc("create '" + file + "' on " + mach); //send the creation request
 
-            if (result.IndexOf("created the file") != -1)
+            if (result.IndexOf("created") != -1)
             {
                 MessageBox.Show("Created the file!", "Sucess");
                 return true;
             }
             else
-            { 
+            {
                 MessageBox.Show("Something is wong with your choice, please try again", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }
 
-        public void Close_Window(object sender, EventArgs a)
+        private void Close_Window(object sender, EventArgs a)
         {
             Close();
         }
@@ -62,25 +62,31 @@ namespace terminal_graphics
             MinimizeBox = false;
             BackColor = Color.LightSkyBlue;
 
-            Label target = new Label();
-            target.Font = f;
-            target.Text = "Target:";
-            target.Location = new Point(5, 12);
-            target.Size = new Size(55, 17);
+            Label target = new Label
+            {
+                Font = f,
+                Text = "Target:",
+                Location = new Point(5, 12),
+                Size = new Size(55, 17)
+            };
             Controls.Add(target);
 
             machs.DropDownStyle = ComboBoxStyle.DropDownList;
             machs.Location = new Point(60, 10);
             machs.Size = new Size(230, 10);
+            machs.Items.Add("Choose a Client");
             foreach (string item in pcnames)
                 machs.Items.Add(item);
+            machs.SelectedItem = machs.Items[0];
             Controls.Add(machs);
 
-            Label file = new Label();
-            file.Text = "File:";
-            file.Font = f;
-            file.Location = new Point(5, 42);
-            file.Size = new Size(45, 15);
+            Label file = new Label
+            {
+                Text = "File:",
+                Font = f,
+                Location = new Point(5, 42),
+                Size = new Size(45, 15)
+            };
             Controls.Add(file);
 
             filename.Location = new Point(60, 40);
@@ -88,8 +94,10 @@ namespace terminal_graphics
 
             exts.DropDownStyle = ComboBoxStyle.DropDownList;
             exts.Location = new Point(169, 40);
+            exts.Items.Add("File Extension");
             foreach (string item in new string[] { "txt", "docx", "pdf" })
                 exts.Items.Add(item);
+            exts.SelectedItem = exts.Items[0];
             Controls.Add(exts);
 
             ok.Font = new Font("Segue", 10);

@@ -1,24 +1,23 @@
 					MILESTONE 3
 - send command button
-- don't show empty dump folders
-- THINK OF GRAPHICAL INTPTR
+- funcs for: run, kill, path, create, delete
+- new window for multi param funcs (run, kill, create ,de;lete)
 
 					BUGS
+- don't show empty dump folders
 - reopen create window
-
 					TEST CASES
 			easy
 			medium
-			hard
 - folders on different pc's with the same name + (bonus bug on remote folder)
-- folders inisde folders remote (Recursive on remote)
 - recurisive deletion of folder
+			hard
+- show folders inisde folders remote (Recursive on remote)
 
 					MR FINISH LINE!!!!
+- project book (yom shabat)
 - QA
-- hide password
-- project book
 - fix help file
 - put all project components in one folder (dump_folder)
-- documentation (on server mostly)
-- check code for esthtical fixes and remove garbage
+- documentation 
+- check code for esthetical fixes and remove garbage

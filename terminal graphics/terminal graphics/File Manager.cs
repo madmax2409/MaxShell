@@ -9,15 +9,11 @@ namespace terminal_graphics
 {
     public partial class Form2 : Form
     {
-        private Button open = new Button();
-        private Button refresh = new Button();
-        private Button delete = new Button();
-        private Button create = new Button();
         private static TreeView tv;
+        private static TreeNode dumps;
         public static string filechoice = "";
         public static string dirchoice = "";
-        private static TreeNode dumps;
-        private static Queue<bool> q = new Queue<bool>();
+        
 
         private static void ProcessDirectory(string dir, TreeNode Node) // recursive addition of nodes
         {
@@ -27,8 +23,10 @@ namespace terminal_graphics
                 SubDir = Directory.GetFiles(dir);
                 foreach (string SB in SubDir)
                 {
-                    TreeNode tempNode = new TreeNode();
-                    tempNode.Text = SB;
+                    TreeNode tempNode = new TreeNode
+                    {
+                        Text = SB
+                    };
                     Node.Nodes.Add(tempNode);
                     ProcessDirectory(SB, tempNode);
                 }
@@ -38,6 +36,7 @@ namespace terminal_graphics
                 
             }
         }
+
         private static void tv_AfterSelect(object sender, TreeViewEventArgs e) //set parameters on each time a treenode is selceted
         {
             TreeNode temp = e.Node;
@@ -54,6 +53,7 @@ namespace terminal_graphics
                 filechoice = e.Node.Text;
             }
         }
+
         public static string AddInsides(string data) //add insides of remote folders
         {
             string temp, mach = "";
@@ -92,12 +92,12 @@ namespace terminal_graphics
                 }
                   
         }
-        public static void Refresh(object sender, EventArgs e)
+        private static void Refresh(object sender, EventArgs e)
         {
             RefreshWindow();
         }
 
-        public static void RefreshWindow()
+        private static void RefreshWindow()
         {
             string dirs = Program.CallFunc("shared folders"); //request the data to update changes
             dirs = AddInsides(dirs);
@@ -105,7 +105,7 @@ namespace terminal_graphics
             tv.Nodes.Clear();
             BuildTree(direcs); //and rebuild the tree
         }
-        public static void DeleteFile(object sender, EventArgs e)
+        private static void DeleteFile(object sender, EventArgs e)
         {
             if (dirchoice != "" && filechoice != "")
             {
@@ -141,7 +141,7 @@ namespace terminal_graphics
             }
         }
 
-        public static void CreateFile(object sender, EventArgs e)
+        private static void CreateFile(object sender, EventArgs e)
         {
             string data = Program.CallFunc("clients");
             Create cl = new Create(data.Substring(0, data.IndexOf("stoprightnow")));
@@ -150,8 +150,8 @@ namespace terminal_graphics
 
         private static void BuildTree(string[] direcs)
         {
-            for (int i = 0; i < direcs.Length; i++)
-                MessageBox.Show(direcs[i]);
+            //for (int i = 0; i < direcs.Length; i++)
+                //MessageBox.Show(direcs[i]);
 
             TreeNode tn = new TreeNode();
             TreeNode temp = null;
@@ -166,9 +166,11 @@ namespace terminal_graphics
                     if (direcs[i].Contains("'s shared folders and drives"))  //check if it's a new client
                         if (direcs[i].Substring(0, direcs[i].IndexOf("'s shared folders and drives")) != Environment.MachineName)
                         {
-                            temp2 = new TreeNode();
-                            temp2.Name = direcs[i];
-                            temp2.Text = direcs[i];
+                            temp2 = new TreeNode
+                            {
+                                Name = direcs[i],
+                                Text = direcs[i]
+                            };
                             tv.Nodes.Add(temp2);
                         }
                         else
@@ -200,7 +202,7 @@ namespace terminal_graphics
             ShowDumps(); //add the dump folders at the end
         }
 
-        public static void ShowDumps()
+        private static void ShowDumps()
         {
             if (Directory.Exists("C:\\dump_folders")) //create the dump folders directory if it's not in place and add all the dumps to the tree
             {
@@ -217,10 +219,50 @@ namespace terminal_graphics
                 Directory.CreateDirectory("C:\\dump_folders");
         }
 
+        private void CreateButtons()
+        {
+            Font f = new Font("Segue", 12);
+            Color[] colors = new Color[] { Color.Khaki, Color.DeepSkyBlue, Color.MediumSeaGreen, Color.Tomato };
+            string[] buttons = new string[] { "open", "refresh", "create", "delete" };
+            int x = 0, y = 380;
+            for(int i =0; i<buttons.Length; i++)
+            {
+                Button btn = new Button {
+                    Font = f,
+                    Size = new Size(100, 70),
+                    Text = buttons[i],
+                    BackColor = colors[i],
+                    FlatStyle = FlatStyle.Flat,
+                    Location = new Point(x, y)
+                };
+                btn.FlatAppearance.BorderColor = colors[i];
+                x += 100;
+                switch (buttons[i])
+                {
+                    case "open":
+                        btn.Click += new EventHandler(OpenFile);
+                        break;
+                    case "refresh":
+                        btn.Click += new EventHandler(Refresh);
+                        break;
+                    case "create":
+                        btn.Click += new EventHandler(CreateFile);
+                        break;
+                    case "delete":
+                        btn.Click += new EventHandler(DeleteFile);
+                        break;
+                }
+                Controls.Add(btn);
+            }
+        }
+
         public Form2(string dirs)
         {
             tv = new TreeView();
             string[] direcs = dirs.Split(new char[] { '\n' });
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
+            MinimizeBox = false;
             BuildTree(direcs);
             
             tv.Font = new Font("Segue", 10);
@@ -230,50 +272,7 @@ namespace terminal_graphics
             tv.AfterSelect += new TreeViewEventHandler(tv_AfterSelect);
             Controls.Add(tv);
 
-            Font f = new Font("Segue", 12);
-            open.Font = f;
-            open.Location = new Point(0, 380);
-            open.Text = "open";
-            open.Click += new EventHandler(OpenFile);
-            open.Size = new Size(100, 70);
-            open.BackColor = Color.Khaki;
-            open.FlatStyle = FlatStyle.Flat;
-            open.FlatAppearance.BorderColor = Color.Khaki;
-            Controls.Add(open);
-
-            refresh.Font = f;
-            refresh.Location = new Point(100, 380);
-            refresh.Text = "refresh";
-            refresh.Click += new EventHandler(Refresh);
-            refresh.Size = new Size(100, 70);
-            refresh.BackColor = Color.DeepSkyBlue;
-            refresh.FlatStyle = FlatStyle.Flat;
-            refresh.FlatAppearance.BorderColor = Color.DeepSkyBlue;
-            Controls.Add(refresh);
-
-            create.Font = f;
-            create.Location = new Point(200, 380);
-            create.Text = "create";
-            create.Click += new EventHandler(CreateFile);
-            create.Size = new Size(100, 70);
-            create.BackColor = Color.MediumSeaGreen;
-            create.FlatStyle = FlatStyle.Flat;
-            create.FlatAppearance.BorderColor = Color.MediumSeaGreen;
-            Controls.Add(create);
-
-            delete.Font = f;
-            delete.Location = new Point(300, 380);
-            delete.Text = "delete";
-            delete.Click += new EventHandler(DeleteFile);
-            delete.Size = new Size(100, 70);
-            delete.BackColor = Color.Tomato;
-            delete.FlatStyle = FlatStyle.Flat;
-            delete.FlatAppearance.BorderColor = Color.Tomato;
-            Controls.Add(delete);
-
-            FormBorderStyle = FormBorderStyle.FixedSingle;
-            MaximizeBox = false;
-            MinimizeBox = false;
+            CreateButtons();
 
             InitializeComponent();
         }

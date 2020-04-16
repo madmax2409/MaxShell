@@ -12,13 +12,15 @@ namespace terminal_graphics
 {
     static class Program
     {
+        public static IPAddress ip;
         private static Socket sender;
-        private static byte[] bytes = new byte[4096];
-        public static Form2 form2;
-        public static bool check = false;
         public static Socket s;
         public static int port = 11000;
-        public static IPAddress ip;
+        private static readonly byte[] bytes = new byte[4096];
+        public static bool check = false;
+        public static Form2 form2;
+
+
 
         private static void Connection() //recieve the address of the server and begin connection
         {
@@ -77,7 +79,7 @@ namespace terminal_graphics
                         sender.Shutdown(SocketShutdown.Both);
                         sender.Close(); // destroy the socket
                     }
-                    return totaldata.Remove(totaldata.IndexOf("stoprightnow"), 12);
+                    return totaldata;
                 }
             }
             catch (SocketException)

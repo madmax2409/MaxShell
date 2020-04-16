@@ -9,74 +9,85 @@ namespace terminal_graphics
 {
     public partial class Shell : Form
     {
-        private TextBox command = new TextBox();
-        private TextBox output = new TextBox();
-        private Stack<string> older = new Stack<string>();
-        private Stack<string> newer = new Stack<string>();
-        private Button fileman = new Button();
-        private Button sysinfo = new Button();
-        private Button clist = new Button();
+        private static readonly TextBox command = new TextBox();
+        private static readonly TextBox output = new TextBox();
+        private static readonly TextBox choice = new TextBox();
+        private static readonly TextBox freetext = new TextBox();
+        private readonly Stack<string> older = new Stack<string>();
+        private readonly Stack<string> newer = new Stack<string>();
+        private readonly Button fileman = new Button();
+        private readonly Button sysinfo = new Button();
+        private readonly Button clist = new Button();
+        private static Panel graph;
+        private static Panel draggables;
+        private static readonly ComboBox pcnames = new ComboBox();
+        private static readonly Dictionary<string, string> funcnames = new Dictionary<string, string>();
+        private static readonly string[] st = new string[] { "get cpu", "get ram", "get windows", "run", "kill", "free space", "path", "PID", "create", "delete" };
 
-        private void BlockingInput(object sender, KeyPressEventArgs e)
+        private static void BlockingInput(object sender, KeyPressEventArgs e)
         {
             e.Handled = true;
         }
 
         private void OutputProcedure(object sender, KeyEventArgs e) 
         {
-            TextBox cmd = (TextBox)sender; //get the command from the entry
             if (e.KeyData == Keys.Enter)
             {
                 while (newer.Count > 0) //save command to history
                     older.Push(newer.Pop());
 
-                if (cmd.Text == "") 
+                if (command.Text == "") 
                     return;
 
-                string command = cmd.Text;
-                older.Push(command);
-                string outpt = Program.Maintain(command); //send the messsage from the entry to the server
+                string com = command.Text;
+                older.Push(com);
+                string outpt = Program.Maintain(com); //send the messsage from the entry to the server
 
                 if (outpt == "")
                     return;
 
-                string[] dirs = outpt.Split(new char[] { '\n' }); 
-                for (int i = 0; i < dirs.Length; i++)
-                {
-                    output.AppendText(dirs[i]);
-                    output.AppendText(Environment.NewLine);
-                }
-                output.AppendText(Environment.NewLine);
-                cmd.Text = "";
+                PrintOut(outpt);
+
+                command.Text = "";
             }
 
             else if (e.KeyData == Keys.Up) //going up and down in command history
             {
                 if (older.Count > 0)
                 {
-                    cmd.Text = older.Pop();
-                    newer.Push(cmd.Text);
-                    cmd.Select(cmd.Text.Length, 0);
+                    command.Text = older.Pop();
+                    newer.Push(command.Text);
+                    command.Select(command.Text.Length, 0);
                 }
             }
             else if (e.KeyData == Keys.Down)
             {
                 if (newer.Count > 0)
                 {
-                    cmd.Text = newer.Pop();
-                    older.Push(cmd.Text);
-                    cmd.Select(cmd.Text.Length, 0);
+                    command.Text = newer.Pop();
+                    older.Push(command.Text);
+                    command.Select(command.Text.Length, 0);
                 }
             }
+        }
+        private static void PrintOut(string outpt)
+        {
+            outpt = outpt.Remove(outpt.IndexOf("stoprightnow"), 12);
+            string[] dirs = outpt.Split(new char[] { '\n' });
+            for (int i = 0; i < dirs.Length; i++)
+            {
+                output.AppendText(dirs[i]);
+                output.AppendText(Environment.NewLine);
+            }
+            output.AppendText(Environment.NewLine);
+            
         }
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);
 
             if (e.CloseReason == CloseReason.WindowsShutDown || e.CloseReason == CloseReason.ApplicationExitCall)
-            {
                 return;
-            }
 
             switch (MessageBox.Show(this, "Are you sure you want to exit?", "Exiting", MessageBoxButtons.YesNo))
             {
@@ -90,30 +101,170 @@ namespace terminal_graphics
             }
         }
 
-        public void OpenManager(object sender, EventArgs e)
+        private void OpenManager(object sender, EventArgs e)
         {
             Program.Maintain("file manager");
         }
 
-        public void ClientList(object sender, EventArgs e)
+        private void ClientList(object sender, EventArgs e)
         {
             string data = Program.CallFunc("clients");
             ClientList cl = new ClientList(data.Substring(0, data.IndexOf("stoprightnow")));
             cl.Show();
         }
 
-        public void SysInfo(object sender, EventArgs e)
+        private void SysInfo(object sender, EventArgs e)
         {
             SystemInfo si = new SystemInfo();
             si.Show();
         }
+
+        private static void TextMouseDown(object sender, MouseEventArgs e)
+        {
+            
+            if (e.Button == MouseButtons.Left) // Start the drag if it's the right mouse button.
+                choice.DoDragDrop(choice.Text, DragDropEffects.Copy);
+        }
+
+       
+        private static void Button_DragEnter(object sender, DragEventArgs e)  // Indicate that we can accept a copy of text
+        {
+            // See if this is a copy and the data includes text.
+            if (e.Data.GetDataPresent(DataFormats.Text) && (e.AllowedEffect & DragDropEffects.Copy) != 0)
+                e.Effect = DragDropEffects.Copy;
+            else
+                e.Effect = DragDropEffects.None; // Don't allow any other drop.
+        }
+
+        private static void Button_DragDrop(object sender, DragEventArgs e)
+        {
+            string data = (string)e.Data.GetData(DataFormats.Text);
+            string command = ((Button)sender).Text;
+            foreach (KeyValuePair<string, string> pair in funcnames)
+                if (pair.Key == command)
+                {
+                    data = Program.CallFunc(pair.Value + " on" + data);
+                    PrintOut(data);
+                    break;
+                }
+        }
+
+        private static void BuildRow(string[] butnames, int y)
+        {
+            int x = 0;
+            for (int i = 0; i < butnames.Length; i++)
+            {
+                Button temp = new Button();
+                string text = butnames[i];
+                text = text.Insert(text.IndexOf('['), "\n");
+                if (y == 70)
+                    funcnames.Add(text, st[i]);
+                else
+                    funcnames.Add(text, st[i + 5]);
+                temp.Text = text;
+                temp.Font = new Font("Segue", 12);
+                temp.FlatStyle = FlatStyle.Flat;
+                temp.FlatAppearance.BorderColor = Color.Black;
+                temp.AllowDrop = true;
+                temp.DragEnter += new DragEventHandler(Button_DragEnter);
+                temp.DragDrop += new DragEventHandler(Button_DragDrop);
+                if (i < 3)
+                {
+                    temp.Size = new Size(130, 80);
+                    temp.Location = new Point(x, y);
+                    x += 130;
+                }
+                else
+                {
+                    temp.Size = new Size(200, 80);
+                    temp.Location = new Point(x, y);
+                    x += 200;
+                }
+                graph.Controls.Add(temp);
+            }
+        }
+
+        private static void FillGraphFuncs()
+        {
+            Font f = new Font("Segue", 12);
+            Label info = new Label
+            {
+                Font = f,
+                Text = "To initiate a function, drag the right parameter to the button space",
+                Size = new Size(790, 40),
+                BorderStyle = BorderStyle.FixedSingle
+            };
+            graph.Controls.Add(info);
+
+            string[] sublabels = { "Data", "Action" };
+            int x = 0, y = 40, size = 390;
+            foreach (string lab in sublabels)
+            {
+                Label temp = new Label
+                {
+                    Text = lab,
+                    Font = f,
+                    Size = new Size(size, 30),
+                    Location = new Point(x, y),
+                    BorderStyle = BorderStyle.FixedSingle
+                };
+                graph.Controls.Add(temp);
+                x += 390;
+                size += 10;
+            }
+            BuildRow(new string[] {"CPU [PC Name]", "RAM [PC Name]", "Windows Ver. [PC Name]", "Run [Process]", "Kill [Process]" }, 70);
+            BuildRow(new string[] { "Free Space [PC Name]", "Path [File]", "PID [Process]", "Create [File]", "Delete [File]" }, 150);
+        }
+
+        private static void SetChoice(object sender, EventArgs e)
+        {
+            if (pcnames.SelectedItem.ToString() != "Target PC")
+                choice.Text = pcnames.SelectedItem.ToString();
+        }
+
+        private static void SetDraggables()
+        {
+            string[] clients = Program.CallFunc("clients").Split(new char[] { '\n' });
+            string[] machs = new string[clients.Length];
+            for (int i = 0; i< clients.Length; i++)
+                machs[i] = clients[i].Split(new char[] { ',' })[1];
+
+            pcnames.DropDownStyle = ComboBoxStyle.DropDownList;
+            pcnames.Location = new Point(4, 5);
+            pcnames.Width = 85;
+            pcnames.Items.Add("Target PC");
+            foreach (string item in machs)
+                pcnames.Items.Add(item);
+            pcnames.SelectedItem = pcnames.Items[0];
+            pcnames.SelectedIndexChanged += new EventHandler(SetChoice);
+            draggables.Controls.Add(pcnames);
+
+            choice.Location = new Point(4, 10 + 20 * pcnames.Items.Count);
+            choice.Size = new Size(pcnames.Width, pcnames.Height);
+            choice.KeyPress += new KeyPressEventHandler(BlockingInput);
+            choice.MouseDown += new MouseEventHandler(TextMouseDown);
+            draggables.Controls.Add(choice);
+
+            Label drag1 = new Label
+            {
+                Text = "Drag From These:",
+                Size = new Size(100, pcnames.Height),
+                Location = new Point(2, choice.Location.Y - 20)
+            };
+            draggables.Controls.Add(drag1);
+
+            freetext.Location = new Point(4, choice.Location.Y + 30);
+            freetext.Size = new Size(pcnames.Width, pcnames.Height);
+            freetext.MouseDown += new MouseEventHandler(TextMouseDown);
+            draggables.Controls.Add(freetext);
+        }
+
         public Shell()
         {
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             MinimizeBox = false;
             BackColor = Color.LightSkyBlue;
-
             Font f = new Font("Segue", 10);
 
             command.Font = f;
@@ -165,6 +316,39 @@ namespace terminal_graphics
             clist.FlatStyle = FlatStyle.Flat;
             clist.FlatAppearance.BorderColor = Color.Black;
             Controls.Add(clist);
+
+            Label sep = new Label
+            {
+                BorderStyle = BorderStyle.FixedSingle,
+                ForeColor = Color.Black,
+                BackColor = Color.Black,
+                AutoSize = false,
+                Location = new Point(5, 455),
+                Size = new Size(890, 3)
+            };
+            Controls.Add(sep);
+
+            graph = new Panel
+            {
+                Location = new Point(5, 470),
+                Size = new Size(790, 230),
+                BorderStyle = BorderStyle.FixedSingle,
+                BackColor = Color.White,
+                AllowDrop = true
+            };
+            Controls.Add(graph);
+
+            draggables = new Panel
+            {
+                Location = new Point(800, 470),
+                Size = new Size(95, 230),
+                BorderStyle = BorderStyle.FixedSingle,
+                BackColor = Color.White
+            };
+            Controls.Add(draggables);
+
+            FillGraphFuncs();
+            SetDraggables();
 
             InitializeComponent();
         }

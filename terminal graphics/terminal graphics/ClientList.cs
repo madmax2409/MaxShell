@@ -46,17 +46,21 @@ namespace terminal_graphics
         {
             BackColor = Color.LightSkyBlue;
             Font f = new Font(FontFamily.GenericSansSerif, 10, FontStyle.Bold);
-            Label top = new Label();
-            top.Location = new Point(5, 5);
-            top.Size = new Size(350, 15);
-            top.Text = "No    Nick       Mach                IP                       ";
-            top.Font = f;
+            Label top = new Label
+            {
+                Location = new Point(5, 5),
+                Size = new Size(350, 15),
+                Text = "No    Nick       Mach                IP                       ",
+                Font = f
+            };
             Controls.Add(top);
 
-            Label line = new Label();
-            line.Location = new Point(5, 25);
-            line.Text = "___________________________________________________";
-            line.Size = new Size(350, 15);
+            Label line = new Label
+            {
+                Location = new Point(5, 25),
+                Text = "___________________________________________________",
+                Size = new Size(350, 15)
+            };
             Controls.Add(line);
 
             CreateLabels(data);

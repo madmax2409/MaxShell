@@ -9,8 +9,7 @@ namespace terminal_graphics
     {
         private void Window_Loaded(object sender, EventArgs e)
         {
-            System.Timers.Timer t = new System.Timers.Timer();
-            t.Interval = 500;
+            System.Timers.Timer t = new System.Timers.Timer {Interval = 500};
             t.Elapsed += new ElapsedEventHandler(t_Elapsed);
             t.Start();
         }
@@ -25,10 +24,12 @@ namespace terminal_graphics
             Text = "Exiting...";
             Load += new EventHandler(Window_Loaded);
 
-            Label l = new Label();
-            l.Font = new Font("Segue", 10);
-            l.Location = new Point(30, 10);
-            l.Text = "Exiting...";
+            Label l = new Label
+            {
+                Font = new Font("Segue", 10),
+                Location = new Point(30, 10),
+                Text = "Exiting..."
+            };
             Controls.Add(l);
 
             InitializeComponent();

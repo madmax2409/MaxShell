@@ -13,12 +13,12 @@ namespace terminal_graphics
 {
     public partial class SystemInfo : Form
     {
-        private static Dictionary<string, string> dict = new Dictionary<string, string>();
-        private static string[] shorts = { "Windwos Version", "Host Name", "Username", "CPU", "RAM", "ipv4", "ipv6", "MAC", "Subnet Mask" };
-        public static Panel sys = new Panel();
-        public static Panel net = new Panel();
+        private static readonly Dictionary<string, string> dict = new Dictionary<string, string>();
+        private static readonly string[] shorts = { "Windwos Version", "Host Name", "Username", "CPU", "RAM", "ipv4", "ipv6", "MAC", "Subnet Mask" };
+        private static readonly Panel sys = new Panel();
+        private static readonly Panel net = new Panel();
 
-        public static void BuildDict() //build the dictionary of the labels and outputs
+        private static void BuildDict() //build the dictionary of the labels and outputs
         {
             string[] methods = { 
                 PrintCom(Program.CallFunc("get windows on " + Environment.MachineName)),
@@ -35,7 +35,7 @@ namespace terminal_graphics
                 dict.Add(shorts[i], methods[i]);
         }
 
-        public static string GetIpv4()
+        private static string GetIpv4()
         {
             IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
             IPAddress ipAddress = ipHostInfo.AddressList[0];
@@ -45,7 +45,7 @@ namespace terminal_graphics
             return ipAddress.ToString();
         }
 
-        public static string GetIpv6()
+        private static string GetIpv6()
         {
             IPHostEntry ipEntry = Dns.GetHostEntry(Dns.GetHostName());
             IPAddress[] addr = ipEntry.AddressList;
@@ -56,7 +56,7 @@ namespace terminal_graphics
             return "no ipv6 address found";
         }
 
-        public static string GetMacAddress()
+        private static string GetMacAddress()
         {
             string mac = NetworkInterface.GetAllNetworkInterfaces().Where(nic => nic.OperationalStatus == OperationalStatus.Up)
                 .Select(nic => nic.GetPhysicalAddress().ToString()).FirstOrDefault();
@@ -71,7 +71,7 @@ namespace terminal_graphics
             return mac;
         }
 
-        public static string GetSubnetMask(IPAddress address)
+        private static string GetSubnetMask(IPAddress address)
         {
             foreach (NetworkInterface adapter in NetworkInterface.GetAllNetworkInterfaces())
                 foreach (UnicastIPAddressInformation unicastIPAddressInformation in adapter.GetIPProperties().UnicastAddresses)
@@ -81,9 +81,9 @@ namespace terminal_graphics
             return null;
         }
 
-        public static void SetLabels() //build the labels
+        private static void SetLabels() //build the labels
         {
-            int counter = 1, x = 0, y = 0, mul = 0;
+            int x, y, mul, counter = 1;
             Panel panel;
             foreach (KeyValuePair<string, string> pair in dict)
             {
@@ -101,16 +101,18 @@ namespace terminal_graphics
                     y = net.Location.Y;
                     mul = counter - 5;
                 }
-                Label temp = new Label();
-                temp.Font = new Font("comic sans", 11);
-                temp.Size = new Size(350, 30);
-                temp.Location = new Point(10, mul * 60 - 40);
-                temp.Text = "\u2022 " + pair.Key + ": " + pair.Value; //build the label and add to the window
+                Label temp = new Label
+                {
+                    Font = new Font("comic sans", 11),
+                    Size = new Size(350, 30),
+                    Location = new Point(10, mul * 60 - 40),
+                    Text = "\u2022 " + pair.Key + ": " + pair.Value //build the label and add to the window
+                };
                 panel.Controls.Add(temp);
                 counter++;
             }
         }
-        public static string PrintCom(string command) 
+        private static string PrintCom(string command) 
         {
             return command.Substring(0, command.IndexOf("stoprightnow"));
         }
@@ -139,30 +141,38 @@ namespace terminal_graphics
             net.BackColor = Color.White;
             Controls.Add(net);
 
-            Label s = new Label();
-            s.Location = new Point(comp.Width + 20, comp.Height / 2 );
-            s.Font = new Font("Segue", 18);
-            s.Text = "System Info:";
-            s.Size = new Size(200, 200);
+            Label s = new Label
+            {
+                Location = new Point(comp.Width + 20, comp.Height / 2),
+                Font = new Font("Segue", 18),
+                Text = "System Info:",
+                Size = new Size(200, 200)
+            };
             Controls.Add(s);
 
-            Label n = new Label();
-            n.Location = new Point(500, comp.Height / 2);
-            n.Font = new Font("Segue", 18);
-            n.Text = "Network Info:";
-            n.Size = new Size(200, 200);
+            Label n = new Label
+            {
+                Location = new Point(500, comp.Height / 2),
+                Font = new Font("Segue", 18),
+                Text = "Network Info:",
+                Size = new Size(200, 200)
+            };
             Controls.Add(n);
 
-            Label pcpic = new Label();
-            pcpic.Location = new Point(105 - comp.Width, 15);
-            pcpic.Size = new Size(comp.Width, comp.Height);
-            pcpic.Image = comp;
+            Label pcpic = new Label
+            {
+                Location = new Point(105 - comp.Width, 15),
+                Size = new Size(comp.Width, comp.Height),
+                Image = comp
+            };
             Controls.Add(pcpic);
 
-            Label netpic = new Label();
-            netpic.Location = new Point(490 - comp.Width, 15);
-            netpic.Size = new Size(comp.Width, comp.Height);
-            netpic.Image = nets;
+            Label netpic = new Label
+            {
+                Location = new Point(490 - comp.Width, 15),
+                Size = new Size(comp.Width, comp.Height),
+                Image = nets
+            };
             Controls.Add(netpic);
 
             SetLabels();
