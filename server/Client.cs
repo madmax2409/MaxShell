@@ -8,11 +8,9 @@ namespace server
     {
         public static Dictionary<Socket, string[]> clients = new Dictionary<Socket, string[]>();
         public static Queue<Client> clientqueue = new Queue<Client>();
-        private Socket my;
-        private Socket update; //notifications
-        // private byte[] bytes;
-        private string nick;
-        private string mach;
+        private readonly Socket my;
+        private readonly string nick;
+        private readonly string mach;
         public Client(Socket cl, string nickname, string machname)
         {
             my = cl;

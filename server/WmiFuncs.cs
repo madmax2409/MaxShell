@@ -43,11 +43,13 @@ namespace server
         }
         public static void RemoteConScope(string target)
         {
-            ConnectionOptions co = new ConnectionOptions();
-            co.Username = "maxim";
-            co.Password = "Barmaley2409";
-            co.Impersonation = ImpersonationLevel.Impersonate;
-            co.EnablePrivileges = true;
+            ConnectionOptions co = new ConnectionOptions
+            {
+                Username = "maxim",
+                Password = "Barmaley2409",
+                Impersonation = ImpersonationLevel.Impersonate,
+                EnablePrivileges = true
+            };
             ms = new ManagementScope("\\\\" + target + "\\root\\cimv2", co);
         }
 
@@ -68,7 +70,7 @@ namespace server
                     ipAddress = ipHostInfo.AddressList[i];
             return ipAddress.ToString();
         }
-        public static string FreeSpace(string target)
+        public static string FreeSpace()
         {
             string outpt = "";
             SelectQuery dskQuery = new SelectQuery("Win32_LogicalDisk", "DriveType=3"); // Define your query (what you want to return from WMI).
@@ -87,7 +89,7 @@ namespace server
             return outpt;
         }
 
-        public static string ShowProcess(string target)
+        public static string ShowProcess()
         {
             string outpt = "";
             try
@@ -105,7 +107,7 @@ namespace server
             }
         }
 
-        public static string KillProcess(string target, string targetprocess)
+        public static string KillProcess(string targetprocess)
         {
             //Execute the query
             SelectQuery oq = new SelectQuery("SELECT * FROM Win32_Process");
@@ -122,7 +124,7 @@ namespace server
             return "Could not kill the specified process, please recheck your parameters";
         }
 
-        public static string RemoteProcess(string target, string procname)
+        public static string RemoteProcess(string procname)
         {
             object[] proc = new[] { procname };
             ManagementClass wmiProcess = new ManagementClass(ms, new ManagementPath("Win32_Process"), new ObjectGetOptions());
@@ -132,39 +134,29 @@ namespace server
 
         public static string ShareFolder(string target, string sharefolder)
         {
-            int counter = 1;
             string rightpath = sharefolder.Replace(':', '$');
             if (!Directory.Exists("\\\\" + target + "\\" + rightpath))
             {
                 Directory.CreateDirectory("\\\\" + target + "\\" + rightpath);
             }
-            try
+            ManagementClass managementClass = new ManagementClass(ms, new ManagementPath("Win32_Share"), new ObjectGetOptions());
+            ManagementBaseObject inParams = managementClass.GetMethodParameters("Create");
+            ManagementBaseObject outParams;
+            inParams["Description"] = "SharedTestApplication";
+            inParams["Name"] = rightpath.Substring(3);
+            inParams["Path"] = sharefolder;
+            inParams["Type"] = 0x0;
+            outParams = managementClass.InvokeMethod("Create", inParams, null);
+            if ((uint)outParams.Properties["ReturnValue"].Value != 0)
+                return "error no: " + (uint)outParams.Properties["ReturnValue"].Value;
+            else
             {
-                ManagementClass managementClass = new ManagementClass(ms, new ManagementPath("Win32_Share"), new ObjectGetOptions());
-                ManagementBaseObject inParams = managementClass.GetMethodParameters("Create");
-                ManagementBaseObject outParams;
-                inParams["Description"] = "SharedTestApplication";
-                inParams["Name"] = rightpath.Substring(3);
-                inParams["Path"] = sharefolder;
-                inParams["Type"] = 0x0;
-                outParams = managementClass.InvokeMethod("Create", inParams, null);
-                if ((uint)outParams.Properties["ReturnValue"].Value != 0)
-                    return "error no: " + (uint)outParams.Properties["ReturnValue"].Value;
-                else
-                {
-                    ShowFolders();
-                    paths.Add(sharefolder, rightpath);
-                    return "folder successfully set as shared with the net-name " + inParams["Name"];
-                }
-            }
-            catch //IO?
-            {
-                counter++;
-                return ShareFolder(target, sharefolder);
+                paths.Add(sharefolder, rightpath);
+                return "folder successfully set as shared with the net-name " + inParams["Name"];
             }
         }
 
-        public static string ListFiles(string target, string path)
+        public static string ListFiles(string path)
         {
             ManagementObject m = null;
             string output = "";
@@ -269,11 +261,14 @@ namespace server
                     else
                         newdir = "C:\\dump_folders\\dump_folder No " + counter;
                     Directory.CreateDirectory(newdir);
+                    Console.WriteLine("Created the dir");
                     break;
                 }
                 catch { counter++; }
             }
+            Console.WriteLine(newdir + "\\" + filename);
             File.Create(newdir + "\\" + filename);
+            Console.WriteLine("bruh?");
             return "created " + filename + " on " + target;
         }
 

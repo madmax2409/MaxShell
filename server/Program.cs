@@ -73,7 +73,7 @@ namespace server
             }
         }
     
-        public static string SetPassword()
+        private static string SetPassword()
         {
             Console.WriteLine("Choose a password, must be at least 4 chars length, and only alpahnumerical");
             Console.Write("Enter the password: ");

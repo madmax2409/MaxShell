@@ -74,12 +74,13 @@ namespace server
                     ipAddress = ipHostInfo.AddressList[i];
 
             Stopwatch sw = new Stopwatch();
-            ProcessStartInfo psi = new ProcessStartInfo("cmd", "/c " + "arp -a");
-            psi.RedirectStandardOutput = true;
-            psi.UseShellExecute = false;
-            psi.CreateNoWindow = true;
-            Process pr = new Process();
-            pr.StartInfo = psi;
+            ProcessStartInfo psi = new ProcessStartInfo("cmd", "/c " + "arp -a")
+            {
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            Process pr = new Process { StartInfo = psi };
             pr.Start();
             string output = pr.StandardOutput.ReadToEnd();
             op = output.Split(new char[] { '\n' });
@@ -94,63 +95,14 @@ namespace server
                     try
                     {
                         t.Start();
-                        Thread.Sleep(1000);
+                        Thread.Sleep(500);
                     }
                     catch (Exception e)
                     {
                         Console.WriteLine(e.Message);
                     }
                 }
-            
         /*
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             private void ClientConnectCallback(IAsyncResult ar)
             {
                 try
@@ -212,26 +164,7 @@ namespace server
                     Debug.Log(e);
                 }
             }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     */
-
 
         }
     }

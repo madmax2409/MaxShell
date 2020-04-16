@@ -7,7 +7,7 @@ namespace server
 {
     class Server
     {
-        private static Dictionary<string, Func<string[], string>> dict = new Dictionary<string, Func<string[], string>>();
+        private static readonly Dictionary<string, Func<string[], string>> dict = new Dictionary<string, Func<string[], string>>();
         private static readonly string[] funcs = { "get ip", "free space", "list processes", "disconnect", "kill", 
             "get directory", "run", "share", "list", "shared folders","help", "copy", "create","delete", "clients", 
             "get cpu", "get ram", "get windows" }; 
@@ -17,14 +17,14 @@ namespace server
         {
             Func<string[], string>[] methods = {
                 targets => WmiFuncs.GetIp(),
-                targets => WmiFuncs.FreeSpace(targets[1]),
-                targets => WmiFuncs.ShowProcess(targets[1]),
+                targets => WmiFuncs.FreeSpace(),
+                targets => WmiFuncs.ShowProcess(),
                 targets => Disconnect(),
-                targets => WmiFuncs.KillProcess(targets[2], targets[1]),
+                targets => WmiFuncs.KillProcess(targets[1]),
                 targets => Directory.GetCurrentDirectory(),
-                targets => WmiFuncs.RemoteProcess(targets[2], targets[1]),
+                targets => WmiFuncs.RemoteProcess(targets[1]),
                 targets => WmiFuncs.ShareFolder(targets[2], targets[1]),
-                targets => WmiFuncs.ListFiles(targets[2], targets[1]),
+                targets => WmiFuncs.ListFiles(targets[1]),
                 targets => WmiFuncs.ShowFolders(),
                 targets => File.ReadAllText(Environment.CurrentDirectory + "\\info.txt"),
                 targets =>WmiFuncs.CopyFile(pass.Dequeue(), targets[2], targets[1]),
@@ -41,6 +41,7 @@ namespace server
 
         public static string CommandOutput(string command, Socket sc)
         {
+            Console.WriteLine("message: " + command);
             string output = "";
             bool flag = false;
             string[] pararms = Interpreter(command);
@@ -58,7 +59,7 @@ namespace server
                             WmiFuncs.TryCon(pararms[pararms.Length-1]); ;
                             output = pair.Value(pararms);
                         }
-                        catch (Exception e)
+                        catch 
                         {
                             output = "an error occurred, please check your parameters\n";// + e.ToString();
                         }
