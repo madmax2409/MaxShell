@@ -12,7 +12,6 @@ namespace terminal_graphics
         private static readonly TextBox command = new TextBox();
         private static readonly TextBox output = new TextBox();
         private static readonly TextBox choice = new TextBox();
-        private static readonly TextBox freetext = new TextBox();
         private readonly Stack<string> older = new Stack<string>();
         private readonly Stack<string> newer = new Stack<string>();
         private readonly Button fileman = new Button();
@@ -22,7 +21,7 @@ namespace terminal_graphics
         private static Panel draggables;
         private static readonly ComboBox pcnames = new ComboBox();
         private static readonly Dictionary<string, string> funcnames = new Dictionary<string, string>();
-        private static readonly string[] st = new string[] { "get cpu", "get ram", "get windows", "run", "kill", "free space", "path", "PID", "create", "delete" };
+        private static readonly string[] st = new string[] { "get cpu", "get ram", "get windows", "run", "kill", "free space", "path", "list processes", "create", "delete" };
 
         private static void BlockingInput(object sender, KeyPressEventArgs e)
         {
@@ -46,8 +45,8 @@ namespace terminal_graphics
                 if (outpt == "")
                     return;
 
-                PrintOut(outpt);
-
+                PrintOut(outpt); 
+  
                 command.Text = "";
             }
 
@@ -72,7 +71,8 @@ namespace terminal_graphics
         }
         private static void PrintOut(string outpt)
         {
-            outpt = outpt.Remove(outpt.IndexOf("stoprightnow"), 12);
+            try { outpt = outpt.Remove(outpt.IndexOf("stoprightnow"), 12); }
+            catch { };
             string[] dirs = outpt.Split(new char[] { '\n' });
             for (int i = 0; i < dirs.Length; i++)
             {
@@ -134,19 +134,43 @@ namespace terminal_graphics
                 e.Effect = DragDropEffects.Copy;
             else
                 e.Effect = DragDropEffects.None; // Don't allow any other drop.
+        } 
+        private static void OpenDraggedFile(object sender, DragEventArgs e)
+        {
+            var data = e.Data.GetData(DataFormats.FileDrop);
+            MessageBox.Show(data.ToString());
         }
-
-        private static void Button_DragDrop(object sender, DragEventArgs e)
+            private static void Button_DragDrop(object sender, DragEventArgs e)
         {
             string data = (string)e.Data.GetData(DataFormats.Text);
             string command = ((Button)sender).Text;
             foreach (KeyValuePair<string, string> pair in funcnames)
                 if (pair.Key == command)
                 {
-                    data = Program.CallFunc(pair.Value + " on" + data);
+                    if (pair.Value == "create" || pair.Value == "delete" || pair.Value == "kill" || pair.Value == "run")
+                    {
+                        if (DetectMach(data))
+                            Program.Maintain(pair.Value, data);
+                    }
+                    else
+                        data = Program.Maintain(pair.Value + " on" + data);
+
                     PrintOut(data);
                     break;
                 }
+        }
+
+        private static bool DetectMach(string data)
+        {
+            string[] clients = Program.CallFunc("clients").Split(new char[] { '\n' });
+            foreach (string cl in clients)
+            {
+                string start = cl.Substring(cl.ToString().IndexOf(", ") + 2);
+                string mac = start.Substring(0, start.IndexOf(','));
+                if (" " + mac == data)
+                    return true;
+            }
+            return false;
         }
 
         private static void BuildRow(string[] butnames, int y)
@@ -167,7 +191,10 @@ namespace terminal_graphics
                 temp.FlatAppearance.BorderColor = Color.Black;
                 temp.AllowDrop = true;
                 temp.DragEnter += new DragEventHandler(Button_DragEnter);
-                temp.DragDrop += new DragEventHandler(Button_DragDrop);
+                if (text == "Path")
+                    temp.DragDrop += new DragEventHandler(OpenDraggedFile);
+                else
+                    temp.DragDrop += new DragEventHandler(Button_DragDrop);
                 if (i < 3)
                 {
                     temp.Size = new Size(130, 80);
@@ -212,8 +239,8 @@ namespace terminal_graphics
                 x += 390;
                 size += 10;
             }
-            BuildRow(new string[] {"CPU [PC Name]", "RAM [PC Name]", "Windows Ver. [PC Name]", "Run [Process]", "Kill [Process]" }, 70);
-            BuildRow(new string[] { "Free Space [PC Name]", "Path [File]", "PID [Process]", "Create [File]", "Delete [File]" }, 150);
+            BuildRow(new string[] {"CPU [PC Name]", "RAM [PC Name]", "Windows Ver. [PC Name]", "Run [PC Name]", "Kill [PC Name]" }, 70);
+            BuildRow(new string[] { "Free Space [PC Name]", "Path [File]", "Processes [PC Name]", "Create [PC Name]", "Delete [File]" }, 150);
         }
 
         private static void SetChoice(object sender, EventArgs e)
@@ -239,24 +266,21 @@ namespace terminal_graphics
             pcnames.SelectedIndexChanged += new EventHandler(SetChoice);
             draggables.Controls.Add(pcnames);
 
-            choice.Location = new Point(4, 10 + 20 * pcnames.Items.Count);
+            Label drag1 = new Label
+            {
+                Text = "Drag From Here:",
+                Size = new Size(100, 20),
+                Location = new Point(2, 10 + 20 * pcnames.Items.Count)
+            };
+            draggables.Controls.Add(drag1);
+
+            choice.Location = new Point(4, drag1.Location.Y + 20);
             choice.Size = new Size(pcnames.Width, pcnames.Height);
             choice.KeyPress += new KeyPressEventHandler(BlockingInput);
             choice.MouseDown += new MouseEventHandler(TextMouseDown);
             draggables.Controls.Add(choice);
 
-            Label drag1 = new Label
-            {
-                Text = "Drag From These:",
-                Size = new Size(100, pcnames.Height),
-                Location = new Point(2, choice.Location.Y - 20)
-            };
-            draggables.Controls.Add(drag1);
-
-            freetext.Location = new Point(4, choice.Location.Y + 30);
-            freetext.Size = new Size(pcnames.Width, pcnames.Height);
-            freetext.MouseDown += new MouseEventHandler(TextMouseDown);
-            draggables.Controls.Add(freetext);
+            
         }
 
         public Shell()
@@ -266,6 +290,7 @@ namespace terminal_graphics
             MinimizeBox = false;
             BackColor = Color.LightSkyBlue;
             Font f = new Font("Segue", 10);
+            AllowDrop = true;
 
             command.Font = f;
             command.Location = new Point(5, 10);
@@ -341,7 +366,7 @@ namespace terminal_graphics
             draggables = new Panel
             {
                 Location = new Point(800, 470),
-                Size = new Size(95, 230),
+                Size = new Size(95, 150),
                 BorderStyle = BorderStyle.FixedSingle,
                 BackColor = Color.White
             };

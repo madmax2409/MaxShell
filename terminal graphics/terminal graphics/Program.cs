@@ -20,8 +20,6 @@ namespace terminal_graphics
         public static bool check = false;
         public static Form2 form2;
 
-
-
         private static void Connection() //recieve the address of the server and begin connection
         {
             IPEndPoint remoteEP = new IPEndPoint(ip, port); //ip, port
@@ -40,7 +38,7 @@ namespace terminal_graphics
                 CallFunc("sharefolder on " + Environment.MachineName + " where dir='C:\\dump_folders'");
         }
 
-        public static string Maintain(string message)
+        public static string Maintain(string message, string mach = "")
         {
             message = RemoveSpaces(message); //remove extras spaces from the command
             try
@@ -58,6 +56,12 @@ namespace terminal_graphics
                     Exit_WIndow ew = new Exit_WIndow();
                     ew.ShowDialog();
                     return "";
+                }
+                else if (message == "create"  || message == "delete" || message == "run" || message == "kill")
+                {
+                    Create c = new Create(CallFunc("clients"), message, mach);
+                    c.ShowDialog();
+                    return "Opened " + message.Substring(0, message.Length - 1) + "ion window";
                 }
                 else
                 {

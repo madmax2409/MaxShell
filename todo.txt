@@ -1,11 +1,16 @@
 					MILESTONE 3
 - send command button
-- funcs for: run, kill, path, create, delete
-- new window for multi param funcs (run, kill, create ,de;lete)
+- funcs for: run, kill
+- replace path button with rich text box
+- double function for delete
+- new window for multi param funcs (run, kill)
+- seperate graphic intptr from coded one
+- add click functions
 
 					BUGS
-- don't show empty dump folders
-- reopen create window
+- empty dump folders
+- machname after drag & drop command
+
 					TEST CASES
 			easy
 			medium
@@ -16,7 +21,6 @@
 
 					MR FINISH LINE!!!!
 - project book (yom shabat)
-- QA
 - fix help file
 - put all project components in one folder (dump_folder)
 - documentation 

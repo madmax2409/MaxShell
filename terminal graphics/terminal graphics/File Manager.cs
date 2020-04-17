@@ -144,7 +144,7 @@ namespace terminal_graphics
         private static void CreateFile(object sender, EventArgs e)
         {
             string data = Program.CallFunc("clients");
-            Create cl = new Create(data.Substring(0, data.IndexOf("stoprightnow")));
+            Create cl = new Create(data.Substring(0, data.IndexOf("stoprightnow")), "create");
             cl.Show();
         }
 
