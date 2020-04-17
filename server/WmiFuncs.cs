@@ -118,7 +118,7 @@ namespace server
                 {
                     object[] obj = new object[] { 0 };
                     ret.InvokeMethod("Terminate", obj);
-                    return "Termiated " + targetprocess + ", It can't harm us anymore";
+                    return "Terminated " + targetprocess + ", It can't harm us anymore";
                 }
 
             return "Could not kill the specified process, please recheck your parameters";

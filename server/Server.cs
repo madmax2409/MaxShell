@@ -41,7 +41,7 @@ namespace server
 
         public static string CommandOutput(string command, Socket sc)
         {
-            Console.WriteLine("message: " + command);
+            //Console.WriteLine("message: " + command);
             string output = "";
             bool flag = false;
             string[] pararms = Interpreter(command);
