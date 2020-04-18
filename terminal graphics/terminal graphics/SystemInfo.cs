@@ -51,7 +51,7 @@ namespace terminal_graphics
             IPAddress[] addr = ipEntry.AddressList;
             foreach (IPAddress ad in addr)
                 if (ad.AddressFamily == AddressFamily.InterNetworkV6)
-                    return ad.ToString(); //ipv6
+                    return ad.ToString(); 
 
             return "no ipv6 address found";
         }

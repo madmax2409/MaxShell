@@ -33,7 +33,10 @@ namespace terminal_graphics
                 Thread.Sleep(1000);
             }
             
-            sender.Send(Encoding.Unicode.GetBytes(Environment.MachineName + "+" + Login_Window.nickname));
+            sender.Send(Encoding.Unicode.GetBytes(Environment.MachineName + "+" + Login_Window.nickname)); //server needs the info to operate and execute functions
+            sender.Send(Encoding.Unicode.GetBytes("about"));
+            int bytesRec = sender.Receive(bytes);
+            Shell.firstdata = Encoding.Unicode.GetString(bytes, 0, bytesRec); //pass the "about" text of the start of the project
             if (!Directory.Exists("C:\\dump_folders")) //if we already have a dump, we share to enable the reading of it by the file manager
                 CallFunc("sharefolder on " + Environment.MachineName + " where dir='C:\\dump_folders'");
         }
@@ -57,7 +60,7 @@ namespace terminal_graphics
                     ew.ShowDialog();
                     return "";
                 }
-                else if (message == "create"  || message == "delete" || message == "run" || message == "kill")
+                else if (message == "create"  || message == "delete" || message == "run" || message == "kill") 
                 {
                     Create c = new Create(CallFunc("clients"), message, mach);
                     c.ShowDialog();

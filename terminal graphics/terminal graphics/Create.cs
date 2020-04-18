@@ -20,7 +20,6 @@ namespace terminal_graphics
         private static Button ok;
         private static Button cancel;
         private static string[] pcnames;
-        private static string passedmach;
         private static string funcname;
 
         private void OutFunc(object sender, EventArgs e)
@@ -52,19 +51,23 @@ namespace terminal_graphics
 
         private static bool Creation(string mach)
         {
-            string file = filename.Text + "." + exts.SelectedItem; 
-            string result = Program.CallFunc("create '" + file + "' on " + mach); //send the creation request
+            if (filename.Text != "" && exts.SelectedItem.ToString() != "File Extension")
+            {
+                string file = filename.Text + "." + exts.SelectedItem;
+                string result = Program.CallFunc("create '" + file + "' on " + mach); //send the creation request
 
-            if (result.IndexOf("created") != -1)
-            {
-                MessageBox.Show(result.Remove(result.IndexOf("stoprightnow"), 12), "Sucess");
-                return true;
+                if (result.IndexOf("created") != -1)
+                {
+                    MessageBox.Show(result.Remove(result.IndexOf("stoprightnow"), 12), "Sucess");
+                    return true;
+                }
+                else
+                {
+                    MessageBox.Show("Something is wrong with your choice, please try again", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
             }
-            else
-            {
-                MessageBox.Show("Something is wrong with your choice, please try again", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
-            }
+            return false;
         }
 
         private static bool Deletion(string mach, string path)
@@ -84,7 +87,7 @@ namespace terminal_graphics
 
         private static bool StartProc(string mach, string path)
         {
-            string result = Program.CallFunc("run '" + path + "' on " + mach); //send the deletion request
+            string result = Program.CallFunc("run '" + path + "' on " + mach); //send the run request
             if (result.IndexOf("created") != -1)
             {
                 MessageBox.Show(result.Remove(result.IndexOf("stoprightnow"), 12), "Sucess");
@@ -99,7 +102,7 @@ namespace terminal_graphics
 
         private static bool KillProc(string mach, string path)
         {
-            string result = Program.CallFunc("kill '" + path + "' on " + mach); //send the deletion request
+            string result = Program.CallFunc("kill '" + path + "' on " + mach); //send the kill request
             if (result.IndexOf("Terminated") != -1)
             {
                 MessageBox.Show(result.Remove(result.IndexOf("stoprightnow"), 12), "Sucess");
@@ -128,13 +131,15 @@ namespace terminal_graphics
             };
             Controls.Add(file);
 
-            filename.Location = new Point(60, 40);
+            filename.Location = new Point(80, 40);
+            filename.Width = 95;
             Controls.Add(filename);
 
             exts = new ComboBox
             {
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                Location = new Point(169, 40)
+                Location = new Point(185, 40),
+                Width = 105
             };
             exts.Items.Add("File Extension");
             foreach (string item in new string[] { "txt", "docx", "pdf" })
@@ -168,10 +173,11 @@ namespace terminal_graphics
 
         public Create(string data, string typeofwinodw, string mach = "")
         {
+            try { data = data.Remove(data.IndexOf("stoprightnow"), 12); }
+            catch { };
             Font f = new Font("Segue", 10);
             filename = new TextBox();
             pcnames = data.Split(new char[] { '\n' });
-            passedmach = mach;
             funcname = typeofwinodw;
 
             FormBorderStyle = FormBorderStyle.FixedSingle;

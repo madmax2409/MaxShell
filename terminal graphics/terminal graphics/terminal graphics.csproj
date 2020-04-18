@@ -74,6 +74,7 @@
       <DependentUpon>Create.cs</DependentUpon>
     </Compile>
     <Compile Include="GetAddr.cs" />
+    <Compile Include="GraphIntptr.cs" />
     <Compile Include="Shell.cs">
       <SubType>Form</SubType>
     </Compile>

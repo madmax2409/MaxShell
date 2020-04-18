@@ -1,27 +1,17 @@
 					MILESTONE 3
-- send command button
-- funcs for: run, kill
-- replace path button with rich text box
-- double function for delete
-- new window for multi param funcs (run, kill)
-- seperate graphic intptr from coded one
-- add click functions
+- encoding and decoding of message (RSA?)
+- add click functions for drag & drop buttons(?)
+- recursive deletion of folder
 
 					BUGS
 - empty dump folders
-- machname after drag & drop command
+- client not recieveing approval of passowrd (socket timed out?)
 
 					TEST CASES
-			easy
-			medium
-- folders on different pc's with the same name + (bonus bug on remote folder)
-- recurisive deletion of folder
-			hard
-- show folders inisde folders remote (Recursive on remote)
+- folders and files with identical names
 
 					MR FINISH LINE!!!!
-- project book (yom shabat)
-- fix help file
+- project book - encryption
 - put all project components in one folder (dump_folder)
 - documentation 
 - check code for esthetical fixes and remove garbage
