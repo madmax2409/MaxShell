@@ -9,13 +9,13 @@ namespace server
     {
         private static readonly Dictionary<string, Func<string[], string>> dict = new Dictionary<string, Func<string[], string>>();
         private static readonly string[] funcs = { "get ip", "free space", "list processes", "disconnect", "kill", 
-            "get directory", "run", "share", "list", "shared folders","help", "copy", "create","delete", "clients", 
+            "get directory", "run", "share", "list", "shared folders","help", "about", "copy", "create","delete", "clients", 
             "get cpu", "get ram", "get windows" }; 
         public static Queue<Socket> pass = new Queue<Socket>();
 
         public static void SetCommands()
         {
-            Func<string[], string>[] methods = {
+            Func<string[], string>[] methods = { //a dictionary of function names and their delegates
                 targets => WmiFuncs.GetIp(),
                 targets => WmiFuncs.FreeSpace(),
                 targets => WmiFuncs.ShowProcess(),
@@ -27,6 +27,7 @@ namespace server
                 targets => WmiFuncs.ListFiles(targets[1]),
                 targets => WmiFuncs.ShowFolders(),
                 targets => File.ReadAllText(Environment.CurrentDirectory + "\\info.txt"),
+                targets => File.ReadAllText(Environment.CurrentDirectory + "\\about.txt"),
                 targets =>WmiFuncs.CopyFile(pass.Dequeue(), targets[2], targets[1]),
                 targets => WmiFuncs.CreateFile(targets[2], targets[1]),
                 targets => WmiFuncs.DeleteFile(targets[2], targets[1]),
@@ -44,20 +45,20 @@ namespace server
             //Console.WriteLine("message: " + command);
             string output = "";
             bool flag = false;
-            string[] pararms = Interpreter(command);
+            string[] pararms = Interpreter(command); //interprets the command and returns a list of parameters
             if (pararms.Length >= 2)
             {
                 foreach (KeyValuePair<string, Func<string[], string>> pair in dict)
                 {
-                    if (pair.Key == pararms[0])
+                    if (pair.Key == pararms[0]) //finds the right dunction
                     {
                         flag = true;
                         try
                         {
                             if (sc != null)
-                                pass.Enqueue(sc);
-                            WmiFuncs.TryCon(pararms[pararms.Length-1]); ;
-                            output = pair.Value(pararms);
+                                pass.Enqueue(sc); //enqueues the socket to check from which client was the message sent
+                            WmiFuncs.TryCon(pararms[pararms.Length-1]); //tries to build the connection scope
+                            output = pair.Value(pararms); //executes and gets the value of the function
                         }
                         catch 
                         {
@@ -66,11 +67,13 @@ namespace server
                     }
                 }
             }
-            if (flag)
+            if (flag) //if the command succceeded, the output is returned
                 return output + "stoprightnow";
             else if (pararms[0] != "command failed")
+                //if the command name is wrong, the most similar command is suggested to the client
                 return "no such command as --> " + pararms[0] + MostSimilar(pararms[0]) + "stoprightnow";
             else
+                //for any other reason, the output is as follows
                 return "couldn't execute your command, please check your parametersstoprightnow";
         }
         
@@ -119,7 +122,7 @@ namespace server
                 else
                     st.Push(Environment.MachineName);
 
-                if (command.IndexOf((char)34) != -1) //get additional parameters
+                if (command.IndexOf((char)34) != -1) //get additional parameters (in brackets)
                 {
                     start = command.IndexOf((char)34);
                     detect = (char)34;
@@ -145,7 +148,7 @@ namespace server
 
                 flag = false;
                 start = 0;
-                if (!found)
+                if (!found) //additional parameter without brackets
                 {
                     if (end != 0)
                     {
@@ -155,7 +158,7 @@ namespace server
                                 start = i;
                             else if (command[i] == ' ')
                             {
-                                foreach (string cmd in funcs)
+                                foreach (string cmd in funcs) //search for command name without any parameter
                                 {
                                     if (cmd == command.Substring(0, end + 1))
                                     {
@@ -164,7 +167,7 @@ namespace server
                                         break;
                                     }
                                 }
-                                if (!flag)
+                                if (!flag) //get the parameter if the detected string didn't match any commmand
                                 {
                                     start = i + 1;
                                     st.Push(command.Substring(start, end - start + 1));
@@ -177,7 +180,7 @@ namespace server
                 try { param = command.Substring(0, end + 1); }
                 catch { }
 
-                if (!flag)
+                if (!flag) //if no command was detected, searches and identifies a possibe command string
                 {
                     if (start != 0)
                         com = command.Substring(0, start - 1); //check command name
@@ -186,18 +189,18 @@ namespace server
                     else
                         com = command;
 
-                    foreach (string cmd in funcs)
+                    foreach (string cmd in funcs) //checks if such a command does exist
                         if (com == cmd)
                         {
-                            st.Push(com);
+                            st.Push(com); //saves it if it does
                             flag = true;
                             break;
                         }
                     if (!flag)
-                        return new string[] { com };
+                        return new string[] { com }; //returns just the command to later inform the client about the mistake
                 }
 
-                string[] finite = new string[st.Count]; //organize and return
+                string[] finite = new string[st.Count]; //organize and return a list from the stack
                 int counter = 0;
                 while (st.Count > 0)
                 {
@@ -217,11 +220,11 @@ namespace server
             int counter, len, max = 0;
             string sim = "";
 
-            for (int i = 0; i < funcs.Length; i++)
+            for (int i = 0; i < funcs.Length; i++) //tries to check whether the client didn't use the full name of the command
                 if (funcs[i].IndexOf(input) != -1 && (input.Length - sim.Length > 2 || input.Length - sim.Length < -2))
                     return ", did you mean " + funcs[i] + "?";
                 
-            for (int i = 0; i < funcs.Length; i++)
+            for (int i = 0; i < funcs.Length; i++) //finds the most similar command by length
             {
                 counter = 0;
                 if (input.Length < funcs[i].Length)
