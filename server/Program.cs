@@ -18,12 +18,12 @@ namespace server
 
         private static void SendPackets(string fullstring, Socket handler)
         {
-            int counter = Encoding.ASCII.GetByteCount(fullstring);
+            int counter = Encoding.ASCII.GetByteCount(fullstring); 
             byte[] msg;
             while (counter >= 0)
             {
-                msg = Encoding.Unicode.GetBytes(fullstring);
-                handler.Send(msg);
+                msg = Encoding.Unicode.GetBytes(fullstring); //divides the data by the buffer size
+                handler.Send(msg);  //and sends it in parts until the whole message is sent
                 string dat = Encoding.Unicode.GetString(msg);
                 fullstring = fullstring.Substring(dat.Length);
                 counter -= 4096;
@@ -37,7 +37,7 @@ namespace server
             int bytesRec;
             try
             {
-                while (!flag)
+                while (!flag) //checks if the password matches with the saved one
                 {
                     bytesRec = s.Receive(bytes);
                     data = Encoding.Unicode.GetString(bytes, 0, bytesRec);
@@ -49,22 +49,21 @@ namespace server
                     else
                         SendPackets("wrong password", s);
                 }
-                bytesRec = s.Receive(bytes);
+                bytesRec = s.Receive(bytes); //recieves data from the client to save
                 data = Encoding.Unicode.GetString(bytes, 0, bytesRec);
                 char[] sep = { '+' };
                 string[] datas = data.Split(sep);
                 Client.CheckAndAdd(s, datas[0], datas[1]);
                 WmiFuncs.AddPaths(datas[0]);
-                while (true)
+                while (true) //and starts listenung to incoming requests
                 {
 
                     bytesRec = s.Receive(bytes);
                     data = Encoding.Unicode.GetString(bytes, 0, bytesRec);
-                    //Console.WriteLine("Got a message: " + data);
                     data = Server.CommandOutput(data, s);
                     SendPackets(data, s);
                     if (data.Contains("disconnect"))
-                        break; // communication over
+                        break; // ends communication
                 }
             }
             catch (SocketException)
@@ -73,17 +72,17 @@ namespace server
             }
         }
     
-        private static string SetPassword()
+        private static string SetPassword() //sets the login password that each client must input in order to login
         {
             Console.WriteLine("Choose a password, must be at least 4 chars length, and only alpahnumerical");
             Console.Write("Enter the password: ");
             string password = " ";
-            while (!Regex.IsMatch(password, "^[a-zA-Z0-9]*$"))
+            while (!Regex.IsMatch(password, "^[a-zA-Z0-9]*$")) //the password must be alphanumerical
             {
                 Console.Write("Enter the password: ");
                 password = Console.ReadLine();
             }
-            PreCon.SendApproval();
+            PreCon.SendApproval(); //once a password is set, all clients are informed
             Thread t = new Thread(new ThreadStart(PreCon.AfterStart));
             t.Start();
             return password;
@@ -92,27 +91,29 @@ namespace server
         
         static void Main(string[] args)
         {
-            PreCon.FreeTcpPort();
-            PreCon.PreSock();
-            Server.SetCommands();
-            WmiFuncs.AddPaths(Environment.MachineName);
+            PreCon.FreeTcpPort(); //finds a free port
+            PreCon.PreSock(); //tries to connect to each address
+            Server.SetCommands(); //sets the server's commands
+            WmiFuncs.AddPaths(Environment.MachineName); //saves the server's local shared folders
             byte[] bytes = new byte[4096];
             IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
             for (int i = 0; i < ipHostInfo.AddressList.Length; i++)
                 if (ipHostInfo.AddressList[i].ToString().StartsWith("192"))
                     ipAddress = ipHostInfo.AddressList[i];
 
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, port);  //port         
+            // builds the socket and starts listening for clients
+            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, port); 
             Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             listener.Bind(localEndPoint);
             string pass  = SetPassword();
             Console.WriteLine("listening on ip: " + ipAddress + " port: " + port);
-            listener.Listen(3);
+            listener.Listen(3); 
             while (true)
             {
                 Socket handler = listener.Accept();
                 Console.WriteLine("A client with the ip of " + handler.RemoteEndPoint + " has connected");
-                Thread t = new Thread(() => KeepInTact(handler, pass));
+                //once a new client is connected, starts the socket maintenance function for him on a separate thread
+                Thread t = new Thread(() => KeepInTact(handler, pass)); 
                 t.Start();
             }
         }
