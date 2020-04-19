@@ -1,17 +1,9 @@
-					MILESTONE 3
-- encoding and decoding of message (RSA?)
-- add click functions for drag & drop buttons(?)
+					SHIT TO DO
 - recursive deletion of folder
-
+- add PID to process list
 					BUGS
 - empty dump folders
-- client not recieveing approval of passowrd (socket timed out?)
-
 					TEST CASES
 - folders and files with identical names
-
 					MR FINISH LINE!!!!
-- project book - encryption
 - put all project components in one folder (dump_folder)
-- documentation 
-- check code for esthetical fixes and remove garbage
