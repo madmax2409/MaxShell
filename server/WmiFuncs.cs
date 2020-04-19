@@ -14,7 +14,7 @@ namespace server
         public static ManagementScope ms = new ManagementScope();
         public static Dictionary<string, string> paths = new Dictionary<string, string>();
 
-        public static string ClientList()
+        public static string ClientList() //returns specific data in on all connected clients in a list
         {
             string output = "";
             int counter = 1;
@@ -27,7 +27,7 @@ namespace server
             output += counter + ". " + "None, " + Environment.MachineName + ", " + GetIp() + " (sever)"; 
             return output;
         }
-        public static void AddPaths(string target)
+        public static void AddPaths(string target) // a function to match paths of shared folders with full paths
         {
             string data = ShowFolders();
             string[] datas = data.Split(new char[] { '\n' });
@@ -41,7 +41,7 @@ namespace server
                 catch { }
             }              
         }
-        public static void RemoteConScope(string target)
+        public static void RemoteConScope(string target) //build the connction scope with the user details
         {
             ConnectionOptions co = new ConnectionOptions
             {
@@ -53,7 +53,7 @@ namespace server
             ms = new ManagementScope("\\\\" + target + "\\root\\cimv2", co);
         }
 
-        public static void TryCon(string target)
+        public static void TryCon(string target) //builds the scope in accordance to the name of the computer
         {
             if (target != Environment.MachineName)
                 RemoteConScope(target);
@@ -92,32 +92,24 @@ namespace server
         public static string ShowProcess()
         {
             string outpt = "";
-            try
-            {
-                SelectQuery oq = new SelectQuery("SELECT * FROM Win32_Process");
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher(ms,oq);
+            SelectQuery oq = new SelectQuery("SELECT * FROM Win32_Process");
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher(ms,oq);
 
-                foreach (ManagementObject queryObj in searcher.Get())
-                    outpt += queryObj["Caption"] + "\n";
-                return outpt;
-            }
-            catch (ManagementException e)
-            {
-                return "An error occurred while querying for WMI data: " + e.Message;
-            }
+            foreach (ManagementObject queryObj in searcher.Get()) //gets the list of all process objects
+                outpt += queryObj["Caption"] + "\n"; //retrieve the name property
+            return outpt;
         }
 
         public static string KillProcess(string targetprocess)
         {
-            //Execute the query
             SelectQuery oq = new SelectQuery("SELECT * FROM Win32_Process");
             ManagementObjectSearcher searcher = new ManagementObjectSearcher(ms, oq);
 
-            foreach (ManagementObject ret in searcher.Get()) //loop through found processes and terminate
-                if (ret["Name"].ToString().ToLower() == targetprocess)
+            foreach (ManagementObject ret in searcher.Get()) //loop through found processes and terminate 
+                if (ret["Name"].ToString().ToLower() == targetprocess) //we compare the names and find the one we want
                 {
                     object[] obj = new object[] { 0 };
-                    ret.InvokeMethod("Terminate", obj);
+                    ret.InvokeMethod("Terminate", obj); 
                     return "Terminated " + targetprocess + ", It can't harm us anymore";
                 }
 
@@ -134,24 +126,23 @@ namespace server
 
         public static string ShareFolder(string target, string sharefolder)
         {
-            string rightpath = sharefolder.Replace(':', '$');
-            if (!Directory.Exists("\\\\" + target + "\\" + rightpath))
-            {
-                Directory.CreateDirectory("\\\\" + target + "\\" + rightpath);
-            }
+            string rightpath = sharefolder.Replace(':', '$'); 
+            if (!Directory.Exists("\\\\" + target + "\\" + rightpath)) // cannot share an unexisting direcory
+                Directory.CreateDirectory("\\\\" + target + "\\" + rightpath);  //so we make sure it exists
+            
             ManagementClass managementClass = new ManagementClass(ms, new ManagementPath("Win32_Share"), new ObjectGetOptions());
             ManagementBaseObject inParams = managementClass.GetMethodParameters("Create");
             ManagementBaseObject outParams;
-            inParams["Description"] = "SharedTestApplication";
-            inParams["Name"] = rightpath.Substring(3);
-            inParams["Path"] = sharefolder;
-            inParams["Type"] = 0x0;
+            inParams["Description"] = "SharedTestApplication"; //set parameters for creation
+            inParams["Name"] = rightpath.Substring(3); //name of folder
+            inParams["Path"] = sharefolder; //full path of creation
+            inParams["Type"] = 0x0; //drive
             outParams = managementClass.InvokeMethod("Create", inParams, null);
             if ((uint)outParams.Properties["ReturnValue"].Value != 0)
                 return "error no: " + (uint)outParams.Properties["ReturnValue"].Value;
             else
             {
-                paths.Add(sharefolder, rightpath);
+                paths.Add(sharefolder, rightpath); //save pah for future use
                 return "folder successfully set as shared with the net-name " + inParams["Name"];
             }
         }
@@ -163,21 +154,21 @@ namespace server
             SelectQuery oq = new SelectQuery("SELECT * FROM Win32_Share");
             ManagementObjectSearcher searcher = new ManagementObjectSearcher(ms, oq);
 
-            foreach (ManagementObject mo in searcher.Get())
+            foreach (ManagementObject mo in searcher.Get()) //find the path of the folder we want from the list of all shares
                 if (mo["path"].ToString() != "" && path == mo["path"].ToString())
                 {
-                    m = mo;
+                    m = mo; //save the path
                     break;
                 }
                    
             if (m != null)
             {
                 string[] str = null;
-                string rightpath = m["Path"].ToString();
+                string rightpath = m["Path"].ToString(); //get full path
                 foreach (KeyValuePair<string, string> pair in paths)
-                    if (rightpath == pair.Key)
+                    if (rightpath == pair.Key) //search in list of saved folders
                     {
-                        str = Directory.GetFiles(pair.Value);
+                        str = Directory.GetFiles(pair.Value); //and list the files in it
                         break;
                     }
                 if (str != null)
@@ -193,7 +184,7 @@ namespace server
         {
             string output = "";
             Queue <Client> q = Client.clientqueue;
-            for(int i = 0; i < q.Count; i++)
+            for(int i = 0; i < q.Count; i++) //iterare on all clients and get their list of shared folders
             {
                 Client temp = q.Dequeue();
                 string mach = temp.GetMach();
@@ -208,8 +199,9 @@ namespace server
                 }
                 q.Enqueue(temp);
             }
-
-            ManagementObjectSearcher searcher2 = new ManagementObjectSearcher("\\\\" + Environment.MachineName + "\\root\\cimv2", "SELECT * FROM Win32_Share");
+            //add shared folders of the server
+            ManagementObjectSearcher searcher2 = new ManagementObjectSearcher("\\\\" + Environment.MachineName + "\\root\\cimv2",
+                "SELECT * FROM Win32_Share"); //win32_share contains the list of all shared instances (folders, drives...)
             output +=  "\n" + Environment.MachineName + "'s shared folders and drives: \n";
             foreach (ManagementObject mo in searcher2.Get())
                 if (!mo["Name"].ToString().Contains("$") && mo["Name"].ToString().Length > 3 && mo["Name"].ToString() != "Users")
@@ -222,7 +214,7 @@ namespace server
         {
             string source = "";
             foreach (KeyValuePair<Socket, string[]> pair in Client.clients)
-                if (src == pair.Key)
+                if (src == pair.Key) //find the source of the command to know where to copy to
                 {
                     source = pair.Value[1];
                     break;
@@ -230,12 +222,12 @@ namespace server
 
             if (target != Environment.MachineName)
                 srcpath = srcpath.Replace(':', '$');
-
+            //create a dump folder as a copy destination on the source machine
             string newdir = "\\\\" + source + "\\C$\\dump_folders\\dump_folder No " + counter + " from " + target; //copyfile from DESKTOP-21F9ULD where dir=C:\testfolder2\uuu.txt
             Directory.CreateDirectory(newdir);
             ++counter;
             try
-            {
+            { //copy the file according to the path and to the created dump folder
                 if (target == Environment.MachineName)
                     File.Copy(srcpath, newdir + "\\" + Path.GetFileName(srcpath));
                 else
@@ -260,33 +252,33 @@ namespace server
                         newdir = "\\\\" + target + "\\C$\\dump_folders\\dump_folder No " + counter;
                     else
                         newdir = "C:\\dump_folders\\dump_folder No " + counter;
-                    Directory.CreateDirectory(newdir);
+                    Directory.CreateDirectory(newdir); //create a dump folder 
                     Console.WriteLine("Created the dir");
                     break;
                 }
                 catch { counter++; }
             }
             Console.WriteLine(newdir + "\\" + filename);
-            File.Create(newdir + "\\" + filename);
+            File.Create(newdir + "\\" + filename); //and create the file as written in the parameters
             Console.WriteLine("bruh?");
             return "created " + filename + " on " + target;
         }
 
         public static string DeleteFile(string target, string path)
-        {
+        {//delete the file specifed by the path in the parameters
             path = path.Replace(':', '$');
-            File.Delete("\\\\" + target + "\\" + path.Replace(':', '$'));
+            File.Delete("\\\\" + target + "\\" + path.Replace(':', '$')); 
             return "deleted " + path + " on " + target;
         }
 
         public static string CPUName()
         {
             string output = "";
-            ObjectQuery oq = new ObjectQuery("SELECT * FROM Win32_Processor");
+            ObjectQuery oq = new ObjectQuery("SELECT * FROM Win32_Processor"); //this class contains info about the processor
             ManagementObjectSearcher mos = new ManagementObjectSearcher(ms, oq);
             foreach (ManagementObject mo in mos.Get())
-            {
-                output = mo["Name"].ToString().Substring(0, mo["Name"].ToString().IndexOf('@')-1) + "\n";
+            {   // so we retrieve the processor's name
+                output = mo["Name"].ToString().Substring(0, mo["Name"].ToString().IndexOf('@')-1) + "\n"; 
             }
             return output;
         }
@@ -294,7 +286,7 @@ namespace server
         public static string TotalRAM()
         {
             string output = "";
-            ObjectQuery oq = new ObjectQuery("SELECT * FROM Win32_OperatingSystem");
+            ObjectQuery oq = new ObjectQuery("SELECT * FROM Win32_OperatingSystem"); 
             ManagementObjectSearcher mos = new ManagementObjectSearcher(ms, oq);
             foreach (ManagementObject mo in mos.Get())
             {
@@ -304,7 +296,7 @@ namespace server
         }
 
         public static string GetWinVer()
-        {
+        {   //this class contains various info about the operating system and info
             string output = "";
             ObjectQuery oq = new ObjectQuery("SELECT * FROM Win32_OperatingSystem");
             ManagementObjectSearcher mos = new ManagementObjectSearcher(ms, oq);
