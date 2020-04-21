@@ -67,10 +67,13 @@ namespace terminal_graphics
                 else if (mach != "" && mach != Environment.MachineName) //if a machine name is deteced, a request to list the files in the folder is sent
                 {
                     temp = Program.CallFunc("list " + datas[i] + " on " + mach);
-                    if (temp != "stoprightnow")
-                    {   //all the additional files are added before the initiation of the treeview
-                        //string direcs[] = data.Split(new char[] )
-                        data = data.Insert(data.IndexOf(datas[i]) + datas[i].Length, "\nfile: " + datas[i] + "\\" + temp.Substring(0, temp.IndexOf("stoprightnow")));
+                    if (temp != "stoprightnow") //all the additional files are added before the initiation of the treeview
+                    {
+                        string subdata = data.Substring(data.IndexOf(mach + "'s shared folders and drives")); 
+                        int addingindex = subdata.IndexOf(datas[i]);
+                        //make sure we insert at the right place if identical names are detected
+                        data = data.Insert(data.IndexOf(subdata) + addingindex + datas[i].Length,  
+                            "\nfile: " + datas[i] + "\\" + temp.Substring(0, temp.IndexOf("stoprightnow")));
                     }
                 }
             }
@@ -149,19 +152,17 @@ namespace terminal_graphics
         }
 
         private static void BuildTree(string[] direcs)
-        {
-            //for (int i = 0; i < direcs.Length; i++)
-                //MessageBox.Show(direcs[i]);
-
+        { 
             TreeNode tn = new TreeNode();
             TreeNode temp = null;
             tn.Name = "sourcenode";
             tn.Text = "My Shared Folders";
             tv.Nodes.Add(tn);
             TreeNode temp2 = tn;
+            string client = Environment.MachineName;
             for (int i =0; i <direcs.Length;i++)
             {
-                if (direcs[i].Length > 3 && direcs[i] != "stoprightnow" && direcs[i] != "C:\\dump_folders") //build the tree in order of: first local shared, then all other clients
+                if (direcs[i].Length > 3 && direcs[i] != "stoprightnow" && direcs[i] != "C:\\MaxShell\\dump_folders") //build the tree in order of: first local shared, then all other clients
                 {
                     if (direcs[i].Contains("'s shared folders and drives"))  //check if it's a new client
                         if (direcs[i].Substring(0, direcs[i].IndexOf("'s shared folders and drives")) != Environment.MachineName)
@@ -172,18 +173,20 @@ namespace terminal_graphics
                                 Text = direcs[i]
                             };
                             tv.Nodes.Add(temp2);
+                            client = direcs[i].Substring(0, direcs[i].IndexOf("'s shared folders and drives"));
                         }
                         else
                             continue;
                     else
                     {
                         string path; //determine wheter the string is a folder or a file
+                        MessageBox.Show("client: " + client);
                         if (direcs[i].Contains("file: "))
                             path = direcs[i].Substring(direcs[i].IndexOf("file: ") + 6);
                         else
                             path = direcs[i];
 
-                        if (Directory.Exists(path) || File.Exists(path)) //check if the folder/file are local
+                        if (client == Environment.MachineName) //check if the folder/file are local
                         { 
                             temp = temp2.Nodes.Add(direcs[i]); //recurisve build if local
                             ProcessDirectory(direcs[i], temp);
@@ -204,11 +207,11 @@ namespace terminal_graphics
 
         private static void ShowDumps()
         {
-            if (Directory.Exists("C:\\dump_folders")) //create the dump folders directory if it's not in place and add all the dumps to the tree
+            if (Directory.Exists("C:\\MaxShell\\dump_folders")) //create the dump folders directory if it's not in place and add all the dumps to the tree
             {
                 dumps = new TreeNode("My Dump Folders");
                 tv.Nodes.Add(dumps);
-                foreach (string dir in Directory.GetFileSystemEntries("C:\\dump_folders"))
+                foreach (string dir in Directory.GetFileSystemEntries("C:\\MaxShell\\dump_folders"))
                 {
                     TreeNode temp = new TreeNode(dir);
                     dumps.Nodes.Add(temp);
@@ -216,7 +219,7 @@ namespace terminal_graphics
                 }
             }
             else
-                Directory.CreateDirectory("C:\\dump_folders");
+                Directory.CreateDirectory("C:\\MaxShell\\dump_folders");
         }
 
         private void CreateButtons()
@@ -229,14 +232,14 @@ namespace terminal_graphics
             {
                 Button btn = new Button {
                     Font = f,
-                    Size = new Size(100, 70),
+                    Size = new Size(114, 70),
                     Text = buttons[i],
                     BackColor = colors[i],
                     FlatStyle = FlatStyle.Flat,
                     Location = new Point(x, y)
                 };
                 btn.FlatAppearance.BorderColor = colors[i];
-                x += 100;
+                x += 114;
                 switch (buttons[i])
                 {
                     case "open":
@@ -259,6 +262,7 @@ namespace terminal_graphics
         public Form2(string dirs)
         {
             tv = new TreeView();
+            tv.BorderStyle = BorderStyle.FixedSingle;
             string[] direcs = dirs.Split(new char[] { '\n' });
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
@@ -267,7 +271,7 @@ namespace terminal_graphics
             
             tv.Font = new Font("Segue", 10);
             tv.Location = new Point(0, 0);
-            tv.Size = new Size(402, 380);
+            tv.Size = new Size(456, 380);
             tv.BorderStyle = BorderStyle.FixedSingle;
             tv.AfterSelect += new TreeViewEventHandler(tv_AfterSelect);
             Controls.Add(tv);

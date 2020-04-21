@@ -1,9 +1,0 @@
-					SHIT TO DO
-- recursive deletion of folder
-- add PID to process list
-					BUGS
-- empty dump folders
-					TEST CASES
-- folders and files with identical names
-					MR FINISH LINE!!!!
-- put all project components in one folder (dump_folder)

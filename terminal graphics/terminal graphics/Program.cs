@@ -37,8 +37,8 @@ namespace terminal_graphics
             sender.Send(Encoding.Unicode.GetBytes("about"));
             int bytesRec = sender.Receive(bytes);
             Shell.firstdata = Encoding.Unicode.GetString(bytes, 0, bytesRec); //pass the "about" text of the start of the project
-            if (!Directory.Exists("C:\\dump_folders")) //if we already have a dump, we share to enable the reading of it by the file manager
-                CallFunc("sharefolder on " + Environment.MachineName + " where dir='C:\\dump_folders'");
+            if (!Directory.Exists("C:\\MaxShell\\dump_folders")) //if we already have a dump, we share to enable the reading of it by the file manager
+                CallFunc("sharefolder on " + Environment.MachineName + " where dir='C:\\MaxShell\\dump_folders'");
         }
 
         public static string Maintain(string message, string mach = "")
@@ -49,7 +49,7 @@ namespace terminal_graphics
                 if (message == "file manager") //check for keywords that represnt special commands
                 {
                     string data = CallFunc("shared folders"); //recieve the data to build the treeview 
-                    data = Form2.AddInsides(data);  
+                    data = Form2.AddInsides(data);
                     form2 = new Form2(data); //and start the building
                     form2.Show();
                     return "opened file manager";
