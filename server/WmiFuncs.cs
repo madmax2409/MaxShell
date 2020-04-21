@@ -60,7 +60,21 @@ namespace server
             else
                 ms = new ManagementScope("\\\\" + target + "\\root\\cimv2");
         }
-    
+        private static string padding (string name)
+        {
+            if (name.Length < 35)
+            {
+                int len = 70 - name.Length;
+                string pad = "";
+                while (len > 0)
+                {
+                    pad += " ";
+                    len--;
+                }
+                return pad;
+            }
+            return "";
+        }
         public static string GetIp()
         {
             IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
@@ -96,7 +110,9 @@ namespace server
             ManagementObjectSearcher searcher = new ManagementObjectSearcher(ms,oq);
 
             foreach (ManagementObject queryObj in searcher.Get()) //gets the list of all process objects
-                outpt += queryObj["Caption"] + "\n"; //retrieve the name property
+            {
+                outpt += "Name: " + queryObj["Caption"] + padding(queryObj["Caption"].ToString()) + " PID: " + queryObj["ProcessID"] + "\n"; //retrieve the name property
+            }
             return outpt;
         }
 
@@ -223,7 +239,7 @@ namespace server
             if (target != Environment.MachineName)
                 srcpath = srcpath.Replace(':', '$');
             //create a dump folder as a copy destination on the source machine
-            string newdir = "\\\\" + source + "\\C$\\dump_folders\\dump_folder No " + counter + " from " + target; //copyfile from DESKTOP-21F9ULD where dir=C:\testfolder2\uuu.txt
+            string newdir = "\\\\" + source + "\\C$\\MaxShell\\dump_folders\\dump_folder No " + counter + " from " + target; //copyfile from DESKTOP-21F9ULD where dir=C:\testfolder2\uuu.txt
             Directory.CreateDirectory(newdir);
             ++counter;
             try
@@ -249,26 +265,23 @@ namespace server
                 try
                 {
                     if (target != Environment.MachineName)
-                        newdir = "\\\\" + target + "\\C$\\dump_folders\\dump_folder No " + counter;
+                        newdir = "\\\\" + target + "\\C$\\MaxShell\\dump_folders\\dump_folder No " + counter;
                     else
-                        newdir = "C:\\dump_folders\\dump_folder No " + counter;
+                        newdir = "C:\\MaxShell\\dump_folders\\dump_folder No " + counter;
                     Directory.CreateDirectory(newdir); //create a dump folder 
-                    Console.WriteLine("Created the dir");
                     break;
                 }
                 catch { counter++; }
             }
-            Console.WriteLine(newdir + "\\" + filename);
             File.Create(newdir + "\\" + filename); //and create the file as written in the parameters
-            Console.WriteLine("bruh?");
-            return "created " + filename + " on " + target;
+            return "created the file";
         }
 
         public static string DeleteFile(string target, string path)
         {//delete the file specifed by the path in the parameters
             path = path.Replace(':', '$');
             File.Delete("\\\\" + target + "\\" + path.Replace(':', '$')); 
-            return "deleted " + path + " on " + target;
+            return "deleted the file";
         }
 
         public static string CPUName()
