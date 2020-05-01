@@ -13,6 +13,7 @@ namespace server
         private static int counter = 1;
         public static ManagementScope ms = new ManagementScope();
         public static Dictionary<string, string> paths = new Dictionary<string, string>();
+        private static Dictionary<string, int> savedfiles = new Dictionary<string, int>();
 
         public static string ClientList() //returns specific data in on all connected clients in a list
         {
@@ -41,6 +42,26 @@ namespace server
                 catch { }
             }              
         }
+
+        private static string CheckForChange(string file)
+        {
+            bool found = false;
+            int len = File.ReadAllText(file).Length;
+            foreach (KeyValuePair<string, int> pair in savedfiles)
+            {
+                if (file == pair.Key)
+                {
+                    found = true;
+                    if (pair.Value != len)
+                    {
+                        return "(changed)";
+                    }
+                }
+            }
+            if (!found)
+                savedfiles.Add(file, len);
+            return ""; 
+        }
         public static void RemoteConScope(string target) //build the connction scope with the user details
         {
             ConnectionOptions co = new ConnectionOptions
@@ -60,7 +81,7 @@ namespace server
             else
                 ms = new ManagementScope("\\\\" + target + "\\root\\cimv2");
         }
-        private static string padding (string name)
+        private static string Padding(string name)
         {
             if (name.Length < 35)
             {
@@ -111,7 +132,7 @@ namespace server
 
             foreach (ManagementObject queryObj in searcher.Get()) //gets the list of all process objects
             {
-                outpt += "Name: " + queryObj["Caption"] + padding(queryObj["Caption"].ToString()) + " PID: " + queryObj["ProcessID"] + "\n"; //retrieve the name property
+                outpt += "Name: " + queryObj["Caption"] + Padding(queryObj["Caption"].ToString()) + " PID: " + queryObj["ProcessID"] + "\n"; //retrieve the name property
             }
             return outpt;
         }
@@ -176,7 +197,7 @@ namespace server
                     m = mo; //save the path
                     break;
                 }
-                   
+
             if (m != null)
             {
                 string[] str = null;
@@ -189,7 +210,10 @@ namespace server
                     }
                 if (str != null)
                     for (int i = 0; i < str.Length; i++)
-                        output += str[i].Substring(str[i].IndexOf(rightpath.Replace(':', '$')) + rightpath.Length + 1) + "\n";
+                    {
+                        string filename = str[i].Substring(str[i].IndexOf(rightpath.Replace(':', '$')) + rightpath.Length + 1);
+                        output += filename + CheckForChange(str[i]) + "\n";
+                    }
                 return output;
             }
             else
