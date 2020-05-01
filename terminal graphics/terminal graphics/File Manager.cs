@@ -69,11 +69,18 @@ namespace terminal_graphics
                     temp = Program.CallFunc("list " + datas[i] + " on " + mach);
                     if (temp != "stoprightnow") //all the additional files are added before the initiation of the treeview
                     {
-                        string subdata = data.Substring(data.IndexOf(mach + "'s shared folders and drives")); 
+                        string subdata = data.Substring(data.IndexOf(mach + "'s shared folders and drives"));
                         int addingindex = subdata.IndexOf(datas[i]);
+                        string insertion = "\nfile: " + datas[i] + "\\" + temp.Substring(0, temp.IndexOf("stoprightnow")) + "\n";
+
+                        bool changed = insertion.Contains("(changed)");
+                        if (changed)
+                        {
+                            insertion = insertion.Replace("(changed)", "");
+                            insertion = insertion.Insert(1, "changed ");
+                        }
                         //make sure we insert at the right place if identical names are detected
-                        data = data.Insert(data.IndexOf(subdata) + addingindex + datas[i].Length,  
-                            "\nfile: " + datas[i] + "\\" + temp.Substring(0, temp.IndexOf("stoprightnow")));
+                        data = data.Insert(data.IndexOf(subdata) + addingindex + datas[i].Length, insertion);
                     }
                 }
             }
@@ -134,9 +141,6 @@ namespace terminal_graphics
                     {
                         if ((dirchoice == "My Shared Folders" || dirchoice == "My Dump Folders") && (filechoice != "My Shared Folders" && filechoice != "My Dump Folders"))
                             Directory.Delete(filechoice, true);
-
-                        else
-                            MessageBox.Show("Recursive Deletion to be added");
                     }
 
                     RefreshWindow();
@@ -180,11 +184,12 @@ namespace terminal_graphics
                     else
                     {
                         string path; //determine wheter the string is a folder or a file
-                        MessageBox.Show("client: " + client);
                         if (direcs[i].Contains("file: "))
                             path = direcs[i].Substring(direcs[i].IndexOf("file: ") + 6);
                         else
                             path = direcs[i];
+
+                        bool changed = direcs[i].Contains("changed file: ");
 
                         if (client == Environment.MachineName) //check if the folder/file are local
                         { 
@@ -193,9 +198,14 @@ namespace terminal_graphics
                         }
                         else if (!direcs[i].Contains("stoprightnow")) //if remote, all the files are next in the array
                         {
-                            if (direcs[i].Contains("file: ")) //add to the last saved node if it's a file
-                                temp.Nodes.Add(path);
-
+                            MessageBox.Show("DVIRM" + direcs[i]);
+                            if (path != direcs[i]) //add to the last saved node if it's a file
+                            {
+                                TreeNode node = new TreeNode(path);
+                                if (changed)
+                                    node.ForeColor = Color.Red;
+                                temp.Nodes.Add(node);
+                            }
                             else
                                 temp = temp2.Nodes.Add(direcs[i]); //create a new node if it's a folder
                         }
