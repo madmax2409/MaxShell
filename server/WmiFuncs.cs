@@ -60,7 +60,7 @@ namespace server
             }
             if (!found)
                 savedfiles.Add(file, len);
-            return ""; 
+            return "";
         }
         public static void RemoteConScope(string target) //build the connction scope with the user details
         {
@@ -146,7 +146,8 @@ namespace server
                 if (ret["Name"].ToString().ToLower() == targetprocess) //we compare the names and find the one we want
                 {
                     object[] obj = new object[] { 0 };
-                    ret.InvokeMethod("Terminate", obj); 
+                    ret.InvokeMethod("Terminate", obj);
+                    Console.WriteLine("priority" + ret["Priority"]);
                     return "Terminated " + targetprocess + ", It can't harm us anymore";
                 }
 
