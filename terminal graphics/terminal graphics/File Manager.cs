@@ -198,7 +198,6 @@ namespace terminal_graphics
                         }
                         else if (!direcs[i].Contains("stoprightnow")) //if remote, all the files are next in the array
                         {
-                            MessageBox.Show("DVIRM" + direcs[i]);
                             if (path != direcs[i]) //add to the last saved node if it's a file
                             {
                                 TreeNode node = new TreeNode(path);
