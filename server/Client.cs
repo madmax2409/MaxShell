@@ -37,22 +37,19 @@ namespace server
         }
         public static void CheckAndAdd(Socket cl, string mach, string nick)
         {
-            if (mach != Environment.MachineName) //check wheter the erver and client are on the same pc
+            bool flag = true;
+            foreach (KeyValuePair<Socket, string[]> pair in clients)
             {
-                bool flag = true;
-                foreach (KeyValuePair<Socket, string[]> pair in clients)
+                if (pair.Value[1] == mach) //check if the client was registered in the session 
                 {
-                    if (pair.Value[1] == mach) //check if the client was registered in the session 
-                    {
-                        flag = false;
-                        break;
-                    }
+                    flag = false;
+                    break;
                 }
-                if (flag || clients.Count == 0) //and adds only if no identical client was detected
-                    clientqueue.Enqueue(new Client(cl, nick, mach));
-
-                Console.WriteLine("Added a new client: nick: {0}, mach: {1}", nick, mach);
             }
+            if (flag || clients.Count == 0) //and adds only if no identical client was detected
+                clientqueue.Enqueue(new Client(cl, nick, mach));
+
+            Console.WriteLine("Added a new client: nick: {0}, mach: {1}", nick, mach);
         }
     }
 }

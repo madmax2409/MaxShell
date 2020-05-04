@@ -73,6 +73,18 @@ namespace server
                 if (ipHostInfo.AddressList[i].ToString().StartsWith("192")) //gets the local ip
                     ipAddress = ipHostInfo.AddressList[i];
 
+            IPEndPoint remoteEP = new IPEndPoint(ipAddress, 11001);
+            Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            t = new Thread(() => TryCon(sender, remoteEP)); //tries to connect to each ip and save if succeeded
+            try
+            {
+                t.Start();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
             Stopwatch sw = new Stopwatch();
             ProcessStartInfo psi = new ProcessStartInfo("cmd", "/c " + "arp -a") //gets the list of all avalible ip's 
             {
@@ -89,13 +101,12 @@ namespace server
                 if (Regex.IsMatch(address, @"((?:\d{1,3}.){3}\d{1,3})\s+((?:[\da-f]{2}-){5}[\da-f]{2})\s+dynamic"))
                 {
                     ips = address.Split(new char[] { ' ' });
-                    IPEndPoint remoteEP = new IPEndPoint(IPAddress.Parse(ips[2]), 11001);
-                    Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                    remoteEP = new IPEndPoint(IPAddress.Parse(ips[2]), 11001);
+                    sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                     t = new Thread(() => TryCon(sender, remoteEP)); //tries to connect to each ip and save if succeeded
                     try
                     {
                         t.Start();
-                        Thread.Sleep(500);
                     }
                     catch (Exception e)
                     {

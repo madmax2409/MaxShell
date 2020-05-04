@@ -223,12 +223,15 @@ namespace server
 
         public static string ShowFolders()
         {
+            bool localclient = false;
             string output = "";
             Queue <Client> q = Client.clientqueue;
             for(int i = 0; i < q.Count; i++) //iterare on all clients and get their list of shared folders
             {
                 Client temp = q.Dequeue();
                 string mach = temp.GetMach();
+                if (mach == Environment.MachineName)
+                    localclient = true;
                 TryCon(mach);
                 SelectQuery sq = new SelectQuery("SELECT * FROM Win32_Share");
                 ManagementObjectSearcher searcher = new ManagementObjectSearcher(ms,sq);
@@ -240,14 +243,16 @@ namespace server
                 }
                 q.Enqueue(temp);
             }
-            //add shared folders of the server
-            ManagementObjectSearcher searcher2 = new ManagementObjectSearcher("\\\\" + Environment.MachineName + "\\root\\cimv2",
-                "SELECT * FROM Win32_Share"); //win32_share contains the list of all shared instances (folders, drives...)
-            output +=  "\n" + Environment.MachineName + "'s shared folders and drives: \n";
-            foreach (ManagementObject mo in searcher2.Get())
-                if (!mo["Name"].ToString().Contains("$") && mo["Name"].ToString().Length > 3 && mo["Name"].ToString() != "Users")
-                    output += mo["Path"] + "\n";
 
+            if (!localclient)//if no local client is detected
+            { //we manually add yhe shared folders on the server's machine
+                ManagementObjectSearcher searcher2 = new ManagementObjectSearcher("\\\\" + Environment.MachineName + "\\root\\cimv2",
+                    "SELECT * FROM Win32_Share"); //win32_share contains the list of all shared instances (folders, drives...)
+                output += "\n" + Environment.MachineName + "'s shared folders and drives: \n";
+                foreach (ManagementObject mo in searcher2.Get())
+                    if (!mo["Name"].ToString().Contains("$") && mo["Name"].ToString().Length > 3 && mo["Name"].ToString() != "Users")
+                        output += mo["Path"] + "\n";
+            }
             return output;
         }
 
