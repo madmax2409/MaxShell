@@ -145,8 +145,28 @@ namespace terminal_graphics
             pcnames.Location = new Point(4, 5);
             pcnames.Width = 85;
             pcnames.Items.Add("Target PC");
+
+            Queue<string> names = new Queue<string>();
             foreach (string item in machs)
+            {
+                bool flag = false;
+                for (int i = 0; i < names.Count; i++)
+                {
+                    string name = names.Dequeue();
+                    if (item == name)
+                    {
+                        flag = true;
+                        names.Enqueue(name);
+                        break;
+                    }
+                }
+                if (flag)
+                    continue;
+
                 pcnames.Items.Add(item);
+                names.Enqueue(item);
+            }
+                
             pcnames.SelectedItem = pcnames.Items[0];
             pcnames.SelectedIndexChanged += new EventHandler(SetChoice);
             draggables.Controls.Add(pcnames);
