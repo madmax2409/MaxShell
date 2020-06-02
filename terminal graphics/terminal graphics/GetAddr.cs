@@ -32,8 +32,7 @@ namespace terminal_graphics
             Program.ip = IPAddress.Parse(datas[0]);
             Program.port = int.Parse(datas[1]);
             handler = listener.Accept(); //after recieveing connectino details, we wait for approval to sign in (the server has successfuly set a passowrd)
-            data = "";
-            while (data != "approved")
+            while (data.IndexOf("approved") != -1)
             {
                 byteslen = handler.Receive(bytes);
                 data = Encoding.Unicode.GetString(bytes, 0, byteslen);

@@ -1,4 +1,6 @@
-- maybe fix ip deafault appearence 
-- fix sometimes no approval of connection
-- try to set udp based connection (book is tcp welp)
-- empty dump on disconnect (or empty on startup?) ((OR BOTH???))
+- check for remote existing server
+- even out process list
+- double target PC?
+- remove stoprightnow appearence
+- debug illegal commands client crash
+- differ between excepions

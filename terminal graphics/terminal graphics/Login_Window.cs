@@ -79,7 +79,7 @@ namespace terminal_graphics
         private void Disconnect(object sender, EventArgs e) 
         {
             socket.Close();
-            Close();
+            Application.Exit();
         }
 
         public Login_Window(Socket s)
