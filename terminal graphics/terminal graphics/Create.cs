@@ -59,6 +59,7 @@ namespace terminal_graphics
                 if (result.IndexOf("created") != -1)
                 {
                     MessageBox.Show(result.Remove(result.IndexOf("stoprightnow"), 12), "Sucess");
+                    Form2.RefreshWindow();
                     return true;
                 }
                 else
@@ -76,6 +77,7 @@ namespace terminal_graphics
             if (result.IndexOf("deleted") != -1)
             {
                 MessageBox.Show(result.Remove(result.IndexOf("stoprightnow"), 12), "Sucess");
+                Form2.RefreshWindow();
                 return true;
             }
             else

@@ -1,6 +1,2 @@
-- check for remote existing server
-- even out process list
-- double target PC?
-- remove stoprightnow appearence
-- debug illegal commands client crash
-- differ between excepions
+- update mach list per client
+- debug 1st run file manager corrupt
