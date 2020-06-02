@@ -42,7 +42,7 @@ namespace server
 
         public static string CommandOutput(string command, Socket sc)
         {
-            //Console.WriteLine("message: " + command);
+            Console.WriteLine("message: " + command);
             string output = "";
             bool flag = false;
             string[] pararms = Interpreter(command); //interprets the command and returns a list of parameters
@@ -50,7 +50,7 @@ namespace server
             {
                 foreach (KeyValuePair<string, Func<string[], string>> pair in dict)
                 {
-                    if (pair.Key == pararms[0]) //finds the right dunction
+                    if (pair.Key == pararms[0]) //finds the right function
                     {
                         flag = true;
                         try
@@ -69,7 +69,7 @@ namespace server
             }
             if (flag) //if the command succceeded, the output is returned
                 return output + "stoprightnow";
-            else if (pararms[0] != "command failed")
+            else if (pararms[0] == "command failed")
                 //if the command name is wrong, the most similar command is suggested to the client
                 return "no such command as --> " + pararms[0] + MostSimilar(pararms[0]) + "stoprightnow";
             else
@@ -116,8 +116,6 @@ namespace server
                         }
                         Client.clientqueue.Enqueue(c);
                     }
-                    if (flag)
-                        st.Push(Environment.MachineName);
                 }
                 else
                     st.Push(Environment.MachineName);
@@ -164,6 +162,7 @@ namespace server
                                     {
                                         flag = true;
                                         st.Push(cmd);
+                                        Console.WriteLine(cmd);
                                         break;
                                     }
                                 }
@@ -208,8 +207,8 @@ namespace server
                     counter++;
                 }
                 return finite;
-            } 
-            catch { return new string[] { "command failed" }; }
+            }
+            catch (Exception e) { Console.WriteLine(e.Message); return new string[] { "command failed" }; }
         }
         private static string Disconnect()
         {
