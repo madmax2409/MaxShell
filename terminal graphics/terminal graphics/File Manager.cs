@@ -67,12 +67,11 @@ namespace terminal_graphics
                 else if (mach != "" && mach != Environment.MachineName) //if a machine name is deteced, a request to list the files in the folder is sent
                 {
                     temp = Program.CallFunc("list " + datas[i] + " on " + mach);
-                    if (temp != "stoprightnow") //all the additional files are added before the initiation of the treeview
+                    if (temp != "stoprightnow" && !temp.Contains("an error occurred")) //all the additional files are added before the initiation of the treeview
                     {
                         string subdata = data.Substring(data.IndexOf(mach + "'s shared folders and drives"));
                         int addingindex = subdata.IndexOf(datas[i]);
-                        string insertion = "\nfile: " + datas[i] + "\\" + temp.Substring(0, temp.IndexOf("stoprightnow")) + "\n";
-
+                        string insertion = "\nfile: " + temp.Substring(0, temp.IndexOf("stoprightnow")) + "\n";
                         bool changed = insertion.Contains("(changed)");
                         if (changed)
                         {
@@ -95,19 +94,19 @@ namespace terminal_graphics
 
                 else if (dirchoice != "My Shared Folders" && dirchoice != "My Dump Folders")
                 {
-                    int end = dirchoice.IndexOf("'s shared folders and drives"); 
-                    Program.CallFunc("copy " + filechoice + " from " + dirchoice.Substring(0, end)); //to copy remote folder, first we reques to copy the file
+                    int end = dirchoice.IndexOf("'s shared folders and drives");
+                    Program.CallFunc("copy " + "'" + filechoice + "' from " + dirchoice.Substring(0, end)); //to copy remote folder, first we reques to copy the file
                     RefreshWindow();
                     Process.Start(dumps.LastNode.LastNode.Text); //and then start the process in the last node, the last copied one
                 }
                   
         }
-        private static void Refresh(object sender, EventArgs e)
+        public static void Refresh(object sender, EventArgs e)
         {
             RefreshWindow();
         }
 
-        private static void RefreshWindow()
+        public static void RefreshWindow()
         {
             string dirs = Program.CallFunc("shared folders"); //request the data to update changes
             dirs = AddInsides(dirs);
@@ -198,7 +197,6 @@ namespace terminal_graphics
                         }
                         else if (!direcs[i].Contains("stoprightnow")) //if remote, all the files are next in the array
                         {
-                            MessageBox.Show("DVIRM" + direcs[i]);
                             if (path != direcs[i]) //add to the last saved node if it's a file
                             {
                                 TreeNode node = new TreeNode(path);

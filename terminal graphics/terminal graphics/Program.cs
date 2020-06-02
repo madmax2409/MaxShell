@@ -127,10 +127,18 @@ namespace terminal_graphics
             return Encoding.Unicode.GetString(bytes, 0, bytesRec);
         }
 
+        public static void EmptyDumps()
+        {
+            string[] dirs = Directory.GetDirectories(@"C:\MaxShell\dump_folders");
+            foreach (string dir in dirs)
+                Directory.Delete(dir, true);
+        }
+
         [STAThread]
         static void Main()
         {
             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
+            try { EmptyDumps(); } catch { };
             GetAddr.PreSock();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

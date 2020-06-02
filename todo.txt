@@ -1,0 +1,2 @@
+- update mach list per client
+- debug 1st run file manager corrupt
