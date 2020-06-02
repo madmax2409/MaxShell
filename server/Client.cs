@@ -34,6 +34,7 @@ namespace server
         public static void Disconnect(Socket dis)
         {
             clients.Remove(dis);
+            dis.Close();
         }
         public static void CheckAndAdd(Socket cl, string mach, string nick)
         {

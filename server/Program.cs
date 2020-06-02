@@ -63,11 +63,15 @@ namespace server
                     data = Server.CommandOutput(data, s);
                     SendPackets(data, s);
                     if (data.Contains("disconnect"))
+                    {
+                        Client.Disconnect(s);
                         break; // ends communication
+                    }
                 }
             }
             catch (SocketException)
             {
+                Client.Disconnect(s);
                 Console.WriteLine("Client has disconnected");
             }
         }
