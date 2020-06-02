@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Data;
 
 namespace server
 {
@@ -79,7 +80,7 @@ namespace server
             if (target != Environment.MachineName)
                 RemoteConScope(target);
             else
-                ms = new ManagementScope("\\\\" + target + "\\root\\cimv2");
+                ms = new ManagementScope("\\\\" + Environment.MachineName + "\\root\\cimv2");
         }
         private static string Padding(string name)
         {
@@ -185,40 +186,49 @@ namespace server
             }
         }
 
-        public static string ListFiles(string path)
+        public static string ListFiles(string target, string path)
         {
-            ManagementObject m = null;
             string output = "";
-            SelectQuery oq = new SelectQuery("SELECT * FROM Win32_Share");
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher(ms, oq);
-
-            foreach (ManagementObject mo in searcher.Get()) //find the path of the folder we want from the list of all shares
-                if (mo["path"].ToString() != "" && path == mo["path"].ToString())
-                {
-                    m = mo; //save the path
-                    break;
-                }
-
-            if (m != null)
+            if (target == Environment.MachineName)
             {
-                string[] str = null;
-                string rightpath = m["Path"].ToString(); //get full path
-                foreach (KeyValuePair<string, string> pair in paths)
-                    if (rightpath == pair.Key) //search in list of saved folders
-                    {
-                        str = Directory.GetFiles(pair.Value); //and list the files in it
-                        break;
-                    }
-                if (str != null)
-                    for (int i = 0; i < str.Length; i++)
-                    {
-                        string filename = str[i].Substring(str[i].IndexOf(rightpath.Replace(':', '$')) + rightpath.Length + 1);
-                        output += filename + CheckForChange(str[i]) + "\n";
-                    }
+                string[] outpt = Directory.GetFiles(path);
+                foreach (string item in outpt)
+                    output += item + "\n";
                 return output;
             }
             else
+            {
+                ManagementObject m = null;
+                SelectQuery oq = new SelectQuery("SELECT * FROM Win32_Share");
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher(ms, oq);
+                foreach (ManagementObject mo in searcher.Get()) //find the path of the folder we want from the list of all shares
+                    if (mo["path"].ToString() != "" && path == mo["path"].ToString())
+                    {
+                        m = mo; //save the path
+                        break;
+                    }
+
+                if (m != null)
+                {
+                    string[] str = null;
+                    string rightpath = m["Path"].ToString(); //get full path
+                    foreach (KeyValuePair<string, string> pair in paths)
+                        if (rightpath == pair.Key) //search in list of saved folders
+                        {
+                            Console.WriteLine("rightpath: " + pair.Value);
+                            str = Directory.GetFiles(pair.Value); //and list the files in it
+                            break;
+                        }
+                    if (str != null)
+                        for (int i = 0; i < str.Length; i++)
+                        {
+                            string filename = str[i].Substring(str[i].IndexOf(rightpath.Replace(':', '$')) + rightpath.Length + 1);
+                            output += filename + CheckForChange(str[i]) + "\n";
+                        }
+                    return output;
+                }                    
                 return "an error occurred";
+            }
         }
 
         public static string ShowFolders()

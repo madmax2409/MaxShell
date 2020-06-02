@@ -24,7 +24,7 @@ namespace server
                 targets => Directory.GetCurrentDirectory(),
                 targets => WmiFuncs.RemoteProcess(targets[1]),
                 targets => WmiFuncs.ShareFolder(targets[2], targets[1]),
-                targets => WmiFuncs.ListFiles(targets[1]),
+                targets => WmiFuncs.ListFiles(targets[2], targets[1]),
                 targets => WmiFuncs.ShowFolders(),
                 targets => File.ReadAllText(Environment.CurrentDirectory + "\\info.txt"),
                 targets => File.ReadAllText(Environment.CurrentDirectory + "\\about.txt"),
@@ -60,8 +60,9 @@ namespace server
                             WmiFuncs.TryCon(pararms[pararms.Length-1]); //tries to build the connection scope
                             output = pair.Value(pararms); //executes and gets the value of the function
                         }
-                        catch 
+                        catch (Exception e)
                         {
+                            Console.WriteLine(e.Message);
                             output = "an error occurred, please check your parameters\n";// + e.ToString();
                         }
                     }
@@ -116,6 +117,8 @@ namespace server
                         }
                         Client.clientqueue.Enqueue(c);
                     }
+                    if (flag)
+                        st.Push(Environment.MachineName);
                 }
                 else
                     st.Push(Environment.MachineName);
