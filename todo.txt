@@ -1,2 +1,14 @@
+				TO FIX
 - update mach list per client
-- debug 1st run file manager corrupt
+- debug 1st run file manager
+- padding for process list
+				
+				TO CHECK
+- exe working
+- commands crash client
+- irrelevant "stoprightnow" appearing
+
+				ERAN WANTS ME TO DO
+- udp based connection
+- check for working server
+- drag drop on treeview
