@@ -48,7 +48,7 @@ namespace terminal_graphics
             {
                 if (message == "file manager") //check for keywords that represnt special commands
                 {
-                    string data = CallFunc("shared folders"); //recieve the data to build the treeview 
+                    string data = CallFunc("shared folders on " + Environment.MachineName); //recieve the data to build the treeview 
                     data = Form2.AddInsides(data);
                     form2 = new Form2(data); //and start the building
                     form2.Show();

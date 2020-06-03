@@ -275,6 +275,7 @@ namespace terminal_graphics
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             MinimizeBox = false;
+            MessageBox.Show(dirs);
             BuildTree(direcs);
             
             tv.Font = new Font("Segue", 10);
