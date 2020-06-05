@@ -31,7 +31,7 @@ namespace server
         }
         public static void AddPaths(string target) // a function to match paths of shared folders with full paths
         {
-            string data = ShowFolders();
+            string data = ShowFolders(target);
             string[] datas = data.Split(new char[] { '\n' });
             for (int i = 0; i < datas.Length; i++)
             {
@@ -215,7 +215,6 @@ namespace server
                     foreach (KeyValuePair<string, string> pair in paths)
                         if (rightpath == pair.Key) //search in list of saved folders
                         {
-                            Console.WriteLine("rightpath: " + pair.Value);
                             str = Directory.GetFiles(pair.Value); //and list the files in it
                             break;
                         }
@@ -231,38 +230,57 @@ namespace server
             }
         }
 
-        public static string ShowFolders()
+        private static string LocalAdd(string output)
         {
-            bool localclient = false;
+            ManagementObjectSearcher searcher2 = new ManagementObjectSearcher("\\\\" + Environment.MachineName + "\\root\\cimv2",
+                    "SELECT * FROM Win32_Share"); //win32_share contains the list of all shared instances (folders, drives...)
+            output += "\n" + Environment.MachineName + "'s shared folders and drives: \n";
+            foreach (ManagementObject mo in searcher2.Get())
+                if (!mo["Name"].ToString().Contains("$") && mo["Name"].ToString().Length > 3 && mo["Name"].ToString() != "Users")
+                    output += mo["Path"] + "\n";
+            return output;
+        }
+
+        public static string ShowFolders(string target)
+        {
             string output = "";
+            bool flag = false;
             Queue <Client> q = Client.clientqueue;
+            for (int i = 0; i < q.Count; i++)
+            {
+                Client temp = q.Dequeue();
+                if (target == Environment.MachineName)
+                {
+                    flag = true;
+                    Console.WriteLine("local target " + target);
+                    output = LocalAdd(output);
+                    q.Enqueue(temp);
+                    break;
+                }
+                q.Enqueue(temp);
+            }
+            Console.WriteLine("\n\noutput " + output  + "\n\n");
             for(int i = 0; i < q.Count; i++) //iterare on all clients and get their list of shared folders
             {
                 Client temp = q.Dequeue();
                 string mach = temp.GetMach();
-                if (mach == Environment.MachineName)
-                    localclient = true;
-                TryCon(mach);
-                SelectQuery sq = new SelectQuery("SELECT * FROM Win32_Share");
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher(ms,sq);
-                output += mach + "'s shared folders and drives: \n";
-                foreach (ManagementObject mo in searcher.Get())
+                if (mach != Environment.MachineName)
                 {
-                    if (!mo["Name"].ToString().Contains("$") && mo["Path"].ToString().Length > 3 && mo["Name"].ToString() != "Users")
-                        output += mo["Path"] + "\n";
+                    TryCon(mach);
+                    SelectQuery sq = new SelectQuery("SELECT * FROM Win32_Share");
+                    ManagementObjectSearcher searcher = new ManagementObjectSearcher(ms, sq);
+                    output += mach + "'s shared folders and drives: \n";
+                    foreach (ManagementObject mo in searcher.Get())
+                    {
+                        if (!mo["Name"].ToString().Contains("$") && mo["Path"].ToString().Length > 3 && mo["Name"].ToString() != "Users")
+                            output += mo["Path"] + "\n";
+                    }
                 }
                 q.Enqueue(temp);
             }
+            if (!flag)
+                output = LocalAdd(output);
 
-            if (!localclient)//if no local client is detected
-            { //we manually add yhe shared folders on the server's machine
-                ManagementObjectSearcher searcher2 = new ManagementObjectSearcher("\\\\" + Environment.MachineName + "\\root\\cimv2",
-                    "SELECT * FROM Win32_Share"); //win32_share contains the list of all shared instances (folders, drives...)
-                output += "\n" + Environment.MachineName + "'s shared folders and drives: \n";
-                foreach (ManagementObject mo in searcher2.Get())
-                    if (!mo["Name"].ToString().Contains("$") && mo["Name"].ToString().Length > 3 && mo["Name"].ToString() != "Users")
-                        output += mo["Path"] + "\n";
-            }
             return output;
         }
 

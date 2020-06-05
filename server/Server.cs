@@ -25,7 +25,7 @@ namespace server
                 targets => WmiFuncs.RemoteProcess(targets[1]),
                 targets => WmiFuncs.ShareFolder(targets[2], targets[1]),
                 targets => WmiFuncs.ListFiles(targets[2], targets[1]),
-                targets => WmiFuncs.ShowFolders(),
+                targets => WmiFuncs.ShowFolders(targets[1]),
                 targets => File.ReadAllText(Environment.CurrentDirectory + "\\info.txt"),
                 targets => File.ReadAllText(Environment.CurrentDirectory + "\\about.txt"),
                 targets =>WmiFuncs.CopyFile(pass.Dequeue(), targets[2], targets[1]),
@@ -165,7 +165,6 @@ namespace server
                                     {
                                         flag = true;
                                         st.Push(cmd);
-                                        Console.WriteLine(cmd);
                                         break;
                                     }
                                 }
